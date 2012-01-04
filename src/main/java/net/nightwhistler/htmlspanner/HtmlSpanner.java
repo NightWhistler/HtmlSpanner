@@ -27,7 +27,9 @@ import java.util.regex.Pattern;
 import net.nightwhistler.htmlspanner.handlers.BoldHandler;
 import net.nightwhistler.htmlspanner.handlers.CenterHandler;
 import net.nightwhistler.htmlspanner.handlers.HeaderHandler;
+import net.nightwhistler.htmlspanner.handlers.ImageHandler;
 import net.nightwhistler.htmlspanner.handlers.ItalicHandler;
+import net.nightwhistler.htmlspanner.handlers.LinkHandler;
 import net.nightwhistler.htmlspanner.handlers.ListItemHandler;
 import net.nightwhistler.htmlspanner.handlers.MarginHandler;
 import net.nightwhistler.htmlspanner.handlers.MonoSpaceHandler;
@@ -353,6 +355,9 @@ public class HtmlSpanner {
 		registerHandler("center", centerHandler);
 
 		registerHandler("li", new ListItemHandler());
+		
+		registerHandler("a", new LinkHandler() );
+		registerHandler("img", new ImageHandler() );
 	}	
 	
 }
