@@ -151,6 +151,10 @@ public class TableHandler extends TagNodeHandler {
 	
 	private int calculateRowHeight( List<Spanned> row ) {
 		
+		if ( row.size() == 0 ) {
+			return 0;
+		}
+		
 		TextPaint textPaint = getTextPaint();
 		
 		int columnWidth = tableWidth / row.size();
