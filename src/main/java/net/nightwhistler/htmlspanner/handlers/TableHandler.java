@@ -225,6 +225,11 @@ public class TableHandler extends TagNodeHandler {
 			paint.setStyle(Style.STROKE);
 			
 			int numberOfColumns = tableRow.size();
+			
+			if ( numberOfColumns == 0 ) {
+				return;
+			}
+			
 			int columnWidth = tableWidth / numberOfColumns;		
 			int rowHeight = calculateRowHeight(tableRow);
 			
