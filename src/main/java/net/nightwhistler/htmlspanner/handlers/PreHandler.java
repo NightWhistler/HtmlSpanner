@@ -37,7 +37,7 @@ public class PreHandler extends TagNodeHandler {
 		if (node instanceof ContentNode) {
 			ContentNode contentNode = (ContentNode) node;
 			buffer.append(contentNode.getContent());
-		} else {
+		} else if ( node instanceof TagNode ){
 			TagNode tagNode = (TagNode) node;
 			for (Object child : tagNode.getChildren()) {
 				getPlainText(buffer, child);
