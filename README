@@ -5,6 +5,6 @@ It allows full control over how specific tags are handled and handles <pre> tags
 HtmlSpanner was originally written as the HTML rendering engine for PageTurner, but was split off under a more
 permissive license (Apache 2) so it may be used in commercial projects.
 
-HtmlSpanner used HtmlCleaner to do most of the heavy lifting for parsing HTML files.
+HtmlSpanner uses HtmlCleaner to do most of the heavy lifting for parsing HTML files.
 
 Let me know if it's useful to you :)
