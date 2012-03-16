@@ -44,6 +44,7 @@ import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
+import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 
@@ -69,6 +70,8 @@ public class HtmlSpanner {
 	private static Map<String, String> REPLACEMENTS = new HashMap<String, String>();
 
 	private HtmlCleaner htmlCleaner;
+	
+	private FontFamily fontFamily;
 
 	static {
 
@@ -88,7 +91,7 @@ public class HtmlSpanner {
 	 * Creates a new HtmlSpanner using a default HtmlCleaner instance.
 	 */
 	public HtmlSpanner() {
-		this(createHtmlCleaner());
+		this(createHtmlCleaner());		
 	}
 	
 	/**
@@ -101,7 +104,17 @@ public class HtmlSpanner {
 	public HtmlSpanner(HtmlCleaner cleaner) {
 		this.htmlCleaner = cleaner;
 		this.handlers = new HashMap<String, TagNodeHandler>();
+		this.fontFamily = new FontFamily( "default", Typeface.DEFAULT );
 		registerBuiltInHandlers();
+		
+	}
+	
+	public FontFamily getFontFamily() {
+		return fontFamily;
+	}
+	
+	public void setFontFamily(FontFamily fontFamily) {
+		this.fontFamily = fontFamily;
 	}
 
 	/**

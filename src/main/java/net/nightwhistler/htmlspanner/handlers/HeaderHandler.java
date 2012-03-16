@@ -15,7 +15,9 @@
  */
 package net.nightwhistler.htmlspanner.handlers;
 
+import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
+import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
 
 import org.htmlcleaner.TagNode;
 
@@ -42,13 +44,13 @@ import android.text.style.StyleSpan;
 public class HeaderHandler extends TagNodeHandler {
 
 	private float size;
-
+	
 	/**
 	 * Creates a HeaderHandler which gives
 	 * @param size
 	 */
 	public HeaderHandler(float size) {
-		this.size = size;
+		this.size = size;		
 	}
 
 	@Override
@@ -65,7 +67,11 @@ public class HeaderHandler extends TagNodeHandler {
 
 		builder.setSpan(new RelativeSizeSpan(size), start, end,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		builder.setSpan(new StyleSpan(Typeface.BOLD), start, end,
+		
+		FontFamilySpan boldSpan = new FontFamilySpan(getSpanner().getFontFamily());
+		boldSpan.setBold(true);
+		
+		builder.setSpan(boldSpan, start, end,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		appendNewLine(builder);

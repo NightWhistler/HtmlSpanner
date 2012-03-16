@@ -21,7 +21,9 @@ import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
+import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
+import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
 
 /**
  * Applies bold formatting.
@@ -30,10 +32,15 @@ import net.nightwhistler.htmlspanner.TagNodeHandler;
  *
  */
 public class BoldHandler extends TagNodeHandler {
-
+	
+	
 	public void handleTagNode(TagNode node,
 			SpannableStringBuilder builder, int start, int end) {
-		builder.setSpan(new StyleSpan(Typeface.BOLD), start, end,
+		
+		FontFamilySpan boldSpan = new FontFamilySpan(getSpanner().getFontFamily());
+		boldSpan.setBold(true);
+		
+		builder.setSpan(boldSpan, start, end,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	}
 }
