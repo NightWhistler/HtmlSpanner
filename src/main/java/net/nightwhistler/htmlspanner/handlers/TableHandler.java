@@ -247,7 +247,7 @@ public class TableHandler extends TagNodeHandler {
 				
 				canvas.translate(offset + PADDING, 0);				
 				layout.draw(canvas);				
-				canvas.translate( -1 * PADDING, 0);
+				canvas.translate( -1 * (offset + PADDING), 0);
 				
 			}			
 		}
