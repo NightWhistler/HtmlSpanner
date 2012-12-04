@@ -26,12 +26,12 @@ import net.nightwhistler.htmlspanner.TagNodeHandler;
  * Used to implement p and br tags.
  * 
  * @author Alex Kuiper
- *
+ * 
  */
 public class NewLineHandler extends TagNodeHandler {
 
 	int numberOfNewLines;
-	
+
 	/**
 	 * Creates this handler for a specified number of newlines.
 	 * 
@@ -40,10 +40,10 @@ public class NewLineHandler extends TagNodeHandler {
 	public NewLineHandler(int howMany) {
 		this.numberOfNewLines = howMany;
 	}
-	
-	public void handleTagNode(TagNode node,
-			SpannableStringBuilder builder, int start, int end) {
-		for ( int i=0; i < numberOfNewLines; i++ ) {
+
+	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
+			int start, int end) {
+		for (int i = 0; i < numberOfNewLines; i++) {
 			appendNewLine(builder);
 		}
 	}

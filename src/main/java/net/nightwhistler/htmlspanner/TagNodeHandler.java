@@ -20,11 +20,10 @@ import org.htmlcleaner.TagNode;
 import android.text.SpannableStringBuilder;
 
 /**
- * A TagNodeHandler handles a specific type of tag (a, img, p, etc),
- * and adds the correct spans to a SpannableStringBuilder.
+ * A TagNodeHandler handles a specific type of tag (a, img, p, etc), and adds
+ * the correct spans to a SpannableStringBuilder.
  * 
- * For example: the TagNodeHandler for i (italic) tags
- * would do
+ * For example: the TagNodeHandler for i (italic) tags would do
  * 
  * <tt>
  * public void handleTagNode( TagNode node, SpannableStringBuilder builder, 
@@ -35,20 +34,21 @@ import android.text.SpannableStringBuilder;
  * </tt>
  * 
  * @author Alex Kuiper
- *
+ * 
  */
 public abstract class TagNodeHandler {
-	
+
 	private HtmlSpanner spanner;
-	
+
 	/**
 	 * Called by HtmlSpanner when this TagNodeHandler is registered.
+	 * 
 	 * @param spanner
 	 */
 	public void setSpanner(HtmlSpanner spanner) {
 		this.spanner = spanner;
 	}
-	
+
 	/**
 	 * Returns a reference to the HtmlSpanner.
 	 * 
@@ -57,24 +57,25 @@ public abstract class TagNodeHandler {
 	protected HtmlSpanner getSpanner() {
 		return spanner;
 	}
-	
+
 	/**
-	 * Called before the children of this node are handled, allowing for
-	 * text to be inserted before the childrens' text.
+	 * Called before the children of this node are handled, allowing for text to
+	 * be inserted before the childrens' text.
 	 * 
 	 * Default implementation is a no-op.
 	 * 
 	 * @param node
 	 * @param builder
 	 */
-	public void beforeChildren( TagNode node, SpannableStringBuilder builder ) {
-		
+	public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
+
 	}
-	
+
 	/**
 	 * If this TagNodeHandler takes care of rendering the content.
 	 * 
 	 * If true, the parser will not add the content itself.
+	 * 
 	 * @return
 	 */
 	public boolean rendersContent() {
@@ -84,17 +85,22 @@ public abstract class TagNodeHandler {
 	/**
 	 * Handle the given node and add spans if needed.
 	 * 
-	 * @param node the node to handle
-	 * @param builder the current stringbuilder
-	 * @param start start position of inner text of this node
-	 * @param end end position of inner text of this node.
+	 * @param node
+	 *            the node to handle
+	 * @param builder
+	 *            the current stringbuilder
+	 * @param start
+	 *            start position of inner text of this node
+	 * @param end
+	 *            end position of inner text of this node.
 	 */
-	public abstract void handleTagNode( TagNode node, SpannableStringBuilder builder, int start, int end );
-	
+	public abstract void handleTagNode(TagNode node,
+			SpannableStringBuilder builder, int start, int end);
+
 	/**
-	 * Utility method to append newlines while making sure that there
-	 * are never more than 2 consecutive newlines in the text (if
-	 * whitespace stripping was enabled).
+	 * Utility method to append newlines while making sure that there are never
+	 * more than 2 consecutive newlines in the text (if whitespace stripping was
+	 * enabled).
 	 * 
 	 * @param builder
 	 */

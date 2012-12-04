@@ -27,14 +27,14 @@ import android.text.SpannableStringBuilder;
  * Applies centered formatting.
  * 
  * @author Alex Kuiper
- *
+ * 
  */
 public class CenterHandler extends TagNodeHandler {
 
 	@Override
-	public void handleTagNode(TagNode node,
-			SpannableStringBuilder builder, int start, int end) {
-		builder.setSpan(new CenterSpan(), start, 
-				end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
+			int start, int end) {
+		builder.setSpan(new CenterSpan(), start, end,
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	}
 }

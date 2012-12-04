@@ -13,28 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package net.nightwhistler.htmlspanner.handlers;
 
 import net.nightwhistler.htmlspanner.TagNodeHandler;
+import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
 
 import org.htmlcleaner.TagNode;
 
-import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.StyleSpan;
 
 /**
  * Applies italic formatting.
  * 
  * @author Alex Kuiper
- *
+ * 
  */
 public class ItalicHandler extends TagNodeHandler {
 
-	public void handleTagNode(TagNode node,
-			SpannableStringBuilder builder, int start, int end) {
-		builder.setSpan(new StyleSpan(Typeface.ITALIC), start, end,
+	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
+			int start, int end) {
+		FontFamilySpan boldSpan = new FontFamilySpan(getSpanner()
+				.getFontFamily());
+		boldSpan.setItalic(true);
+
+		builder.setSpan(boldSpan, start, end,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	}
 }

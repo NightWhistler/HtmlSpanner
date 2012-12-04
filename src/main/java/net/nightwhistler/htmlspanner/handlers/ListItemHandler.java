@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package net.nightwhistler.htmlspanner.handlers;
 
 import net.nightwhistler.htmlspanner.TagNodeHandler;
+import net.nightwhistler.htmlspanner.spans.ListItemSpan;
 
 import org.htmlcleaner.TagNode;
 
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 
 /**
  * Handles items in both numbered and unordered lists.
  * 
  * @author Alex Kuiper
- *
+ * 
  */
 public class ListItemHandler extends TagNodeHandler {
 
 	private int getMyIndex(TagNode node) {
-
 		if (node.getParent() == null) {
 			return -1;
 		}
@@ -62,22 +64,23 @@ public class ListItemHandler extends TagNodeHandler {
 	}
 
 	@Override
-	public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
-		if ("ol".equals(getParentName(node))) {
-			builder.append("" + getMyIndex(node) + ". ");
-		} else if ("ul".equals(getParentName(node))) {
-			// Unicode bullet character.
-			builder.append("\u2022  ");
-		}
-	}
-
-	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
 			int start, int end) {
 
 		if (builder.length() > 0
 				&& builder.charAt(builder.length() - 1) != '\n') {
 			builder.append("\n");
+		}
+
+		if ("ol".equals(getParentName(node))) {
+			ListItemSpan bSpan = new ListItemSpan(getMyIndex(node));
+			builder.setSpan(bSpan, start, end,
+					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		} else if ("ul".equals(getParentName(node))) {
+			// Unicode bullet character.
+			ListItemSpan bSpan = new ListItemSpan();
+			builder.setSpan(bSpan, start, end,
+					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
 
 	}

@@ -33,42 +33,43 @@ import android.text.style.ImageSpan;
 /**
  * Handles image tags.
  * 
- * The default implementation tries to load images through
- * a URL.openStream(), override loadBitmap()
- * to implement your own loading.
+ * The default implementation tries to load images through a URL.openStream(),
+ * override loadBitmap() to implement your own loading.
  * 
  * @author Alex Kuiper
- *
+ * 
  */
 public class ImageHandler extends TagNodeHandler {
 
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end) {						
+			int start, int end) {
 		String src = node.getAttributeByName("src");
-		
-        builder.append("\uFFFC");
 
-		Bitmap bitmap = loadBitmap( src );		
-		
-		if ( bitmap != null ) {
-			Drawable drawable = new BitmapDrawable( bitmap );
-			drawable.setBounds(0,0, bitmap.getWidth() - 1, bitmap.getHeight() - 1);
-			builder.setSpan( new ImageSpan(drawable), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		}				
-	}	
-	
+		builder.append("\uFFFC");
+
+		Bitmap bitmap = loadBitmap(src);
+
+		if (bitmap != null) {
+			Drawable drawable = new BitmapDrawable(bitmap);
+			drawable.setBounds(0, 0, bitmap.getWidth() - 1,
+					bitmap.getHeight() - 1);
+			builder.setSpan(new ImageSpan(drawable), start, end,
+					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+	}
+
 	/**
 	 * Loads a Bitmap from the given url.
 	 * 
 	 * @param url
 	 * @return a Bitmap, or null if it could not be loaded.
 	 */
-	protected Bitmap loadBitmap( String url ) {
-		 try {
-			 return BitmapFactory.decodeStream( new URL(url).openStream() ); 
-		 } catch (IOException io ) {
-			 return null;
-		 }
+	protected Bitmap loadBitmap(String url) {
+		try {
+			return BitmapFactory.decodeStream(new URL(url).openStream());
+		} catch (IOException io) {
+			return null;
+		}
 	}
 }

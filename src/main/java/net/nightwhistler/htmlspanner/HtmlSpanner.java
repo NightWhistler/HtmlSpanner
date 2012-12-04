@@ -61,20 +61,18 @@ public class HtmlSpanner {
 	private Map<String, TagNodeHandler> handlers;
 
 	private boolean stripExtraWhiteSpace = false;
-	
-	private HtmlCleaner htmlCleaner;
-	
-	private FontFamily fontFamily;
 
-	
+	private HtmlCleaner htmlCleaner;
+
+	private FontFamily fontFamily;
 
 	/**
 	 * Creates a new HtmlSpanner using a default HtmlCleaner instance.
 	 */
 	public HtmlSpanner() {
-		this(createHtmlCleaner());		
+		this(createHtmlCleaner());
 	}
-	
+
 	/**
 	 * Creates a new HtmlSpanner using the given HtmlCleaner instance.
 	 * 
@@ -85,29 +83,29 @@ public class HtmlSpanner {
 	public HtmlSpanner(HtmlCleaner cleaner) {
 		this.htmlCleaner = cleaner;
 		this.handlers = new HashMap<String, TagNodeHandler>();
-		this.fontFamily = new FontFamily( "default", Typeface.DEFAULT );
+		this.fontFamily = new FontFamily("default", Typeface.DEFAULT);
 		registerBuiltInHandlers();
-		
+
 	}
-	
+
 	public FontFamily getFontFamily() {
 		return fontFamily;
 	}
-	
+
 	public void setFontFamily(FontFamily fontFamily) {
 		this.fontFamily = fontFamily;
 	}
 
 	/**
-	 * Switch to specify whether excess whitespace should be stripped from 
-	 * the input.
+	 * Switch to specify whether excess whitespace should be stripped from the
+	 * input.
 	 * 
 	 * @param stripExtraWhiteSpace
 	 */
 	public void setStripExtraWhiteSpace(boolean stripExtraWhiteSpace) {
 		this.stripExtraWhiteSpace = stripExtraWhiteSpace;
 	}
-	
+
 	/**
 	 * Returns if whitespace is being stripped.
 	 * 
@@ -118,10 +116,10 @@ public class HtmlSpanner {
 	}
 
 	/**
-	 * Registers a new custom TagNodeHandler. 
+	 * Registers a new custom TagNodeHandler.
 	 * 
-	 * If a TagNodeHandler was already registered for the specified
-	 * tagName it will be overwritten.
+	 * If a TagNodeHandler was already registered for the specified tagName it
+	 * will be overwritten.
 	 * 
 	 * @param tagName
 	 * @param handler
@@ -138,10 +136,10 @@ public class HtmlSpanner {
 	 * 
 	 * @return a Spanned version of the text.
 	 */
-	public Spanned fromHtml( String html ) {
-		return fromTagNode( this.htmlCleaner.clean(html) );
+	public Spanned fromHtml(String html) {
+		return fromTagNode(this.htmlCleaner.clean(html));
 	}
-	
+
 	/**
 	 * Parses the text in the given Reader.
 	 * 
@@ -149,10 +147,10 @@ public class HtmlSpanner {
 	 * @return
 	 * @throws IOException
 	 */
-	public Spanned fromHtml( Reader reader ) throws IOException {
-		return fromTagNode( this.htmlCleaner.clean(reader) );
+	public Spanned fromHtml(Reader reader) throws IOException {
+		return fromTagNode(this.htmlCleaner.clean(reader));
 	}
-	
+
 	/**
 	 * Parses the text in the given InputStream.
 	 * 
@@ -160,10 +158,10 @@ public class HtmlSpanner {
 	 * @return
 	 * @throws IOException
 	 */
-	public Spanned fromHtml( InputStream inputStream ) throws IOException {
-		return fromTagNode( this.htmlCleaner.clean(inputStream) );
+	public Spanned fromHtml(InputStream inputStream) throws IOException {
+		return fromTagNode(this.htmlCleaner.clean(inputStream));
 	}
-	
+
 	/**
 	 * Gets the currently registered handler for this tag.
 	 * 
@@ -188,30 +186,28 @@ public class HtmlSpanner {
 
 		return result;
 	}
-	
+
 	private static HtmlCleaner createHtmlCleaner() {
 		HtmlCleaner result = new HtmlCleaner();
 		CleanerProperties cleanerProperties = result.getProperties();
-		
+
 		cleanerProperties.setAdvancedXmlEscape(true);
-		
+
 		cleanerProperties.setOmitXmlDeclaration(true);
-		cleanerProperties.setOmitDoctypeDeclaration(false);		
-		
+		cleanerProperties.setOmitDoctypeDeclaration(false);
+
 		cleanerProperties.setTranslateSpecialEntities(true);
 		cleanerProperties.setTransResCharsToNCR(true);
 		cleanerProperties.setRecognizeUnicodeChars(true);
-		
+
 		cleanerProperties.setIgnoreQuestAndExclam(true);
 		cleanerProperties.setUseEmptyElementTags(false);
-		
+
 		cleanerProperties.setPruneTags("script,style,title");
-		
+
 		return result;
-	}	
-	
-	
-	
+	}
+
 	private void handleContent(SpannableStringBuilder builder, Object node,
 			TagNode parent) {
 		if (node instanceof ContentNode) {
@@ -225,14 +221,14 @@ public class HtmlSpanner {
 				}
 			}
 
-			String text = TextUtil.replaceHtmlEntities(contentNode.getContent().toString(), false)
-					.trim();
+			String text = TextUtil.replaceHtmlEntities(
+					contentNode.getContent().toString(), false).trim();
 			builder.append(text);
 
 		} else if (node instanceof TagNode) {
 			applySpan(builder, (TagNode) node);
 		}
-	}	
+	}
 
 	private void applySpan(SpannableStringBuilder builder, TagNode node) {
 
@@ -318,9 +314,9 @@ public class HtmlSpanner {
 		registerHandler("center", centerHandler);
 
 		registerHandler("li", new ListItemHandler());
-		
-		registerHandler("a", new LinkHandler() );
-		registerHandler("img", new ImageHandler() );
-	}	
-	
+
+		registerHandler("a", new LinkHandler());
+		registerHandler("img", new ImageHandler());
+	}
+
 }

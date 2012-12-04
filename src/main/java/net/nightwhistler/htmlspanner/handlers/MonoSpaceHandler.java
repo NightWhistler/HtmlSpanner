@@ -26,15 +26,15 @@ import net.nightwhistler.htmlspanner.TagNodeHandler;
  * Sets monotype font.
  * 
  * @author Alex Kuiper
- *
+ * 
  */
 public class MonoSpaceHandler extends TagNodeHandler {
 
-	public void handleTagNode(TagNode node,
-			SpannableStringBuilder builder, int start, int end) {
+	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
+			int start, int end) {
 
 		builder.setSpan(new TypefaceSpan("monospace"), start, end,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	}
-	
+
 }

@@ -29,17 +29,17 @@ import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
  * Applies bold formatting.
  * 
  * @author Alex Kuiper
- *
+ * 
  */
 public class BoldHandler extends TagNodeHandler {
-	
-	
-	public void handleTagNode(TagNode node,
-			SpannableStringBuilder builder, int start, int end) {
-		
-		FontFamilySpan boldSpan = new FontFamilySpan(getSpanner().getFontFamily());
+
+	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
+			int start, int end) {
+
+		FontFamilySpan boldSpan = new FontFamilySpan(getSpanner()
+				.getFontFamily());
 		boldSpan.setBold(true);
-		
+
 		builder.setSpan(boldSpan, start, end,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	}

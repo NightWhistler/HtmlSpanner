@@ -27,16 +27,17 @@ import android.text.style.URLSpan;
  * Creates clickable links.
  * 
  * @author Alex Kuiper
- *
+ * 
  */
 public class LinkHandler extends TagNodeHandler {
-	
+
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
 			int start, int end) {
-		
+
 		final String href = node.getAttributeByName("href");
-	
-		builder.setSpan(new URLSpan(href), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);		
+
+		builder.setSpan(new URLSpan(href), start, end,
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	}
 }

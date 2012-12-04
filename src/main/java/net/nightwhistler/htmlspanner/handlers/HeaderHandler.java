@@ -30,27 +30,28 @@ import android.text.style.StyleSpan;
 /**
  * Handles Headers, by assigning a relative text-size.
  * 
- * Note that which header is handled (h1, h2, etc) is determined
- * by the tag this handler is registered for.
+ * Note that which header is handled (h1, h2, etc) is determined by the tag this
+ * handler is registered for.
  * 
- * Example: 
+ * Example:
  * 
  * spanner.registerHandler("h1", new HeaderHandler(1.5f));
  * spanner.registerHandler("h2", new HeaderHandler(1.4f));
  * 
  * @author Alex Kuiper
- *
+ * 
  */
 public class HeaderHandler extends TagNodeHandler {
 
 	private float size;
-	
+
 	/**
 	 * Creates a HeaderHandler which gives
+	 * 
 	 * @param size
 	 */
 	public HeaderHandler(float size) {
-		this.size = size;		
+		this.size = size;
 	}
 
 	@Override
@@ -67,10 +68,11 @@ public class HeaderHandler extends TagNodeHandler {
 
 		builder.setSpan(new RelativeSizeSpan(size), start, end,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		
-		FontFamilySpan boldSpan = new FontFamilySpan(getSpanner().getFontFamily());
+
+		FontFamilySpan boldSpan = new FontFamilySpan(getSpanner()
+				.getFontFamily());
 		boldSpan.setBold(true);
-		
+
 		builder.setSpan(boldSpan, start, end,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -78,4 +80,3 @@ public class HeaderHandler extends TagNodeHandler {
 		appendNewLine(builder);
 	}
 }
-
