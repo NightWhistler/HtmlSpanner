@@ -21,8 +21,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import net.nightwhistler.htmlspanner.handlers.BoldHandler;
 import net.nightwhistler.htmlspanner.handlers.CenterHandler;
@@ -63,29 +61,12 @@ public class HtmlSpanner {
 	private Map<String, TagNodeHandler> handlers;
 
 	private boolean stripExtraWhiteSpace = false;
-
-	private static Pattern SPECIAL_CHAR = Pattern
-			.compile("(\t| +|&[a-z]*;|&#[0-9]*;|\n)");
-
-	private static Map<String, String> REPLACEMENTS = new HashMap<String, String>();
-
+	
 	private HtmlCleaner htmlCleaner;
 	
 	private FontFamily fontFamily;
 
-	static {
-
-		REPLACEMENTS.put("", " ");
-		REPLACEMENTS.put("\n", " ");
-		REPLACEMENTS.put("&nbsp;", " ");
-		REPLACEMENTS.put("&amp;", "&");
-		REPLACEMENTS.put("&quot;", "\"");
-		REPLACEMENTS.put("&cent;", "¢");
-		REPLACEMENTS.put("&lt;", "<");
-		REPLACEMENTS.put("&gt;", ">");
-		REPLACEMENTS.put("&sect;", "§");
-
-	}
+	
 
 	/**
 	 * Creates a new HtmlSpanner using a default HtmlCleaner instance.
@@ -230,38 +211,7 @@ public class HtmlSpanner {
 	}	
 	
 	
-	private static String getEditedText(String aText) {
-		StringBuffer result = new StringBuffer();
-		Matcher matcher = SPECIAL_CHAR.matcher(aText);
-
-		while (matcher.find()) {
-			matcher.appendReplacement(result, getReplacement(matcher));
-		}
-		matcher.appendTail(result);
-		return result.toString();
-	}
-
-	private static String getReplacement(Matcher aMatcher) {
-
-		String match = aMatcher.group(0).trim();
-		String result = REPLACEMENTS.get(match);
-
-		if (result != null) {
-			return result;
-		} else if (match.startsWith("&#")) {
-			// Translate to unicode character.
-			try {
-				Integer code = Integer.parseInt(match.substring(2,
-						match.length() - 1));
-				return "" + (char) code.intValue();
-			} catch (NumberFormatException nfe) {
-				return "";
-			}
-		} else {
-			return "";
-		}
-	}	
-
+	
 	private void handleContent(SpannableStringBuilder builder, Object node,
 			TagNode parent) {
 		if (node instanceof ContentNode) {
@@ -275,7 +225,7 @@ public class HtmlSpanner {
 				}
 			}
 
-			String text = getEditedText(contentNode.getContent().toString())
+			String text = TextUtil.replaceHtmlEntities(contentNode.getContent().toString(), false)
 					.trim();
 			builder.append(text);
 

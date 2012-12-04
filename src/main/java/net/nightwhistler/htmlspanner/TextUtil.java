@@ -1,0 +1,85 @@
+package net.nightwhistler.htmlspanner;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class TextUtil {
+	
+	private static Pattern SPECIAL_CHAR_WHITESPACE = Pattern
+			.compile("(\t| +|&[a-z]*;|&#[0-9]*;|\n)");
+		
+	private static Pattern SPECIAL_CHAR_NO_WHITESPACE = Pattern
+			.compile("(&[a-z]*;|&#[0-9]*;)");	
+	
+	
+	private static Map<String, String> REPLACEMENTS = new HashMap<String, String>();
+	
+	static {
+
+		REPLACEMENTS.put("&nbsp;", " ");
+		REPLACEMENTS.put("&amp;", "&");
+		REPLACEMENTS.put("&quot;", "\"");
+		REPLACEMENTS.put("&cent;", "¢");
+		REPLACEMENTS.put("&lt;", "<");
+		REPLACEMENTS.put("&gt;", ">");
+		REPLACEMENTS.put("&sect;", "§");
+
+	}
+
+	/**
+	 * Replaces all HTML entities ( &lt;, &amp; ), with
+	 * their Unicode characters.
+	 * 
+	 * @param aText text to replace entities in
+	 * @return the text with entities replaced.
+	 */
+	public static String replaceHtmlEntities(String aText, boolean preserveFormatting ) {
+			StringBuffer result = new StringBuffer();
+			
+			Map<String, String> replacements = new HashMap<String, String>(REPLACEMENTS);
+			Matcher matcher;
+			
+			if ( preserveFormatting ) {
+				matcher = SPECIAL_CHAR_NO_WHITESPACE.matcher(aText);
+			} else {
+				matcher = SPECIAL_CHAR_WHITESPACE.matcher(aText);
+				replacements.put("", " ");
+				replacements.put("\n", " ");
+			}			
+			
+			while (matcher.find()) {
+				matcher.appendReplacement(result, getReplacement(matcher, replacements));
+			}
+			matcher.appendTail(result);
+			return result.toString();
+		}
+	
+		private static String getReplacement(Matcher aMatcher, Map<String, String> replacements) {
+				
+			String match = aMatcher.group(0).trim();
+			String result = replacements.get(match);
+	
+			if (result != null) {
+				return result;
+			} else if (match.startsWith("&#")) {
+				// Translate to unicode character.
+				try {
+					Integer code = Integer.parseInt(match.substring(2,
+							match.length() - 1));
+					return "" + (char) code.intValue();
+				} catch (NumberFormatException nfe) {
+					return "";
+				}
+			} else {
+				return "";
+			}
+		}
+
+			
+	
+
+	
+	
+}

@@ -16,6 +16,7 @@
 package net.nightwhistler.htmlspanner.handlers;
 
 import net.nightwhistler.htmlspanner.TagNodeHandler;
+import net.nightwhistler.htmlspanner.TextUtil;
 
 import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.TagNode;
@@ -35,8 +36,12 @@ public class PreHandler extends TagNodeHandler {
 	
 	private void getPlainText(StringBuffer buffer, Object node) {
 		if (node instanceof ContentNode) {
+			
 			ContentNode contentNode = (ContentNode) node;
-			buffer.append(contentNode.getContent());
+			String text = TextUtil.replaceHtmlEntities(contentNode.getContent().toString(), true);
+			//String text = contentNode.getContent().toString();
+			buffer.append(text);
+			
 		} else if ( node instanceof TagNode ){
 			TagNode tagNode = (TagNode) node;
 			for (Object child : tagNode.getChildren()) {
