@@ -43,6 +43,7 @@ import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
 import android.graphics.Typeface;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 
@@ -136,7 +137,7 @@ public class HtmlSpanner {
 	 * 
 	 * @return a Spanned version of the text.
 	 */
-	public Spanned fromHtml(String html) {
+	public Spannable fromHtml(String html) {
 		return fromTagNode(this.htmlCleaner.clean(html));
 	}
 
@@ -147,7 +148,7 @@ public class HtmlSpanner {
 	 * @return
 	 * @throws IOException
 	 */
-	public Spanned fromHtml(Reader reader) throws IOException {
+	public Spannable fromHtml(Reader reader) throws IOException {
 		return fromTagNode(this.htmlCleaner.clean(reader));
 	}
 
@@ -158,7 +159,7 @@ public class HtmlSpanner {
 	 * @return
 	 * @throws IOException
 	 */
-	public Spanned fromHtml(InputStream inputStream) throws IOException {
+	public Spannable fromHtml(InputStream inputStream) throws IOException {
 		return fromTagNode(this.htmlCleaner.clean(inputStream));
 	}
 
@@ -180,7 +181,7 @@ public class HtmlSpanner {
 	 * @param node
 	 * @return
 	 */
-	public Spanned fromTagNode(TagNode node) {
+	public Spannable fromTagNode(TagNode node) {
 		SpannableStringBuilder result = new SpannableStringBuilder();
 		handleContent(result, node, null);
 
