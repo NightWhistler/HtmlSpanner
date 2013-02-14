@@ -24,6 +24,7 @@ import java.util.Map;
 
 import net.nightwhistler.htmlspanner.handlers.BoldHandler;
 import net.nightwhistler.htmlspanner.handlers.CenterHandler;
+import net.nightwhistler.htmlspanner.handlers.FontHandler;
 import net.nightwhistler.htmlspanner.handlers.HeaderHandler;
 import net.nightwhistler.htmlspanner.handlers.ImageHandler;
 import net.nightwhistler.htmlspanner.handlers.ItalicHandler;
@@ -45,7 +46,6 @@ import org.htmlcleaner.TagNode;
 import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 
 /**
  * HtmlSpanner provides an alternative to Html.fromHtml() from the Android
@@ -65,7 +65,10 @@ public class HtmlSpanner {
 
 	private HtmlCleaner htmlCleaner;
 
-	private FontFamily fontFamily;
+	private FontFamily defaultFont;
+	
+	private FontFamily serifFont;
+	private FontFamily sansSerifFont;
 
 	/**
 	 * Creates a new HtmlSpanner using a default HtmlCleaner instance.
@@ -84,17 +87,36 @@ public class HtmlSpanner {
 	public HtmlSpanner(HtmlCleaner cleaner) {
 		this.htmlCleaner = cleaner;
 		this.handlers = new HashMap<String, TagNodeHandler>();
-		this.fontFamily = new FontFamily("default", Typeface.DEFAULT);
+		this.defaultFont = new FontFamily("default", Typeface.DEFAULT);
+		this.serifFont = new FontFamily("serif", Typeface.SERIF);
+		this.sansSerifFont = new FontFamily("sans-serif", Typeface.SANS_SERIF);
+		
 		registerBuiltInHandlers();
 
 	}
 
-	public FontFamily getFontFamily() {
-		return fontFamily;
+	public FontFamily getDefaultFont() {
+		return defaultFont;
 	}
-
-	public void setFontFamily(FontFamily fontFamily) {
-		this.fontFamily = fontFamily;
+	
+	public void setDefaultFont(FontFamily defaultFont) {
+		this.defaultFont = defaultFont;
+	}
+	
+	public FontFamily getSansSerifFont() {
+		return sansSerifFont;
+	}
+	
+	public void setSansSerifFont(FontFamily sansSerifFont) {
+		this.sansSerifFont = sansSerifFont;
+	}
+	
+	public FontFamily getSerifFont() {
+		return serifFont;
+	}
+	
+	public void setSerifFont(FontFamily serifFont) {
+		this.serifFont = serifFont;
 	}
 
 	/**
@@ -327,6 +349,8 @@ public class HtmlSpanner {
 
 		registerHandler("a", new LinkHandler());
 		registerHandler("img", new ImageHandler());
+		
+		registerHandler("font", new FontHandler() );
 	}
 
 }

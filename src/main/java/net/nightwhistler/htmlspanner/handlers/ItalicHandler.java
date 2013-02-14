@@ -34,11 +34,21 @@ public class ItalicHandler extends TagNodeHandler {
 
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
 			int start, int end) {
-		FontFamilySpan boldSpan = new FontFamilySpan(getSpanner()
-				.getFontFamily());
-		boldSpan.setItalic(true);
 
-		builder.setSpan(boldSpan, start, end,
+		FontFamilySpan originalSpan = getFontFamilySpan(builder, start, end);
+		
+		FontFamilySpan italicSpan;
+		
+		if ( originalSpan != null ) {
+			italicSpan = new FontFamilySpan(originalSpan.getFontFamily());
+			italicSpan.setBold(originalSpan.isBold());
+		} else {
+			italicSpan = new FontFamilySpan(getSpanner().getDefaultFont());				
+		}
+		
+		italicSpan.setItalic(true);
+
+		builder.setSpan(italicSpan, start, end,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	}
 }

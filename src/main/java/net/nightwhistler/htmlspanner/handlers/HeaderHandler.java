@@ -70,7 +70,7 @@ public class HeaderHandler extends TagNodeHandler {
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		FontFamilySpan boldSpan = new FontFamilySpan(getSpanner()
-				.getFontFamily());
+				.getDefaultFont());
 		boldSpan.setBold(true);
 
 		builder.setSpan(boldSpan, start, end,

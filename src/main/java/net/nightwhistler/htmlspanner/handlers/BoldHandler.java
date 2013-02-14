@@ -15,15 +15,13 @@
  */
 package net.nightwhistler.htmlspanner.handlers;
 
-import org.htmlcleaner.TagNode;
-
-import android.graphics.Typeface;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.StyleSpan;
-import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
+
+import org.htmlcleaner.TagNode;
+
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 
 /**
  * Applies bold formatting.
@@ -35,9 +33,18 @@ public class BoldHandler extends TagNodeHandler {
 
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
 			int start, int end) {
-
-		FontFamilySpan boldSpan = new FontFamilySpan(getSpanner()
-				.getFontFamily());
+		
+		FontFamilySpan originalSpan = getFontFamilySpan(builder, start, end);
+		
+		FontFamilySpan boldSpan;
+		
+		if ( originalSpan != null ) {
+			boldSpan = new FontFamilySpan(originalSpan.getFontFamily());
+			boldSpan.setItalic(originalSpan.isItalic());
+		} else {
+			boldSpan = new FontFamilySpan(getSpanner().getDefaultFont());				
+		}
+		
 		boldSpan.setBold(true);
 
 		builder.setSpan(boldSpan, start, end,
