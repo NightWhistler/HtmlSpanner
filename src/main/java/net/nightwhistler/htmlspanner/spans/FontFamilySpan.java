@@ -23,14 +23,14 @@ import android.text.style.TypefaceSpan;
 
 public class FontFamilySpan extends TypefaceSpan {
 
-	private final FontFamily family;
+	private final FontFamily fontFamily;
 
 	private boolean bold;
 	private boolean italic;
 
 	public FontFamilySpan(FontFamily type) {
 		super(type.getName());
-		this.family = type;
+		this.fontFamily = type;
 	}
 
 	public void setBold(boolean bold) {
@@ -39,21 +39,35 @@ public class FontFamilySpan extends TypefaceSpan {
 
 	public void setItalic(boolean italic) {
 		this.italic = italic;
+	}	
+	
+	public FontFamily getFontFamily() {
+		return fontFamily;
+	}
+	
+	public boolean isBold() {
+		return bold;
+	}
+	
+	public boolean isItalic() {
+		return italic;
 	}
 
 	@Override
 	public void updateDrawState(TextPaint ds) {
-		applyCustomTypeFace(ds, this.family);
+		applyCustomTypeFace(ds, this.fontFamily);
 	}
 
 	@Override
 	public void updateMeasureState(TextPaint paint) {
-		applyCustomTypeFace(paint, this.family);
+		applyCustomTypeFace(paint, this.fontFamily);
 	}
 
 	private void applyCustomTypeFace(Paint paint, FontFamily tf) {
 
 		paint.setAntiAlias(true);
+		
+		paint.setTypeface(tf.getDefaultTypeface());
 
 		if (bold) {
 			if (tf.isFakeBold()) {
