@@ -15,17 +15,14 @@
  */
 package net.nightwhistler.htmlspanner.handlers;
 
-import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
 
 import org.htmlcleaner.TagNode;
 
-import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
 
 /**
  * Handles Headers, by assigning a relative text-size.
@@ -68,9 +65,19 @@ public class HeaderHandler extends TagNodeHandler {
 
 		builder.setSpan(new RelativeSizeSpan(size), start, end,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		
+		FontFamilySpan originalSpan = getFontFamilySpan(builder, start, end);
 
-		FontFamilySpan boldSpan = new FontFamilySpan(getSpanner()
+		FontFamilySpan boldSpan;
+		
+		if ( originalSpan == null ) {
+			boldSpan = new FontFamilySpan(getSpanner()
 				.getDefaultFont());
+		} else {
+			boldSpan = new FontFamilySpan(originalSpan.getFontFamily());
+			boldSpan.setItalic(originalSpan.isItalic());
+		}
+		
 		boldSpan.setBold(true);
 
 		builder.setSpan(boldSpan, start, end,
