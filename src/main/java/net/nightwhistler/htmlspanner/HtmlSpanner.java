@@ -22,6 +22,7 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.nightwhistler.htmlspanner.handlers.AlignmentHandler;
 import net.nightwhistler.htmlspanner.handlers.BoldHandler;
 import net.nightwhistler.htmlspanner.handlers.CenterHandler;
 import net.nightwhistler.htmlspanner.handlers.FontHandler;
@@ -302,9 +303,11 @@ public class HtmlSpanner {
 		registerHandler("br", brHandler);
 
 		TagNodeHandler pHandler = new NewLineHandler(2);
-
-		registerHandler("p", pHandler);
-		registerHandler("div", pHandler);
+		
+		//We wrap an alignment-handler to support
+		//align attributes
+		registerHandler("p", new AlignmentHandler(pHandler));
+		registerHandler("div", new AlignmentHandler(pHandler));
 
 		registerHandler("h1", new HeaderHandler(1.5f));
 		registerHandler("h2", new HeaderHandler(1.4f));
