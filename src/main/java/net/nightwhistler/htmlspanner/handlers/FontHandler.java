@@ -60,8 +60,8 @@ public class FontHandler extends TagNodeHandler {
 
 		if ( size != null ) {
 			try {			
-				float relSize = Float.parseFloat(size);
-				builder.setSpan(new RelativeSizeSpan(relSize), start, end,
+				int fontSize = Integer.parseInt(size);
+				builder.setSpan(new RelativeSizeSpan(translateFontSize(fontSize)), start, end,
 						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 			} catch (NumberFormatException e) {
@@ -69,6 +69,28 @@ public class FontHandler extends TagNodeHandler {
 			}
 		}
 		
+	}
+	
+	private static float translateFontSize( int fontSize ) {
+		
+		switch (fontSize ) {
+		case 1:
+			return 0.8f;
+		case 2:
+			return 0.9f;
+		case 3:
+			return 1.0f;
+		case 4:
+			return 1.1f;
+		case 5:
+			return 1.2f;
+		case 6:
+			return 1.3f;
+		case 7:
+			return 1.4f;
+		}
+		
+		return 1.0f;
 	}
 	
 }
