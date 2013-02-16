@@ -75,19 +75,19 @@ public class FontHandler extends TagNodeHandler {
 		
 		switch (fontSize ) {
 		case 1:
-			return 0.8f;
+			return 0.6f;
 		case 2:
-			return 0.9f;
+			return 0.8f;
 		case 3:
 			return 1.0f;
 		case 4:
-			return 1.1f;
-		case 5:
 			return 1.2f;
-		case 6:
-			return 1.3f;
-		case 7:
+		case 5:
 			return 1.4f;
+		case 6:
+			return 1.6f;
+		case 7:
+			return 1.8f;
 		}
 		
 		return 1.0f;
