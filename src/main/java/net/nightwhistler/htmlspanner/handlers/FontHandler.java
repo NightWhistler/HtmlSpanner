@@ -21,8 +21,10 @@ import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
 
 import org.htmlcleaner.TagNode;
 
+import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 
 public class FontHandler extends TagNodeHandler {
@@ -36,6 +38,7 @@ public class FontHandler extends TagNodeHandler {
 		
 		String face = node.getAttributeByName("face");
 		String size = node.getAttributeByName("size");
+		String color = node.getAttributeByName("color");
 		
 		FontFamilySpan originalSpan = getFontFamilySpan(builder, start, end);		
 		FontFamilySpan fontSpan;		
@@ -69,6 +72,11 @@ public class FontHandler extends TagNodeHandler {
 			}
 		}
 		
+		if ( color != null ) {
+			int fontColor = Color.parseColor(color);
+			builder.setSpan(new ForegroundColorSpan(fontColor), start, end,
+					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
 	}
 	
 	private static float translateFontSize( int fontSize ) {
