@@ -8,10 +8,10 @@ import java.util.regex.Pattern;
 public class TextUtil {
 
 	private static Pattern SPECIAL_CHAR_WHITESPACE = Pattern
-			.compile("(\t| +|&[a-z]*;|&#[0-9]*;|\n)");
+			.compile("(\t| +|&[a-z]*;|&#x?([a-f]|[A-F]|[0-9])*;|\n)");
 
 	private static Pattern SPECIAL_CHAR_NO_WHITESPACE = Pattern
-			.compile("(&[a-z]*;|&#[0-9]*;)");
+			.compile("(&[a-z]*;|&#x?([a-f]|[A-F]|[0-9])*;)");
 
 	private static Map<String, String> REPLACEMENTS = new HashMap<String, String>();
 
@@ -67,11 +67,21 @@ public class TextUtil {
 
 		if (result != null) {
 			return result;
-		} else if (match.startsWith("&#")) {
+		} else if ( match.startsWith("&#")) {
+			
+			Integer code;
+			
 			// Translate to unicode character.
 			try {
-				Integer code = Integer.parseInt(match.substring(2,
+				
+				//Check if it's hex or normal
+				if ( match.startsWith("&#x") ) {
+					code = Integer.decode( "0x" + match.substring(3, match.length() -1));
+				} else {				
+					code = Integer.parseInt(match.substring(2,
 						match.length() - 1));
+				}
+				
 				return "" + (char) code.intValue();
 			} catch (NumberFormatException nfe) {
 				return "";
