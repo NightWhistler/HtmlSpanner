@@ -19,8 +19,8 @@ It currently renders:
 * ``<center>``
 * ``<tables>``
 * ``<img>``
-* ``<a>
-*   <font> tags with size, face and color attributes
+* ``<a>``
+* ``<font>`` tags with size, face and color attributes
 
 The default link implementation just opens URLs, but it can be easily overridden to support anchors.
 
