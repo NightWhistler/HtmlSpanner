@@ -18,18 +18,15 @@ package net.nightwhistler.htmlspanner.handlers;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.*;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 
 import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.TagNode;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
 import android.graphics.Paint.Style;
-import android.graphics.PixelFormat;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Layout.Alignment;
 import android.text.Spannable;
@@ -189,18 +186,30 @@ public class TableHandler extends TagNodeHandler {
 			drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
 					drawable.getIntrinsicHeight());
 
-			builder.setSpan(new ImageSpan(drawable), start, start + 1,
+			builder.setSpan(new ImageSpan(drawable), start + i, builder.length(),
 					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-			builder.setSpan(new AlignmentSpan() {
-				@Override
-				public Alignment getAlignment() {
-					return Alignment.ALIGN_CENTER;
-				}
-			}, start, start + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-			start++;
 		}
+
+        /*
+         We add an empty last row to work around a rendering issue where
+         the last row would appear detached.
+         */
+        builder.append("\uFFFC");
+        Drawable drawable = new TableRowDrawable(new ArrayList<Spanned>());
+        drawable.setBounds(0, 0, tableWidth, 1);
+        builder.setSpan(new ImageSpan(drawable), builder.length() -1, builder.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        /*
+         Center the entire table
+         */
+        builder.setSpan(new AlignmentSpan() {
+            @Override
+            public Alignment getAlignment() {
+                return Alignment.ALIGN_CENTER;
+            }
+        }, start, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 	}
 
 	/**
@@ -213,8 +222,11 @@ public class TableHandler extends TagNodeHandler {
 
 		private List<Spanned> tableRow;
 
+        private int rowHeight;
+
 		public TableRowDrawable(List<Spanned> tableRow) {
 			this.tableRow = tableRow;
+            this.rowHeight = calculateRowHeight(tableRow);
 		}
 
 		@Override
@@ -230,7 +242,6 @@ public class TableHandler extends TagNodeHandler {
 			}
 
 			int columnWidth = tableWidth / numberOfColumns;
-			int rowHeight = calculateRowHeight(tableRow);
 
 			int offset = 0;
 
@@ -256,7 +267,7 @@ public class TableHandler extends TagNodeHandler {
 
 		@Override
 		public int getIntrinsicHeight() {
-			return calculateRowHeight(tableRow);
+			return rowHeight;
 		}
 
 		@Override
