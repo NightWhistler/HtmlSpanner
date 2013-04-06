@@ -130,6 +130,15 @@ public class HtmlSpanner {
 		handler.setSpanner(this);
 	}
 
+    /**
+     * Removes the handler for the given tag.
+     *
+     * @param tagName the tag to remove handlers for.
+     */
+    public void unregisterHandler(String tagName) {
+        this.handlers.remove(tagName);
+    }
+
 	/**
 	 * Parses the text in the given String.
 	 * 
