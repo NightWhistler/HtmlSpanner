@@ -3,8 +3,6 @@ package net.nightwhistler.htmlspanner.handlers.attributes;
 import android.graphics.Color;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
-import com.osbcp.cssparser.CSSParser;
-import com.osbcp.cssparser.Rule;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.handlers.WrappingHandler;

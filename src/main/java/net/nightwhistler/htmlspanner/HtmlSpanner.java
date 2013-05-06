@@ -311,6 +311,9 @@ public class HtmlSpanner {
         return translateFontSize(Integer.parseInt(fontSize));
     }
 
+    private static StyleHandler wrap( StyleHandler handler ) {
+        return new StyleAttributeHandler(new AlignmentAttributeHandler(handler));
+    }
 
 	private void registerBuiltInHandlers() {
 
@@ -336,7 +339,7 @@ public class HtmlSpanner {
 
         //We wrap an alignment-handler to support
         //align attributes
-        StyleAttributeHandler blockAlignment = new StyleAttributeHandler(new AlignmentAttributeHandler(new StyleHandler(new Style())));
+        StyleHandler blockAlignment = wrap(new StyleHandler());
 
         TagNodeHandler brHandler = new NewLineHandler(1, blockAlignment);
 
@@ -348,12 +351,15 @@ public class HtmlSpanner {
 		registerHandler("p", pHandler);
 		registerHandler("div", pHandler);
 
-		registerHandler("h1", new HeaderHandler(1.5f));
-		registerHandler("h2", new HeaderHandler(1.4f));
-		registerHandler("h3", new HeaderHandler(1.3f));
-		registerHandler("h4", new HeaderHandler(1.2f));
-		registerHandler("h5", new HeaderHandler(1.1f));
-		registerHandler("h6", new HeaderHandler(1f));
+        registerHandler("span", blockAlignment );
+        registerHandler("body", blockAlignment);
+
+		registerHandler("h1", wrap(new HeaderHandler(1.5f)));
+		registerHandler("h2", wrap(new HeaderHandler(1.4f)));
+		registerHandler("h3", wrap(new HeaderHandler(1.3f)));
+		registerHandler("h4", wrap(new HeaderHandler(1.2f)));
+		registerHandler("h5", wrap(new HeaderHandler(1.1f)));
+		registerHandler("h6", wrap(new HeaderHandler(1f)));
 
 		TagNodeHandler monSpaceHandler = new MonoSpaceHandler();
 
@@ -384,9 +390,6 @@ public class HtmlSpanner {
 		registerHandler("img", new ImageHandler());
 		
 		registerHandler("font", new FontHandler() );
-
-        StyleAttributeHandler spanHandler = new StyleAttributeHandler(new StyleHandler(new Style()));
-        registerHandler("span", spanHandler );
 
 	}
 
