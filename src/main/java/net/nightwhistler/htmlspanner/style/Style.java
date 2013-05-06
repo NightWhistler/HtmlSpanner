@@ -88,4 +88,5 @@ public class Style {
     public Integer getColor() {
         return this.color;
     }
+
 }

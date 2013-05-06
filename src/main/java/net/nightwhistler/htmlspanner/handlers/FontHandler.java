@@ -43,9 +43,7 @@ public class FontHandler extends StyleHandler {
 
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end) {
-
-        Style style = getStyle();
+			int start, int end, Style style) {
 
 		String face = node.getAttributeByName("face");
 		String size = node.getAttributeByName("size");
@@ -71,7 +69,7 @@ public class FontHandler extends StyleHandler {
 			style = style.setColor(fontColor);
 		}
 
-        handleTagNode(node, builder, start, end, style);
+        super.handleTagNode(node, builder, start, end, style);
 	}
 	
 	private static float translateFontSize( int fontSize ) {

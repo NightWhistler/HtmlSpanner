@@ -1,9 +1,12 @@
 package net.nightwhistler.htmlspanner.style;
 
+import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AlignmentSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 import net.nightwhistler.htmlspanner.spans.AlignNormalSpan;
 import net.nightwhistler.htmlspanner.spans.AlignOppositeSpan;
@@ -33,35 +36,45 @@ public class StyleHandler extends TagNodeHandler {
 
     public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end, Style useStyle ) {
 
-        FontFamilySpan originalSpan = getFontFamilySpan(builder, start, end);
 
-        FontFamilySpan newSpan;
+        if ( useStyle.getFontFamily() != null || useStyle.getFontStyle() != null || useStyle.getFontWeight() != null ) {
 
-        if ( useStyle.getFontFamily() == null && originalSpan == null ) {
-            newSpan = new FontFamilySpan(getSpanner().getDefaultFont());
-        } else if ( useStyle.getFontFamily() != null ) {
-            newSpan = new FontFamilySpan(  useStyle.getFontFamily() );
-        } else {
-            newSpan = new FontFamilySpan(originalSpan.getFontFamily());
+            FontFamilySpan originalSpan = getFontFamilySpan(builder, start, end);
+            FontFamilySpan newSpan;
+
+            if ( useStyle.getFontFamily() == null && originalSpan == null ) {
+                newSpan = new FontFamilySpan(getSpanner().getDefaultFont());
+            } else if ( useStyle.getFontFamily() != null ) {
+                newSpan = new FontFamilySpan(  useStyle.getFontFamily() );
+            } else {
+                newSpan = new FontFamilySpan(originalSpan.getFontFamily());
+            }
+
+            if ( style.getFontWeight() != null ) {
+                newSpan.setBold( useStyle.getFontWeight() == Style.FontWeight.BOLD );
+            } else if ( originalSpan != null ) {
+                newSpan.setBold( originalSpan.isBold() );
+            }
+
+            if ( useStyle.getFontStyle() != null ) {
+                newSpan.setItalic( useStyle.getFontStyle() == Style.FontStyle.ITALIC );
+            } else if ( originalSpan != null ) {
+                newSpan.setItalic( originalSpan.isItalic() );
+            }
+
+            Log.d("StyleHandler", "Applying FontFamilySpan from " + start + " to " + end );
+            builder.setSpan(newSpan, start, end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        if ( style.getFontWeight() != null ) {
-            newSpan.setBold( useStyle.getFontWeight() == Style.FontWeight.BOLD );
-        } else {
-            newSpan.setBold( originalSpan.isBold() );
+        if ( useStyle.getFontSize() != null ) {
+            builder.setSpan(new RelativeSizeSpan(useStyle.getFontSize()), start, end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        if ( useStyle.getFontStyle() != null ) {
-            newSpan.setItalic( useStyle.getFontStyle() == Style.FontStyle.ITALIC );
-        } else {
-            newSpan.setItalic( originalSpan.isItalic() );
-        }
-
-        builder.setSpan(newSpan, start, end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        if ( style.getFontSize() != null ) {
-            builder.setSpan(new RelativeSizeSpan(style.getFontSize()), start, end,
+        if ( useStyle.getColor() != null ) {
+            Log.d("StyleHandler", "Applying ForegroundColorSpan from " + start + " to " + end );
+            builder.setSpan(new ForegroundColorSpan(useStyle.getColor()), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
@@ -81,14 +94,11 @@ public class StyleHandler extends TagNodeHandler {
                     break;
             }
 
+            Log.d("StyleHandler", "Applying AlignMentSpan from " + start + " to " + end );
             builder.setSpan(alignSpan, start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         }
-    }
-
-    public Style getStyle() {
-        return this.style;
     }
 
 }

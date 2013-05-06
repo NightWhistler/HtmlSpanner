@@ -22,19 +22,10 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.nightwhistler.htmlspanner.handlers.AlignmentHandler;
-import net.nightwhistler.htmlspanner.handlers.FontHandler;
-import net.nightwhistler.htmlspanner.handlers.HeaderHandler;
-import net.nightwhistler.htmlspanner.handlers.ImageHandler;
-import net.nightwhistler.htmlspanner.handlers.LinkHandler;
-import net.nightwhistler.htmlspanner.handlers.ListItemHandler;
-import net.nightwhistler.htmlspanner.handlers.MarginHandler;
-import net.nightwhistler.htmlspanner.handlers.MonoSpaceHandler;
-import net.nightwhistler.htmlspanner.handlers.NewLineHandler;
-import net.nightwhistler.htmlspanner.handlers.PreHandler;
-import net.nightwhistler.htmlspanner.handlers.SubScriptHandler;
-import net.nightwhistler.htmlspanner.handlers.SuperScriptHandler;
+import net.nightwhistler.htmlspanner.handlers.*;
+import net.nightwhistler.htmlspanner.handlers.attributes.AlignmentAttributeHandler;
 
+import net.nightwhistler.htmlspanner.handlers.attributes.StyleAttributeHandler;
 import net.nightwhistler.htmlspanner.style.Style;
 import net.nightwhistler.htmlspanner.style.StyleHandler;
 import org.htmlcleaner.CleanerProperties;
@@ -291,7 +282,6 @@ public class HtmlSpanner {
 
 	private void registerBuiltInHandlers() {
 
-        /*
 		TagNodeHandler italicHandler = new StyleHandler(
                 new Style().setFontStyle(Style.FontStyle.ITALIC));
 
@@ -314,7 +304,7 @@ public class HtmlSpanner {
 
         //We wrap an alignment-handler to support
         //align attributes
-        AlignmentHandler blockAlignment = new AlignmentHandler(new StyleHandler(new Style()));
+        StyleAttributeHandler blockAlignment = new StyleAttributeHandler(new AlignmentAttributeHandler(new StyleHandler(new Style())));
 
         TagNodeHandler brHandler = new NewLineHandler(1, blockAlignment);
 
@@ -362,7 +352,10 @@ public class HtmlSpanner {
 		registerHandler("img", new ImageHandler());
 		
 		registerHandler("font", new FontHandler() );
-		*/
+
+        StyleAttributeHandler spanHandler = new StyleAttributeHandler(new StyleHandler(new Style()));
+        registerHandler("span", spanHandler );
+
 	}
 
 }

@@ -35,34 +35,19 @@ import net.nightwhistler.htmlspanner.spans.CenterSpan;
  * @author Alex Kuiper
  *
  */
-public class AlignmentAttributeHandler extends WrappingHandler {
+public class AlignmentAttributeHandler extends WrappingStyleHandler {
 	
 
 	public AlignmentAttributeHandler(StyleHandler wrapHandler) {
 		super(wrapHandler);
 	}
 
-    @Override
-    protected StyleHandler getWrappedHandler() {
-        return (StyleHandler) super.getWrappedHandler();
-    }
-
-    @Override
-	public void setSpanner(HtmlSpanner spanner) {		
-		super.setSpanner(spanner);
-		
-		if ( this.getWrappedHandler() != null ) {
-			this.getWrappedHandler().setSpanner(spanner);
-		}
-	}
 
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end) {
+			int start, int end, Style style) {
 		
 		String align = node.getAttributeByName("align");
-
-        Style style = getWrappedHandler().getStyle();
 
 		if ( "right".equalsIgnoreCase(align) ) {
 		    style = style.setTextAlignment(Style.TextAlignment.RIGHT);
