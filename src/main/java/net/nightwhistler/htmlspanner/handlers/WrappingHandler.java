@@ -2,6 +2,7 @@ package net.nightwhistler.htmlspanner.handlers;
 
 import android.text.SpannableStringBuilder;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
+import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 import org.htmlcleaner.TagNode;
 
@@ -19,8 +20,8 @@ public class WrappingHandler extends TagNodeHandler {
     }
 
     @Override
-    public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end) {
-        wrappedHandler.handleTagNode(node, builder, start, end);
+    public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end, SpanStack spanStack) {
+        wrappedHandler.handleTagNode(node, builder, start, end, spanStack);
     }
 
     @Override

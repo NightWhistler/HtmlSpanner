@@ -16,6 +16,7 @@
 
 package net.nightwhistler.htmlspanner.handlers;
 
+import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
 
@@ -43,7 +44,7 @@ public class FontHandler extends StyleHandler {
 
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end, Style style) {
+			int start, int end, Style style, SpanStack spanStack) {
 
 		String face = node.getAttributeByName("face");
 		String size = node.getAttributeByName("size");
@@ -69,7 +70,7 @@ public class FontHandler extends StyleHandler {
 			style = style.setColor(fontColor);
 		}
 
-        super.handleTagNode(node, builder, start, end, style);
+        super.handleTagNode(node, builder, start, end, style, spanStack);
 	}
 	
 	private static float translateFontSize( int fontSize ) {

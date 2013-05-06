@@ -15,6 +15,7 @@
  */
 package net.nightwhistler.htmlspanner.handlers;
 
+import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 
 import org.htmlcleaner.TagNode;
@@ -32,9 +33,8 @@ import android.text.style.SubscriptSpan;
 public class SubScriptHandler extends TagNodeHandler {
 
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end) {
+			int start, int end, SpanStack spanStack) {
 
-		builder.setSpan(new SubscriptSpan(), start, end,
-				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		spanStack.pushSpan(new SubscriptSpan(), start, end);
 	}
 }

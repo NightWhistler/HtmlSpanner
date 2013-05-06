@@ -95,30 +95,12 @@ public abstract class TagNodeHandler {
 	 *            start position of inner text of this node
 	 * @param end
 	 *            end position of inner text of this node.
+     *
+     * @param spanStack stack to push new spans on
 	 */
 	public abstract void handleTagNode(TagNode node,
-			SpannableStringBuilder builder, int start, int end);
+			SpannableStringBuilder builder, int start, int end, SpanStack spanStack);
 	
-	/**
-	 * Returns the current FontFamilySpan in use on the given subsection of the builder.
-	 * 
-	 * If no FontFamily has been set yet, spanner.getDefaultFont() is returned.
-	 * 
-	 * @param builder the text to check
-	 * @param start start of the section
-	 * @param end end of the section
-	 * @return a FontFamily object
-	 */
-	protected FontFamilySpan getFontFamilySpan( SpannableStringBuilder builder, int start, int end ) {
-		
-		FontFamilySpan[] spans = builder.getSpans(start, end, FontFamilySpan.class);
-		
-		if ( spans != null && spans.length > 0 ) {
-			return spans[spans.length-1];
-		}
-		
-		return null;
-	}
 
 	/**
 	 * Utility method to append newlines while making sure that there are never

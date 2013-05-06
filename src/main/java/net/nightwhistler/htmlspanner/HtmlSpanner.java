@@ -208,7 +208,10 @@ public class HtmlSpanner {
 	 */
 	public Spannable fromTagNode(TagNode node) {
 		SpannableStringBuilder result = new SpannableStringBuilder();
-		handleContent(result, node, null);
+        SpanStack stack = new SpanStack();
+		handleContent(result, node, null, stack);
+
+        stack.applySpans(result);
 
 		return result;
 	}
@@ -235,7 +238,7 @@ public class HtmlSpanner {
 	}
 
 	private void handleContent(SpannableStringBuilder builder, Object node,
-			TagNode parent) {
+			TagNode parent, SpanStack stack) {
 		if (node instanceof ContentNode) {
 
 			ContentNode contentNode = (ContentNode) node;
@@ -252,11 +255,11 @@ public class HtmlSpanner {
 			builder.append(text);
 
 		} else if (node instanceof TagNode) {
-			applySpan(builder, (TagNode) node);
+			applySpan(builder, (TagNode) node, stack);
 		}
 	}
 
-	private void applySpan(SpannableStringBuilder builder, TagNode node) {
+	private void applySpan(SpannableStringBuilder builder, TagNode node, SpanStack stack) {
 
 		TagNodeHandler handler = this.handlers.get(node.getName());
 
@@ -269,14 +272,14 @@ public class HtmlSpanner {
 		if (handler == null || !handler.rendersContent()) {
 
 			for (Object childNode : node.getChildren()) {
-				handleContent(builder, childNode, node);
+				handleContent(builder, childNode, node, stack);
 			}
 		}
 
 		int lengthAfter = builder.length();
 
 		if (handler != null) {
-			handler.handleTagNode(node, builder, lengthBefore, lengthAfter);
+			handler.handleTagNode(node, builder, lengthBefore, lengthAfter, stack);
 		}
 	}
 

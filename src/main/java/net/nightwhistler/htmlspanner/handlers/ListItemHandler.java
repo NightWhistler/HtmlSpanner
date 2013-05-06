@@ -16,6 +16,7 @@
 
 package net.nightwhistler.htmlspanner.handlers;
 
+import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 import net.nightwhistler.htmlspanner.spans.ListItemSpan;
 
@@ -65,7 +66,7 @@ public class ListItemHandler extends TagNodeHandler {
 
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end) {
+			int start, int end, SpanStack spanStack) {
 
 		if (builder.length() > 0
 				&& builder.charAt(builder.length() - 1) != '\n') {
@@ -74,13 +75,11 @@ public class ListItemHandler extends TagNodeHandler {
 
 		if ("ol".equals(getParentName(node))) {
 			ListItemSpan bSpan = new ListItemSpan(getMyIndex(node));
-			builder.setSpan(bSpan, start, end,
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spanStack.pushSpan(bSpan, start, end);
 		} else if ("ul".equals(getParentName(node))) {
 			// Unicode bullet character.
 			ListItemSpan bSpan = new ListItemSpan();
-			builder.setSpan(bSpan, start, end,
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spanStack.pushSpan(bSpan, start, end);
 		}
 
 	}

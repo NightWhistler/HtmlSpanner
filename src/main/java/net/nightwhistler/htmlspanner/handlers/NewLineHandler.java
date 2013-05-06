@@ -15,6 +15,7 @@
  */
 package net.nightwhistler.htmlspanner.handlers;
 
+import net.nightwhistler.htmlspanner.SpanStack;
 import org.htmlcleaner.TagNode;
 
 import android.text.SpannableStringBuilder;
@@ -43,9 +44,9 @@ public class NewLineHandler extends WrappingHandler {
 	}
 
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end) {
+			int start, int end, SpanStack spanStack) {
 
-        super.handleTagNode(node, builder, start, end);
+        super.handleTagNode(node, builder, start, end, spanStack);
 
 		for (int i = 0; i < numberOfNewLines; i++) {
 			appendNewLine(builder);

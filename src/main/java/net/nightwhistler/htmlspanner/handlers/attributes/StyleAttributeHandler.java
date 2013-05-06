@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.text.SpannableStringBuilder;
 import com.osbcp.cssparser.CSSParser;
 import com.osbcp.cssparser.Rule;
+import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.handlers.WrappingHandler;
 import net.nightwhistler.htmlspanner.style.Style;
 import net.nightwhistler.htmlspanner.style.StyleHandler;
@@ -23,21 +24,31 @@ public class StyleAttributeHandler extends WrappingStyleHandler  {
     }
 
     @Override
-    public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end, Style useStyle) {
-
-        Style style = useStyle;
+    public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end, Style useStyle,
+                              SpanStack spanStack) {
 
         String styleAttr = node.getAttributeByName("style");
 
         if ( styleAttr != null ) {
-            Map<String, String> mapping = toMap(styleAttr);
-
-            if ( mapping.containsKey("color") ) {
-                style = style.setColor(Color.parseColor(mapping.get("color")));
-            }
+            super.handleTagNode(node, builder, start, end,
+                    parseStyleFromAttribute(useStyle, styleAttr),
+                    spanStack);
+        } else {
+            super.handleTagNode(node, builder, start, end, useStyle, spanStack);
         }
 
-        getWrappedHandler().handleTagNode(node, builder, start, end, style);
+    }
+
+    private static Style parseStyleFromAttribute(Style baseStyle, String attribute) {
+        Style style = baseStyle;
+
+        Map<String, String> mapping = toMap(attribute);
+
+        if ( mapping.containsKey("color") ) {
+            style = style.setColor(Color.parseColor(mapping.get("color")));
+        }
+
+        return  style;
     }
 
 

@@ -15,6 +15,7 @@
  */
 package net.nightwhistler.htmlspanner.handlers.attributes;
 
+import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.handlers.WrappingHandler;
 import net.nightwhistler.htmlspanner.style.Style;
 import net.nightwhistler.htmlspanner.style.StyleHandler;
@@ -45,7 +46,7 @@ public class AlignmentAttributeHandler extends WrappingStyleHandler {
 
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end, Style style) {
+			int start, int end, Style style, SpanStack spanStack) {
 		
 		String align = node.getAttributeByName("align");
 
@@ -57,10 +58,7 @@ public class AlignmentAttributeHandler extends WrappingStyleHandler {
             style =  style.setTextAlignment(Style.TextAlignment.LEFT);
 		}
 		
-		if ( getWrappedHandler() != null ) {
-			getWrappedHandler().handleTagNode(node, builder, start, end, style);
-		}
-		
+		super.handleTagNode(node, builder, start, end, style, spanStack);
 	}
 	
 }

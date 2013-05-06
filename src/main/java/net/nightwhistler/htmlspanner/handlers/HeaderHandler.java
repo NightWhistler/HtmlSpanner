@@ -15,6 +15,7 @@
  */
 package net.nightwhistler.htmlspanner.handlers;
 
+import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
 
@@ -50,10 +51,7 @@ public class HeaderHandler extends StyleHandler {
 	 * @param size
 	 */
 	public HeaderHandler(float size) {
-		super(new Style()
-                .setFontSize(size)
-                .setFontWeight(Style.FontWeight.BOLD)
-        );
+		this.size = size;
 	}
 
 	@Override
@@ -66,9 +64,12 @@ public class HeaderHandler extends StyleHandler {
 
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end, Style style ) {
+			int start, int end, Style style, SpanStack stack ) {
 
-        super.handleTagNode(node, builder, start, end, style);
+        style = style.setFontSize(size)
+                .setFontWeight(Style.FontWeight.BOLD);
+
+        super.handleTagNode(node, builder, start, end, style, stack);
 
 		appendNewLine(builder);
 		appendNewLine(builder);
