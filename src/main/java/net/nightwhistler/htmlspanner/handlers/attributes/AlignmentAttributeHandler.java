@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.nightwhistler.htmlspanner.handlers;
+package net.nightwhistler.htmlspanner.handlers.attributes;
 
+import net.nightwhistler.htmlspanner.handlers.WrappingHandler;
 import net.nightwhistler.htmlspanner.style.Style;
 import net.nightwhistler.htmlspanner.style.StyleHandler;
 import org.htmlcleaner.TagNode;
@@ -34,22 +35,24 @@ import net.nightwhistler.htmlspanner.spans.CenterSpan;
  * @author Alex Kuiper
  *
  */
-public class AlignmentHandler extends TagNodeHandler {
+public class AlignmentAttributeHandler extends WrappingHandler {
 	
-	private StyleHandler wrappedHandler;
-	
-	public AlignmentHandler() {}
-	
-	public AlignmentHandler(StyleHandler wrapHandler) {
-		this.wrappedHandler = wrapHandler;
+
+	public AlignmentAttributeHandler(StyleHandler wrapHandler) {
+		super(wrapHandler);
 	}
-	
-	@Override
+
+    @Override
+    protected StyleHandler getWrappedHandler() {
+        return (StyleHandler) super.getWrappedHandler();
+    }
+
+    @Override
 	public void setSpanner(HtmlSpanner spanner) {		
 		super.setSpanner(spanner);
 		
-		if ( this.wrappedHandler != null ) {
-			this.wrappedHandler.setSpanner(spanner);
+		if ( this.getWrappedHandler() != null ) {
+			this.getWrappedHandler().setSpanner(spanner);
 		}
 	}
 
@@ -59,7 +62,7 @@ public class AlignmentHandler extends TagNodeHandler {
 		
 		String align = node.getAttributeByName("align");
 
-        Style style = wrappedHandler.getStyle();
+        Style style = getWrappedHandler().getStyle();
 
 		if ( "right".equalsIgnoreCase(align) ) {
 		    style = style.setTextAlignment(Style.TextAlignment.RIGHT);
@@ -69,8 +72,8 @@ public class AlignmentHandler extends TagNodeHandler {
             style =  style.setTextAlignment(Style.TextAlignment.LEFT);
 		}
 		
-		if ( wrappedHandler != null ) {
-			wrappedHandler.handleTagNode(node, builder, start, end, style);
+		if ( getWrappedHandler() != null ) {
+			getWrappedHandler().handleTagNode(node, builder, start, end, style);
 		}
 		
 	}
