@@ -16,6 +16,7 @@
 
 package net.nightwhistler.htmlspanner.handlers;
 
+import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
@@ -57,9 +58,8 @@ public class FontHandler extends StyleHandler {
 		}
 
 		if ( size != null ) {
-			try {			
-				int fontSize = Integer.parseInt(size);
-				style.setFontSize( translateFontSize(fontSize));
+			try {
+				style.setFontSize(HtmlSpanner.translateFontSize(size));
 			} catch (NumberFormatException e) {
 				//Ignore
 			}
@@ -73,26 +73,6 @@ public class FontHandler extends StyleHandler {
         super.handleTagNode(node, builder, start, end, style, spanStack);
 	}
 	
-	private static float translateFontSize( int fontSize ) {
-		
-		switch (fontSize ) {
-		case 1:
-			return 0.6f;
-		case 2:
-			return 0.8f;
-		case 3:
-			return 1.0f;
-		case 4:
-			return 1.2f;
-		case 5:
-			return 1.4f;
-		case 6:
-			return 1.6f;
-		case 7:
-			return 1.8f;
-		}
-		
-		return 1.0f;
-	}
+
 	
 }

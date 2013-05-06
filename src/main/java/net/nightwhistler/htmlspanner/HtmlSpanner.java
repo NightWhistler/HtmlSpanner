@@ -283,6 +283,35 @@ public class HtmlSpanner {
 		}
 	}
 
+    public static float translateFontSize( int fontSize ) {
+
+        switch (fontSize ) {
+            case 1:
+                return 0.6f;
+            case 2:
+                return 0.8f;
+            case 3:
+                return 1.0f;
+            case 4:
+                return 1.2f;
+            case 5:
+                return 1.4f;
+            case 6:
+                return 1.6f;
+            case 7:
+                return 1.8f;
+        }
+
+        return 1.0f;
+    }
+
+    public static float translateFontSize( String fontSize ) {
+
+        //TODO: parse things like em and px
+        return translateFontSize(Integer.parseInt(fontSize));
+    }
+
+
 	private void registerBuiltInHandlers() {
 
 		TagNodeHandler italicHandler = new StyleHandler(
