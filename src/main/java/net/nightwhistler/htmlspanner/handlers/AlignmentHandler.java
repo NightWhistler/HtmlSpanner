@@ -15,6 +15,8 @@
  */
 package net.nightwhistler.htmlspanner.handlers;
 
+import net.nightwhistler.htmlspanner.style.Style;
+import net.nightwhistler.htmlspanner.style.StyleHandler;
 import org.htmlcleaner.TagNode;
 
 import android.text.Spannable;
@@ -34,11 +36,11 @@ import net.nightwhistler.htmlspanner.spans.CenterSpan;
  */
 public class AlignmentHandler extends TagNodeHandler {
 	
-	private TagNodeHandler wrappedHandler;
+	private StyleHandler wrappedHandler;
 	
 	public AlignmentHandler() {}
 	
-	public AlignmentHandler(TagNodeHandler wrapHandler) {
+	public AlignmentHandler(StyleHandler wrapHandler) {
 		this.wrappedHandler = wrapHandler;
 	}
 	
@@ -50,31 +52,25 @@ public class AlignmentHandler extends TagNodeHandler {
 			this.wrappedHandler.setSpanner(spanner);
 		}
 	}
-	
 
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
 			int start, int end) {
 		
 		String align = node.getAttributeByName("align");
-		
-		AlignmentSpan span = null;
-		
+
+        Style style = wrappedHandler.getStyle();
+
 		if ( "right".equalsIgnoreCase(align) ) {
-			span = new AlignOppositeSpan();
+		    style = style.setTextAlignment(Style.TextAlignment.RIGHT);
 		} else if ( "center".equalsIgnoreCase(align) ) {
-			span = new CenterSpan();
+            style =  style.setTextAlignment(Style.TextAlignment.CENTER);
 		} else if ( "left".equalsIgnoreCase(align) ) {
-			span = new AlignNormalSpan();
-		}
-		
-		if ( span != null ) {
-			builder.setSpan(span, start, end,
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            style =  style.setTextAlignment(Style.TextAlignment.LEFT);
 		}
 		
 		if ( wrappedHandler != null ) {
-			wrappedHandler.handleTagNode(node, builder, start, end);
+			wrappedHandler.handleTagNode(node, builder, start, end, style);
 		}
 		
 	}

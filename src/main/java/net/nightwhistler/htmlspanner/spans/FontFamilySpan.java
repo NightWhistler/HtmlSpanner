@@ -39,8 +39,8 @@ public class FontFamilySpan extends TypefaceSpan {
 
 	public void setItalic(boolean italic) {
 		this.italic = italic;
-	}	
-	
+	}
+
 	public FontFamily getFontFamily() {
 		return fontFamily;
 	}

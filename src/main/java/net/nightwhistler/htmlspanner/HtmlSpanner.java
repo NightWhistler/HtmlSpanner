@@ -23,22 +23,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.nightwhistler.htmlspanner.handlers.AlignmentHandler;
-import net.nightwhistler.htmlspanner.handlers.BoldHandler;
-import net.nightwhistler.htmlspanner.handlers.CenterHandler;
 import net.nightwhistler.htmlspanner.handlers.FontHandler;
 import net.nightwhistler.htmlspanner.handlers.HeaderHandler;
 import net.nightwhistler.htmlspanner.handlers.ImageHandler;
-import net.nightwhistler.htmlspanner.handlers.ItalicHandler;
 import net.nightwhistler.htmlspanner.handlers.LinkHandler;
 import net.nightwhistler.htmlspanner.handlers.ListItemHandler;
 import net.nightwhistler.htmlspanner.handlers.MarginHandler;
 import net.nightwhistler.htmlspanner.handlers.MonoSpaceHandler;
 import net.nightwhistler.htmlspanner.handlers.NewLineHandler;
 import net.nightwhistler.htmlspanner.handlers.PreHandler;
-import net.nightwhistler.htmlspanner.handlers.RelativeSizeHandler;
 import net.nightwhistler.htmlspanner.handlers.SubScriptHandler;
 import net.nightwhistler.htmlspanner.handlers.SuperScriptHandler;
 
+import net.nightwhistler.htmlspanner.style.Style;
+import net.nightwhistler.htmlspanner.style.StyleHandler;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
@@ -119,6 +117,10 @@ public class HtmlSpanner {
 	public void setSerifFont(FontFamily serifFont) {
 		this.serifFont = serifFont;
 	}
+
+    public FontFamily getFont( String name ) {
+        return getSerifFont();
+    }
 
 	/**
 	 * Switch to specify whether excess whitespace should be stripped from the
@@ -289,14 +291,17 @@ public class HtmlSpanner {
 
 	private void registerBuiltInHandlers() {
 
-		TagNodeHandler italicHandler = new ItalicHandler();
+        /*
+		TagNodeHandler italicHandler = new StyleHandler(
+                new Style().setFontStyle(Style.FontStyle.ITALIC));
 
 		registerHandler("i", italicHandler);
 		registerHandler("strong", italicHandler);
 		registerHandler("cite", italicHandler);
 		registerHandler("dfn", italicHandler);
 
-		TagNodeHandler boldHandler = new BoldHandler();
+		TagNodeHandler boldHandler = new StyleHandler(
+                new Style().setFontWeight(Style.FontWeight.BOLD));
 
 		registerHandler("b", boldHandler);
 		registerHandler("em", boldHandler);
@@ -307,16 +312,19 @@ public class HtmlSpanner {
 		registerHandler("ul", marginHandler);
 		registerHandler("ol", marginHandler);
 
-		TagNodeHandler brHandler = new NewLineHandler(1);
+        //We wrap an alignment-handler to support
+        //align attributes
+        AlignmentHandler blockAlignment = new AlignmentHandler(new StyleHandler(new Style()));
+
+        TagNodeHandler brHandler = new NewLineHandler(1, blockAlignment);
 
 		registerHandler("br", brHandler);
 
-		TagNodeHandler pHandler = new NewLineHandler(2);
-		
-		//We wrap an alignment-handler to support
-		//align attributes
-		registerHandler("p", new AlignmentHandler(pHandler));
-		registerHandler("div", new AlignmentHandler(pHandler));
+        //And add 2 newlines at the end
+		TagNodeHandler pHandler = new NewLineHandler(2, blockAlignment);
+
+		registerHandler("p", pHandler);
+		registerHandler("div", pHandler);
 
 		registerHandler("h1", new HeaderHandler(1.5f));
 		registerHandler("h2", new HeaderHandler(1.4f));
@@ -333,10 +341,10 @@ public class HtmlSpanner {
 
 		registerHandler("pre", preHandler);
 
-		TagNodeHandler bigHandler = new RelativeSizeHandler(1.25f);
+		TagNodeHandler bigHandler = new StyleHandler(new Style().setFontSize(1.25f));
 		registerHandler("big", bigHandler);
 
-		TagNodeHandler smallHandler = new RelativeSizeHandler(0.8f);
+		TagNodeHandler smallHandler = new StyleHandler(new Style().setFontSize(0.8f));
 		registerHandler("small", smallHandler);
 
 		TagNodeHandler subHandler = new SubScriptHandler();
@@ -345,7 +353,7 @@ public class HtmlSpanner {
 		TagNodeHandler superHandler = new SuperScriptHandler();
 		registerHandler("sup", superHandler);
 
-		TagNodeHandler centerHandler = new CenterHandler();
+		TagNodeHandler centerHandler = new StyleHandler(new Style().setTextAlignment(Style.TextAlignment.CENTER));
 		registerHandler("center", centerHandler);
 
 		registerHandler("li", new ListItemHandler());
@@ -354,6 +362,7 @@ public class HtmlSpanner {
 		registerHandler("img", new ImageHandler());
 		
 		registerHandler("font", new FontHandler() );
+		*/
 	}
 
 }
