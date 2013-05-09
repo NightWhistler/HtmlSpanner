@@ -17,7 +17,7 @@ public class TextUtil {
 
 	static {
 
-		REPLACEMENTS.put("&nbsp;", " ");
+		REPLACEMENTS.put("&nbsp;", "\u00A0");
 		REPLACEMENTS.put("&amp;", "&");
 		REPLACEMENTS.put("&quot;", "\"");
 		REPLACEMENTS.put("&cent;", "¢");
