@@ -22,6 +22,7 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.util.Log;
 import net.nightwhistler.htmlspanner.handlers.*;
 import net.nightwhistler.htmlspanner.handlers.attributes.AlignmentAttributeHandler;
 
@@ -251,7 +252,15 @@ public class HtmlSpanner {
 			}
 
 			String text = TextUtil.replaceHtmlEntities(
-					contentNode.getContent().toString(), false).trim();
+					contentNode.getContent().toString(), false);
+
+            if ( isStripExtraWhiteSpace() ) {
+                //Replace unicode non-breaking space with normal space.
+                text = text.replace( '\u00A0', ' ' );
+            }
+
+            text = text.trim();
+
 			builder.append(text);
 
 		} else if (node instanceof TagNode) {
