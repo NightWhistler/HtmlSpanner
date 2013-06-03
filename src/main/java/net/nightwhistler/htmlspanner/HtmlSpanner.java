@@ -216,7 +216,7 @@ public class HtmlSpanner {
 	 */
 	public Spannable fromTagNode(TagNode node) {
 		SpannableStringBuilder result = new SpannableStringBuilder();
-		handleContent(result, node, null);
+		handleContent(result, node);
 
 		return result;
 	}
@@ -242,59 +242,61 @@ public class HtmlSpanner {
 		return result;
 	}
 
-	private void handleContent(SpannableStringBuilder builder, Object node,
-			TagNode parent) {
-		if (node instanceof ContentNode) {
+    private void handleContent(SpannableStringBuilder builder, Object node) {
 
-			ContentNode contentNode = (ContentNode) node;
+        if (node instanceof TagNode) {
 
-			if (builder.length() > 0) {
-				char lastChar = builder.charAt(builder.length() - 1);
-				if (lastChar != ' ' && lastChar != '\n') {
-					builder.append(' ');
-				}
-			}
+            TagNode tagNode = (TagNode) node;
 
-			String text = TextUtil.replaceHtmlEntities(
-					contentNode.getContent().toString(), false);
+            TagNodeHandler handler = this.handlers.get(tagNode.getName());
 
-            if ( isStripExtraWhiteSpace() ) {
-                //Replace unicode non-breaking space with normal space.
-                text = text.replace( '\u00A0', ' ' );
+            int lengthBefore = builder.length();
+
+            if (handler != null) {
+                handler.beforeChildren(tagNode, builder);
             }
 
-            text = text.trim();
+            if (handler == null || !handler.rendersContent()) {
 
-			builder.append(text);
+                for (Object childNode : tagNode.getChildren()) {
+                    handleContent(builder, childNode);
+                }
+            }
 
-		} else if (node instanceof TagNode) {
-			applySpan(builder, (TagNode) node);
-		}
-	}
+            int lengthAfter = builder.length();
 
-	private void applySpan(SpannableStringBuilder builder, TagNode node) {
+            if (handler != null) {
+                handler.handleTagNode(tagNode, builder, lengthBefore, lengthAfter);
+            }
 
-		TagNodeHandler handler = this.handlers.get(node.getName());
+        } else if (node instanceof ContentNode) {
+            handleContentNode(builder, (ContentNode) node);
+        }
+    }
 
-		int lengthBefore = builder.length();
 
-		if (handler != null) {
-			handler.beforeChildren(node, builder);
-		}
+    private void handleContentNode( SpannableStringBuilder builder, ContentNode contentNode ) {
 
-		if (handler == null || !handler.rendersContent()) {
+        if (builder.length() > 0) {
+            char lastChar = builder.charAt(builder.length() - 1);
+            if (lastChar != ' ' && lastChar != '\n') {
+                builder.append(' ');
+            }
+        }
 
-			for (Object childNode : node.getChildren()) {
-				handleContent(builder, childNode, node);
-			}
-		}
+        String text = TextUtil.replaceHtmlEntities(
+                contentNode.getContent().toString(), false);
 
-		int lengthAfter = builder.length();
+        if ( isStripExtraWhiteSpace() ) {
+            //Replace unicode non-breaking space with normal space.
+            text = text.replace( '\u00A0', ' ' );
+        }
 
-		if (handler != null) {
-			handler.handleTagNode(node, builder, lengthBefore, lengthAfter);
-		}
-	}
+        text = text.trim();
+
+        builder.append(text);
+    }
+
 
 	private void registerBuiltInHandlers() {
 
