@@ -15,7 +15,6 @@
  */
 package net.nightwhistler.htmlspanner;
 
-import android.util.Log;
 import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
 
 import org.htmlcleaner.TagNode;
@@ -25,19 +24,19 @@ import android.text.SpannableStringBuilder;
 /**
  * A TagNodeHandler handles a specific type of tag (a, img, p, etc), and adds
  * the correct spans to a SpannableStringBuilder.
- * 
+ *
  * For example: the TagNodeHandler for i (italic) tags would do
- * 
+ *
  * <tt>
- * public void handleTagNode( TagNode node, SpannableStringBuilder builder, 
+ * public void handleTagNode( TagNode node, SpannableStringBuilder builder,
  * 		int start, int end ) {
- * 		builder.setSpan(new StyleSpan(Typeface.ITALIC), 
+ * 		builder.setSpan(new StyleSpan(Typeface.ITALIC),
  * 			start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
  * }
  * </tt>
- * 
+ *
  * @author Alex Kuiper
- * 
+ *
  */
 public abstract class TagNodeHandler {
 
@@ -45,7 +44,7 @@ public abstract class TagNodeHandler {
 
 	/**
 	 * Called by HtmlSpanner when this TagNodeHandler is registered.
-	 * 
+	 *
 	 * @param spanner
 	 */
 	public void setSpanner(HtmlSpanner spanner) {
@@ -54,7 +53,7 @@ public abstract class TagNodeHandler {
 
 	/**
 	 * Returns a reference to the HtmlSpanner.
-	 * 
+	 *
 	 * @return the HtmlSpanner;
 	 */
 	protected HtmlSpanner getSpanner() {
@@ -64,9 +63,9 @@ public abstract class TagNodeHandler {
 	/**
 	 * Called before the children of this node are handled, allowing for text to
 	 * be inserted before the childrens' text.
-	 * 
+	 *
 	 * Default implementation is a no-op.
-	 * 
+	 *
 	 * @param node
 	 * @param builder
 	 */
@@ -76,9 +75,9 @@ public abstract class TagNodeHandler {
 
 	/**
 	 * If this TagNodeHandler takes care of rendering the content.
-	 * 
+	 *
 	 * If true, the parser will not add the content itself.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean rendersContent() {
@@ -87,7 +86,7 @@ public abstract class TagNodeHandler {
 
 	/**
 	 * Handle the given node and add spans if needed.
-	 * 
+	 *
 	 * @param node
 	 *            the node to handle
 	 * @param builder
@@ -99,25 +98,25 @@ public abstract class TagNodeHandler {
 	 */
 	public abstract void handleTagNode(TagNode node,
 			SpannableStringBuilder builder, int start, int end);
-	
+
 	/**
 	 * Returns the current FontFamilySpan in use on the given subsection of the builder.
-	 * 
+	 *
 	 * If no FontFamily has been set yet, spanner.getDefaultFont() is returned.
-	 * 
+	 *
 	 * @param builder the text to check
 	 * @param start start of the section
 	 * @param end end of the section
 	 * @return a FontFamily object
 	 */
 	protected FontFamilySpan getFontFamilySpan( SpannableStringBuilder builder, int start, int end ) {
-		
+
 		FontFamilySpan[] spans = builder.getSpans(start, end, FontFamilySpan.class);
-		
+
 		if ( spans != null && spans.length > 0 ) {
 			return spans[spans.length-1];
 		}
-		
+
 		return null;
 	}
 
@@ -125,7 +124,7 @@ public abstract class TagNodeHandler {
 	 * Utility method to append newlines while making sure that there are never
 	 * more than 2 consecutive newlines in the text (if whitespace stripping was
 	 * enabled).
-	 * 
+	 *
 	 * @param builder
 	 */
 	protected void appendNewLine(SpannableStringBuilder builder) {

@@ -22,7 +22,6 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.util.Log;
 import net.nightwhistler.htmlspanner.handlers.AlignmentHandler;
 import net.nightwhistler.htmlspanner.handlers.BoldHandler;
 import net.nightwhistler.htmlspanner.handlers.CenterHandler;
@@ -52,23 +51,23 @@ import android.text.SpannableStringBuilder;
 /**
  * HtmlSpanner provides an alternative to Html.fromHtml() from the Android
  * libraries.
- * 
+ *
  * In its simplest form, just call new HtmlSpanner().fromHtml() to get a similar
  * result. The real strength is in being able to register custom NodeHandlers.
- * 
+ *
  * @author work
- * 
+ *
  */
 public class HtmlSpanner {
 
-	private Map<String, TagNodeHandler> handlers;
+	private final Map<String, TagNodeHandler> handlers;
 
 	private boolean stripExtraWhiteSpace = false;
 
-	private HtmlCleaner htmlCleaner;
+	private final HtmlCleaner htmlCleaner;
 
 	private FontFamily defaultFont;
-	
+
 	private FontFamily serifFont;
 	private FontFamily sansSerifFont;
 
@@ -81,9 +80,9 @@ public class HtmlSpanner {
 
 	/**
 	 * Creates a new HtmlSpanner using the given HtmlCleaner instance.
-	 * 
+	 *
 	 * This allows for a custom-configured HtmlCleaner.
-	 * 
+	 *
 	 * @param cleaner
 	 */
 	public HtmlSpanner(HtmlCleaner cleaner) {
@@ -92,7 +91,7 @@ public class HtmlSpanner {
 		this.defaultFont = new FontFamily("default", Typeface.DEFAULT);
 		this.serifFont = new FontFamily("serif", Typeface.SERIF);
 		this.sansSerifFont = new FontFamily("sans-serif", Typeface.SANS_SERIF);
-		
+
 		registerBuiltInHandlers();
 
 	}
@@ -100,23 +99,23 @@ public class HtmlSpanner {
 	public FontFamily getDefaultFont() {
 		return defaultFont;
 	}
-	
+
 	public void setDefaultFont(FontFamily defaultFont) {
 		this.defaultFont = defaultFont;
 	}
-	
+
 	public FontFamily getSansSerifFont() {
 		return sansSerifFont;
 	}
-	
+
 	public void setSansSerifFont(FontFamily sansSerifFont) {
 		this.sansSerifFont = sansSerifFont;
 	}
-	
+
 	public FontFamily getSerifFont() {
 		return serifFont;
 	}
-	
+
 	public void setSerifFont(FontFamily serifFont) {
 		this.serifFont = serifFont;
 	}
@@ -124,7 +123,7 @@ public class HtmlSpanner {
 	/**
 	 * Switch to specify whether excess whitespace should be stripped from the
 	 * input.
-	 * 
+	 *
 	 * @param stripExtraWhiteSpace
 	 */
 	public void setStripExtraWhiteSpace(boolean stripExtraWhiteSpace) {
@@ -133,7 +132,7 @@ public class HtmlSpanner {
 
 	/**
 	 * Returns if whitespace is being stripped.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isStripExtraWhiteSpace() {
@@ -142,10 +141,10 @@ public class HtmlSpanner {
 
 	/**
 	 * Registers a new custom TagNodeHandler.
-	 * 
+	 *
 	 * If a TagNodeHandler was already registered for the specified tagName it
 	 * will be overwritten.
-	 * 
+	 *
 	 * @param tagName
 	 * @param handler
 	 */
@@ -165,9 +164,9 @@ public class HtmlSpanner {
 
 	/**
 	 * Parses the text in the given String.
-	 * 
+	 *
 	 * @param html
-	 * 
+	 *
 	 * @return a Spanned version of the text.
 	 */
 	public Spannable fromHtml(String html) {
@@ -176,7 +175,7 @@ public class HtmlSpanner {
 
 	/**
 	 * Parses the text in the given Reader.
-	 * 
+	 *
 	 * @param reader
 	 * @return
 	 * @throws IOException
@@ -187,7 +186,7 @@ public class HtmlSpanner {
 
 	/**
 	 * Parses the text in the given InputStream.
-	 * 
+	 *
 	 * @param inputStream
 	 * @return
 	 * @throws IOException
@@ -198,9 +197,9 @@ public class HtmlSpanner {
 
 	/**
 	 * Gets the currently registered handler for this tag.
-	 * 
+	 *
 	 * Used so it can be wrapped.
-	 * 
+	 *
 	 * @param tagName
 	 * @return the registed TagNodeHandler, or null if none is registered.
 	 */
@@ -210,7 +209,7 @@ public class HtmlSpanner {
 
 	/**
 	 * Creates spanned text from a TagNode.
-	 * 
+	 *
 	 * @param node
 	 * @return
 	 */
@@ -323,7 +322,7 @@ public class HtmlSpanner {
 		registerHandler("br", brHandler);
 
 		TagNodeHandler pHandler = new NewLineHandler(2);
-		
+
 		//We wrap an alignment-handler to support
 		//align attributes
 		registerHandler("p", new AlignmentHandler(pHandler));
@@ -363,7 +362,7 @@ public class HtmlSpanner {
 
 		registerHandler("a", new LinkHandler());
 		registerHandler("img", new ImageHandler());
-		
+
 		registerHandler("font", new FontHandler() );
 	}
 
