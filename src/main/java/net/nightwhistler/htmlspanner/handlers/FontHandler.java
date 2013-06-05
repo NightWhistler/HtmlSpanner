@@ -73,7 +73,14 @@ public class FontHandler extends TagNodeHandler {
 		}
 		
 		if ( color != null ) {
-			int fontColor = Color.parseColor(color);
+			int fontColor = Color.BLACK;
+
+            try {
+                fontColor = Color.parseColor(color);
+            } catch ( IllegalArgumentException ia ) {
+
+            }
+
 			builder.setSpan(new ForegroundColorSpan(fontColor), start, end,
 					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
