@@ -66,7 +66,14 @@ public class FontHandler extends StyleHandler {
 		}
 		
 		if ( color != null ) {
-			int fontColor = Color.parseColor(color);
+			int fontColor = Color.BLACK;
+
+            try {
+                fontColor = Color.parseColor(color);
+            } catch ( IllegalArgumentException ia ) {
+
+            }
+
 			style = style.setColor(fontColor);
 		}
 
