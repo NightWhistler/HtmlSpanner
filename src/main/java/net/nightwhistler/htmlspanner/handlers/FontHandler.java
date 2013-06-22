@@ -18,23 +18,18 @@ package net.nightwhistler.htmlspanner.handlers;
 
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanStack;
-import net.nightwhistler.htmlspanner.TagNodeHandler;
-import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
 
 import net.nightwhistler.htmlspanner.style.Style;
-import net.nightwhistler.htmlspanner.style.StyleHandler;
+import net.nightwhistler.htmlspanner.style.StyledTextHandler;
 import org.htmlcleaner.TagNode;
 
 import android.graphics.Color;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 
 /**
  * Handler for font-tags
  */
-public class FontHandler extends StyleHandler {
+public class FontHandler extends StyledTextHandler {
 	
 	private static final String SERIF = "serif";
 	private static final String SANS_SERIF = "sans-serif";

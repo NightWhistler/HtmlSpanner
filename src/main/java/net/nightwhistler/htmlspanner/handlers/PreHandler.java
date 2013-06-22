@@ -41,7 +41,7 @@ public class PreHandler extends TagNodeHandler {
 			ContentNode contentNode = (ContentNode) node;
 			String text = TextUtil.replaceHtmlEntities(contentNode.getContent()
 					.toString(), true);
-			// String text = contentNode.getContent().toString();
+
 			buffer.append(text);
 
 		} else if (node instanceof TagNode) {

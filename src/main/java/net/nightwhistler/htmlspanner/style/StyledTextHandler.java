@@ -16,27 +16,27 @@ import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
 import org.htmlcleaner.TagNode;
 
 /**
- * Created with IntelliJ IDEA.
- * User: alex
- * Date: 5/6/13
- * Time: 8:46 AM
- * To change this template use File | Settings | File Templates.
+ * TagNodeHandler for any type of text that may be styled using CSS.
+ *
+ * @author Alex Kuiper
  */
-public class StyleHandler extends TagNodeHandler {
+public class StyledTextHandler extends TagNodeHandler {
 
     private Style style;
 
-    public StyleHandler() {
+    public StyledTextHandler() {
         this.style = new Style();
     }
 
-    public StyleHandler(Style style) {
+    public StyledTextHandler(Style style) {
         this.style = style;
     }
 
     public final void handleTagNode(TagNode node, SpannableStringBuilder builder,
-                              int start, int end, SpanStack spanStack) {
-          handleTagNode(node, builder, start, end, this.style, spanStack);
+                                    int start, int end, SpanStack spanStack) {
+
+        Style styleFromCSS = spanStack.getStyle( node, this.style );
+        handleTagNode(node, builder, start, end, styleFromCSS, spanStack);
     }
 
     public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end, Style useStyle, SpanStack stack ) {

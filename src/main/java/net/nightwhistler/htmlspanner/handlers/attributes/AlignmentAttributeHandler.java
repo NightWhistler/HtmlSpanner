@@ -16,19 +16,11 @@
 package net.nightwhistler.htmlspanner.handlers.attributes;
 
 import net.nightwhistler.htmlspanner.SpanStack;
-import net.nightwhistler.htmlspanner.handlers.WrappingHandler;
 import net.nightwhistler.htmlspanner.style.Style;
-import net.nightwhistler.htmlspanner.style.StyleHandler;
+import net.nightwhistler.htmlspanner.style.StyledTextHandler;
 import org.htmlcleaner.TagNode;
 
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.AlignmentSpan;
-import net.nightwhistler.htmlspanner.HtmlSpanner;
-import net.nightwhistler.htmlspanner.TagNodeHandler;
-import net.nightwhistler.htmlspanner.spans.AlignNormalSpan;
-import net.nightwhistler.htmlspanner.spans.AlignOppositeSpan;
-import net.nightwhistler.htmlspanner.spans.CenterSpan;
 
 /**
  * Handler for align='left|right|center' attributes.
@@ -39,7 +31,7 @@ import net.nightwhistler.htmlspanner.spans.CenterSpan;
 public class AlignmentAttributeHandler extends WrappingStyleHandler {
 	
 
-	public AlignmentAttributeHandler(StyleHandler wrapHandler) {
+	public AlignmentAttributeHandler(StyledTextHandler wrapHandler) {
 		super(wrapHandler);
 	}
 

@@ -16,16 +16,12 @@
 package net.nightwhistler.htmlspanner.handlers;
 
 import net.nightwhistler.htmlspanner.SpanStack;
-import net.nightwhistler.htmlspanner.TagNodeHandler;
-import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
 
 import net.nightwhistler.htmlspanner.style.Style;
-import net.nightwhistler.htmlspanner.style.StyleHandler;
+import net.nightwhistler.htmlspanner.style.StyledTextHandler;
 import org.htmlcleaner.TagNode;
 
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.RelativeSizeSpan;
 
 /**
  * Handles Headers, by assigning a relative text-size.
@@ -41,7 +37,7 @@ import android.text.style.RelativeSizeSpan;
  * @author Alex Kuiper
  * 
  */
-public class HeaderHandler extends StyleHandler {
+public class HeaderHandler extends StyledTextHandler {
 
 	private float size;
 

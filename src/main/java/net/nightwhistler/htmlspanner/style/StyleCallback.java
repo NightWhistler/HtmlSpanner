@@ -64,7 +64,7 @@ public class StyleCallback implements SpanCallback {
                 newSpan.setItalic( originalSpan.isItalic() );
             }
 
-            Log.d("StyleHandler", "Applying FontFamilySpan from " + start + " to " + end + " on text " + builder.subSequence(start, end));
+            Log.d("StyleCallback", "Applying FontFamilySpan from " + start + " to " + end + " on text " + builder.subSequence(start, end));
             builder.setSpan(newSpan, start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
@@ -75,7 +75,7 @@ public class StyleCallback implements SpanCallback {
         }
 
         if ( useStyle.getColor() != null ) {
-            Log.d("StyleHandler", "Applying ForegroundColorSpan from " + start + " to " + end + " on text " + builder.subSequence(start, end) );
+            Log.d("StyleCallback", "Applying ForegroundColorSpan from " + start + " to " + end + " on text " + builder.subSequence(start, end) );
             builder.setSpan(new ForegroundColorSpan(useStyle.getColor()), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
@@ -96,7 +96,7 @@ public class StyleCallback implements SpanCallback {
                     break;
             }
 
-            Log.d("StyleHandler", "Applying AlignMentSpan from " + start + " to " + end + " on text " + builder.subSequence(start, end) );
+            Log.d("StyleCallback", "Applying AlignMentSpan from " + start + " to " + end + " on text " + builder.subSequence(start, end) );
             builder.setSpan(alignSpan, start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 

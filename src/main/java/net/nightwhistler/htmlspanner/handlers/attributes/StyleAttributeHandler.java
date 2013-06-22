@@ -5,21 +5,17 @@ import android.text.SpannableStringBuilder;
 import android.util.Log;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanStack;
-import net.nightwhistler.htmlspanner.handlers.WrappingHandler;
+import net.nightwhistler.htmlspanner.css.CSSUtil;
 import net.nightwhistler.htmlspanner.style.Style;
-import net.nightwhistler.htmlspanner.style.StyleHandler;
+import net.nightwhistler.htmlspanner.style.StyledTextHandler;
 import org.htmlcleaner.TagNode;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Handler which parses style attributes and modifies the style accordingly.
  */
 public class StyleAttributeHandler extends WrappingStyleHandler  {
 
-    public StyleAttributeHandler(StyleHandler wrapHandler) {
+    public StyleAttributeHandler(StyledTextHandler wrapHandler) {
         super(wrapHandler);
     }
 
@@ -56,7 +52,7 @@ public class StyleAttributeHandler extends WrappingStyleHandler  {
             String value = keyVal[1].toLowerCase().trim();
 
             try {
-                style = handleKeyValuePair(style, key, value );
+                style = CSSUtil.mapToStyle(getSpanner(), style, key, value);
             } catch (IllegalArgumentException ie) {
                 Log.e("StyleAttributeHandler", "Unsupported value " + value + " for property " + key  );
             }
@@ -65,35 +61,7 @@ public class StyleAttributeHandler extends WrappingStyleHandler  {
         return style;
     }
 
-    private Style handleKeyValuePair(Style style, String key, String value) {
 
-        if ( "color".equals(key)) {
-            return style.setColor(Color.parseColor(value));
-        }
-        if ( "align".equals(key) || "text-align".equals(key)) {
-            return style.setTextAlignment(Style.TextAlignment.valueOf(value.toUpperCase()));
-        }
-
-        if ( "font-weight".equals(key)) {
-            return style.setFontWeight(Style.FontWeight.valueOf(value.toUpperCase()));
-        }
-
-        if ( "font-style".equals(key)) {
-            return style.setFontStyle(Style.FontStyle.valueOf(value.toUpperCase()));
-        }
-
-        if ( "font-family".equals(key)) {
-            return style.setFontFamily( getSpanner().getFont(value));
-        }
-
-        if ( "font-size".equals(key)) {
-            return style.setFontSize(HtmlSpanner.translateFontSize(value));
-        }
-
-
-        return  style;
-
-    }
 
 
 

@@ -4,7 +4,7 @@ import android.text.SpannableStringBuilder;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.style.Style;
-import net.nightwhistler.htmlspanner.style.StyleHandler;
+import net.nightwhistler.htmlspanner.style.StyledTextHandler;
 import org.htmlcleaner.TagNode;
 
 /**
@@ -14,11 +14,11 @@ import org.htmlcleaner.TagNode;
  * Time: 1:46 PM
  * To change this template use File | Settings | File Templates.
  */
-public class WrappingStyleHandler extends StyleHandler {
+public class WrappingStyleHandler extends StyledTextHandler {
 
-    private StyleHandler wrappedHandler;
+    private StyledTextHandler wrappedHandler;
 
-    public WrappingStyleHandler(StyleHandler wrappedHandler) {
+    public WrappingStyleHandler(StyledTextHandler wrappedHandler) {
         super(new Style());
         this.wrappedHandler = wrappedHandler;
     }
@@ -31,7 +31,7 @@ public class WrappingStyleHandler extends StyleHandler {
         }
     }
 
-    public StyleHandler getWrappedHandler() {
+    public StyledTextHandler getWrappedHandler() {
         return this.wrappedHandler;
     }
 

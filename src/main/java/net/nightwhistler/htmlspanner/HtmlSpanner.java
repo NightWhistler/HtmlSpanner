@@ -20,15 +20,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import android.util.Log;
+import com.osbcp.cssparser.Rule;
+import com.osbcp.cssparser.Selector;
 import net.nightwhistler.htmlspanner.handlers.*;
 import net.nightwhistler.htmlspanner.handlers.attributes.AlignmentAttributeHandler;
 
 import net.nightwhistler.htmlspanner.handlers.attributes.StyleAttributeHandler;
 import net.nightwhistler.htmlspanner.style.Style;
-import net.nightwhistler.htmlspanner.style.StyleHandler;
+import net.nightwhistler.htmlspanner.style.StyledTextHandler;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
@@ -210,7 +212,7 @@ public class HtmlSpanner {
 	public Spannable fromTagNode(TagNode node) {
 		SpannableStringBuilder result = new SpannableStringBuilder();
         SpanStack stack = new SpanStack();
-		handleContent(result, node, null, stack);
+		handleContent(result, node, stack);
 
         stack.applySpans(result);
 
@@ -233,13 +235,13 @@ public class HtmlSpanner {
 		cleanerProperties.setIgnoreQuestAndExclam(true);
 		cleanerProperties.setUseEmptyElementTags(false);
 
-		cleanerProperties.setPruneTags("script,style,title");
+		cleanerProperties.setPruneTags("script,title");
 
 		return result;
 	}
 
 	private void handleContent(SpannableStringBuilder builder, Object node,
-			TagNode parent, SpanStack stack) {
+			 SpanStack stack) {
 		if (node instanceof ContentNode) {
 
 			ContentNode contentNode = (ContentNode) node;
@@ -281,7 +283,7 @@ public class HtmlSpanner {
 		if (handler == null || !handler.rendersContent()) {
 
 			for (Object childNode : node.getChildren()) {
-				handleContent(builder, childNode, node, stack);
+				handleContent(builder, childNode, stack);
 			}
 		}
 
@@ -316,17 +318,17 @@ public class HtmlSpanner {
 
     public static float translateFontSize( String fontSize ) {
 
-        //TODO: parse things like em and px
+        //TODO: parse things like em and px, larger, smaller, etc.
         return translateFontSize(Integer.parseInt(fontSize));
     }
 
-    private static StyleHandler wrap( StyleHandler handler ) {
+    private static StyledTextHandler wrap( StyledTextHandler handler ) {
         return new StyleAttributeHandler(new AlignmentAttributeHandler(handler));
     }
 
 	private void registerBuiltInHandlers() {
 
-		TagNodeHandler italicHandler = new StyleHandler(
+		TagNodeHandler italicHandler = new StyledTextHandler(
                 new Style().setFontStyle(Style.FontStyle.ITALIC));
 
 		registerHandler("i", italicHandler);
@@ -334,7 +336,7 @@ public class HtmlSpanner {
 		registerHandler("cite", italicHandler);
 		registerHandler("dfn", italicHandler);
 
-		TagNodeHandler boldHandler = new StyleHandler(
+		TagNodeHandler boldHandler = new StyledTextHandler(
                 new Style().setFontWeight(Style.FontWeight.BOLD));
 
 		registerHandler("b", boldHandler);
@@ -346,9 +348,11 @@ public class HtmlSpanner {
 		registerHandler("ul", marginHandler);
 		registerHandler("ol", marginHandler);
 
+        registerHandler("style", new StyleNodeHandler() );
+
         //We wrap an alignment-handler to support
         //align attributes
-        StyleHandler blockAlignment = wrap(new StyleHandler());
+        StyledTextHandler blockAlignment = wrap(new StyledTextHandler());
 
         TagNodeHandler brHandler = new NewLineHandler(1, blockAlignment);
 
@@ -378,10 +382,10 @@ public class HtmlSpanner {
 
 		registerHandler("pre", preHandler);
 
-		TagNodeHandler bigHandler = new StyleHandler(new Style().setFontSize(1.25f));
+		TagNodeHandler bigHandler = new StyledTextHandler(new Style().setFontSize(1.25f));
 		registerHandler("big", bigHandler);
 
-		TagNodeHandler smallHandler = new StyleHandler(new Style().setFontSize(0.8f));
+		TagNodeHandler smallHandler = new StyledTextHandler(new Style().setFontSize(0.8f));
 		registerHandler("small", smallHandler);
 
 		TagNodeHandler subHandler = new SubScriptHandler();
@@ -390,7 +394,7 @@ public class HtmlSpanner {
 		TagNodeHandler superHandler = new SuperScriptHandler();
 		registerHandler("sup", superHandler);
 
-		TagNodeHandler centerHandler = new StyleHandler(new Style().setTextAlignment(Style.TextAlignment.CENTER));
+		TagNodeHandler centerHandler = new StyledTextHandler(new Style().setTextAlignment(Style.TextAlignment.CENTER));
 		registerHandler("center", centerHandler);
 
 		registerHandler("li", new ListItemHandler());
