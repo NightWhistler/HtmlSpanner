@@ -70,6 +70,7 @@ public class StyleCallback implements SpanCallback {
         }
 
         if ( useStyle.getFontSize() != null ) {
+            Log.d("StyleCallback", "Applying RelativeSizeSpan with size " + useStyle.getFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
             builder.setSpan(new RelativeSizeSpan(useStyle.getFontSize()), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }

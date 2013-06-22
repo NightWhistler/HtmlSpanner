@@ -2,6 +2,8 @@ package net.nightwhistler.htmlspanner.style;
 
 import net.nightwhistler.htmlspanner.FontFamily;
 
+import java.lang.reflect.Field;
+
 /**
  * CSS Style object.
  *
@@ -50,7 +52,7 @@ public class Style {
     }
 
     public Style setFontSize(Float fontSize) {
-        return new Style(fontFamily, this.textAlignment, fontSize, this.fontWeight, this.fontStyle, this.color);
+        return new Style(this.fontFamily, this.textAlignment, fontSize, this.fontWeight, this.fontStyle, this.color);
     }
 
     public Style setFontWeight(FontWeight fontWeight) {
@@ -87,6 +89,39 @@ public class Style {
 
     public Integer getColor() {
         return this.color;
+    }
+
+    public String toString() {
+
+        StringBuilder result = new StringBuilder( "{\n" );
+
+        if ( fontFamily != null  ) {
+            result.append( "font-family: " + fontFamily + "\n");
+        }
+
+        if ( textAlignment != null ) {
+            result.append( "text-alignment: " + textAlignment + "\n");
+        }
+
+        if ( fontSize != null ) {
+            result.append( "font-size: " + fontSize + "\n");
+        }
+
+        if ( fontWeight != null ) {
+            result.append( "font-weight: " + fontWeight + "\n" );
+        }
+
+        if ( fontStyle != null ) {
+            result.append( "font-style: " + fontStyle + "\n" );
+        }
+
+        if ( color != null ) {
+            result.append("color: " + color + "\n");
+        }
+
+        result.append("}\n");
+
+        return result.toString();
     }
 
 }

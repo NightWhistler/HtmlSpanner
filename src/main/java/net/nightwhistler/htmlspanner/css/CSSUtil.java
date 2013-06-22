@@ -27,15 +27,31 @@ public class CSSUtil {
         }
 
         if ( "align".equals(key) || "text-align".equals(key)) {
-            return style.setTextAlignment(Style.TextAlignment.valueOf(value.toUpperCase()));
+            try {
+                return style.setTextAlignment(Style.TextAlignment.valueOf(value.toUpperCase()));
+            } catch ( IllegalArgumentException i ) {
+                Log.e("CSSUtil", "Can't parse alignment: " + value);
+                return style;
+            }
         }
 
         if ( "font-weight".equals(key)) {
-            return style.setFontWeight(Style.FontWeight.valueOf(value.toUpperCase()));
+            try {
+                return style.setFontWeight(Style.FontWeight.valueOf(value.toUpperCase()));
+            } catch ( IllegalArgumentException i ) {
+                Log.e("CSSUtil", "Can't parse font-weight: " + value);
+                return style;
+            }
         }
 
         if ( "font-style".equals(key)) {
-            return style.setFontStyle(Style.FontStyle.valueOf(value.toUpperCase()));
+            try {
+                return style.setFontStyle(Style.FontStyle.valueOf(value.toUpperCase()));
+            }
+            catch ( IllegalArgumentException i ) {
+                Log.e("CSSUtil", "Can't parse font-style: " + value);
+                return style;
+            }
         }
 
         if ( "font-family".equals(key)) {
@@ -44,7 +60,11 @@ public class CSSUtil {
 
         if ( "font-size".equals(key)) {
             try {
-                return style.setFontSize(HtmlSpanner.translateFontSize(value));
+                float fontSize = HtmlSpanner.translateFontSize(value);
+                Log.d("CSSUtil", "Setting font-size: " + fontSize );
+                //return style.setFontSize(fontSize);
+                Style newStyle = style.setFontSize(fontSize);
+                return newStyle;
             } catch ( NumberFormatException nfe ) {
                 Log.e("CSSUtil", "Can't parse font-size: " + value );
                 return style;

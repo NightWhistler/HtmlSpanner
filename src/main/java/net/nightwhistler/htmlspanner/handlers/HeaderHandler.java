@@ -47,10 +47,16 @@ public class HeaderHandler extends StyledTextHandler {
 	 * @param size
 	 */
 	public HeaderHandler(float size) {
-		this.size = size;
+        this.size = size;
 	}
 
-	@Override
+    @Override
+    public Style getStyle() {
+        return super.getStyle().setFontSize(size)
+                .setFontWeight(Style.FontWeight.BOLD);
+    }
+
+    @Override
 	public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
 		if (builder.length() > 0
 				&& builder.charAt(builder.length() - 1) != '\n') {
@@ -61,9 +67,6 @@ public class HeaderHandler extends StyledTextHandler {
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
 			int start, int end, Style style, SpanStack stack ) {
-
-        style = style.setFontSize(size)
-                .setFontWeight(Style.FontWeight.BOLD);
 
         super.handleTagNode(node, builder, start, end, style, stack);
 

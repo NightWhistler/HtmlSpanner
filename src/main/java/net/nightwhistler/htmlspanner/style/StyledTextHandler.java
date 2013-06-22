@@ -32,10 +32,13 @@ public class StyledTextHandler extends TagNodeHandler {
         this.style = style;
     }
 
+    public Style getStyle() {
+        return style;
+    }
+
     public final void handleTagNode(TagNode node, SpannableStringBuilder builder,
                                     int start, int end, SpanStack spanStack) {
-
-        Style styleFromCSS = spanStack.getStyle( node, this.style );
+        Style styleFromCSS = spanStack.getStyle( node, getStyle() );
         handleTagNode(node, builder, start, end, styleFromCSS, spanStack);
     }
 

@@ -24,6 +24,11 @@ public class WrappingStyleHandler extends StyledTextHandler {
     }
 
     @Override
+    public Style getStyle() {
+        return wrappedHandler.getStyle();
+    }
+
+    @Override
     public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end, Style useStyle,
         SpanStack spanStack ) {
         if ( wrappedHandler != null ) {

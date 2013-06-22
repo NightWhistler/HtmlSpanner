@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.util.Log;
 import com.osbcp.cssparser.Rule;
 import com.osbcp.cssparser.Selector;
 import net.nightwhistler.htmlspanner.handlers.*;
@@ -317,6 +318,12 @@ public class HtmlSpanner {
     }
 
     public static float translateFontSize( String fontSize ) {
+
+        if ( fontSize.endsWith("%") ) {
+            Log.d("HtmlSpanner", "translating percentage " + fontSize );
+            int percentage = Integer.parseInt( fontSize.substring(0, fontSize.length() -1 ) );
+            return percentage / 100f;
+        }
 
         //TODO: parse things like em and px, larger, smaller, etc.
         return translateFontSize(Integer.parseInt(fontSize));

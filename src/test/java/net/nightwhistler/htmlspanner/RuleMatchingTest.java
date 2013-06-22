@@ -103,5 +103,12 @@ public class RuleMatchingTest {
 
     }
 
+    @Test
+    public void testImport() throws Exception {
+        List<Rule> rules = CSSParser.parse("@import \"extrapage.css\";");
+
+
+    }
+
 
 }

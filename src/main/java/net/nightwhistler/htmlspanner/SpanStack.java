@@ -40,6 +40,7 @@ public class SpanStack {
             if ( rule.matches(node) ) {
                 Log.d( "SpanStack", "Applying rule " + rule + " to tagNode " + node.getName() );
                 result = rule.applyStyle(result);
+                Log.d("SpanStack", "Resulting style: " + result);
             }
         }
 

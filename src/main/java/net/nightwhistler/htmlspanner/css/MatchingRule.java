@@ -95,7 +95,7 @@ public class MatchingRule  {
         Style result = style;
 
         for ( PropertyValue prop: rule.getPropertyValues() ) {
-            result = CSSUtil.mapToStyle( spanner, style, prop.getProperty(), prop.getValue() );
+            result = CSSUtil.mapToStyle( spanner, result, prop.getProperty(), prop.getValue() );
         }
 
         return result;
