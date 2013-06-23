@@ -404,6 +404,8 @@ public class HtmlSpanner {
 		
 		registerHandler("font", new FontHandler() );
 
+        registerHandler("border", new BorderHandler() );
+
 	}
 
 }
