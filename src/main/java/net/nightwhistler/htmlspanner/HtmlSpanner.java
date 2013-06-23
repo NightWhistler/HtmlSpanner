@@ -59,16 +59,14 @@ public class HtmlSpanner {
 
 	private HtmlCleaner htmlCleaner;
 
-	private FontFamily defaultFont;
-	
-	private FontFamily serifFont;
-	private FontFamily sansSerifFont;
+    private FontResolver fontResolver;
+
 
 	/**
 	 * Creates a new HtmlSpanner using a default HtmlCleaner instance.
 	 */
 	public HtmlSpanner() {
-		this(createHtmlCleaner());
+		this(createHtmlCleaner(), new SystemFontResolver());
 	}
 
 	/**
@@ -78,43 +76,24 @@ public class HtmlSpanner {
 	 * 
 	 * @param cleaner
 	 */
-	public HtmlSpanner(HtmlCleaner cleaner) {
+	public HtmlSpanner(HtmlCleaner cleaner, FontResolver fontResolver) {
 		this.htmlCleaner = cleaner;
-		this.handlers = new HashMap<String, TagNodeHandler>();
-		this.defaultFont = new FontFamily("default", Typeface.DEFAULT);
-		this.serifFont = new FontFamily("serif", Typeface.SERIF);
-		this.sansSerifFont = new FontFamily("sans-serif", Typeface.SANS_SERIF);
+		this.fontResolver = fontResolver;
+        this.handlers = new HashMap<String, TagNodeHandler>();
 		
 		registerBuiltInHandlers();
-
 	}
 
-	public FontFamily getDefaultFont() {
-		return defaultFont;
-	}
-	
-	public void setDefaultFont(FontFamily defaultFont) {
-		this.defaultFont = defaultFont;
-	}
-	
-	public FontFamily getSansSerifFont() {
-		return sansSerifFont;
-	}
-	
-	public void setSansSerifFont(FontFamily sansSerifFont) {
-		this.sansSerifFont = sansSerifFont;
-	}
-	
-	public FontFamily getSerifFont() {
-		return serifFont;
-	}
-	
-	public void setSerifFont(FontFamily serifFont) {
-		this.serifFont = serifFont;
-	}
+	public FontResolver getFontResolver() {
+        return this.fontResolver;
+    }
+
+    public void setFontResolver( FontResolver fontResolver ) {
+        this.fontResolver = fontResolver;
+    }
 
     public FontFamily getFont( String name ) {
-        return getSerifFont();
+        return this.fontResolver.getFont(name);
     }
 
 	/**
@@ -295,7 +274,7 @@ public class HtmlSpanner {
 		}
 	}
 
-    public static float translateFontSize( int fontSize ) {
+    private static float translateFontSize( int fontSize ) {
 
         switch (fontSize ) {
             case 1:
@@ -317,16 +296,27 @@ public class HtmlSpanner {
         return 1.0f;
     }
 
-    public static float translateFontSize( String fontSize ) {
+    public static Style setFontSize( Style style, String fontSize ) {
+
+        if ( fontSize.endsWith("px") ) {
+            return style.setAbsoluteFontSize( Integer.parseInt( fontSize.substring(0, fontSize.length() -2) ));
+        }
+
 
         if ( fontSize.endsWith("%") ) {
             Log.d("HtmlSpanner", "translating percentage " + fontSize );
             int percentage = Integer.parseInt( fontSize.substring(0, fontSize.length() -1 ) );
-            return percentage / 100f;
+
+            return style.setRelativeFontSize(percentage / 100f);
+        }
+
+        if ( fontSize.endsWith("em") ) {
+            String number = fontSize.substring(0, fontSize.length() - 2 );
+            return style.setRelativeFontSize( Float.parseFloat(number) );
         }
 
         //TODO: parse things like em and px, larger, smaller, etc.
-        return translateFontSize(Integer.parseInt(fontSize));
+        return style.setRelativeFontSize( translateFontSize(Integer.parseInt(fontSize)) );
     }
 
     private static StyledTextHandler wrap( StyledTextHandler handler ) {
@@ -339,7 +329,7 @@ public class HtmlSpanner {
                 new Style().setFontStyle(Style.FontStyle.ITALIC));
 
 		registerHandler("i", italicHandler);
-		registerHandler("strong", italicHandler);
+		registerHandler("em", italicHandler);
 		registerHandler("cite", italicHandler);
 		registerHandler("dfn", italicHandler);
 
@@ -347,13 +337,16 @@ public class HtmlSpanner {
                 new Style().setFontWeight(Style.FontWeight.BOLD));
 
 		registerHandler("b", boldHandler);
-		registerHandler("em", boldHandler);
+		registerHandler("strong", boldHandler);
 
 		TagNodeHandler marginHandler = new MarginHandler();
 
 		registerHandler("blockquote", marginHandler);
 		registerHandler("ul", marginHandler);
 		registerHandler("ol", marginHandler);
+
+        registerHandler("code", wrap(new StyledTextHandler(
+                new Style().setFontFamily(fontResolver.getMonoSpaceFont()))));
 
         registerHandler("style", new StyleNodeHandler() );
 
@@ -389,10 +382,10 @@ public class HtmlSpanner {
 
 		registerHandler("pre", preHandler);
 
-		TagNodeHandler bigHandler = new StyledTextHandler(new Style().setFontSize(1.25f));
+		TagNodeHandler bigHandler = new StyledTextHandler(new Style().setRelativeFontSize(1.25f));
 		registerHandler("big", bigHandler);
 
-		TagNodeHandler smallHandler = new StyledTextHandler(new Style().setFontSize(0.8f));
+		TagNodeHandler smallHandler = new StyledTextHandler(new Style().setRelativeFontSize(0.8f));
 		registerHandler("small", smallHandler);
 
 		TagNodeHandler subHandler = new SubScriptHandler();

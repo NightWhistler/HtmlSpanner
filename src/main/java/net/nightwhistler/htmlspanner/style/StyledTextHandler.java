@@ -43,7 +43,8 @@ public class StyledTextHandler extends TagNodeHandler {
     }
 
     public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end, Style useStyle, SpanStack stack ) {
-        stack.pushSpan(new StyleCallback(getSpanner().getDefaultFont(), useStyle, start, end ));
+        stack.pushSpan(new StyleCallback(getSpanner().getFontResolver()
+                .getDefaultFont(), useStyle, start, end ));
     }
 
 }

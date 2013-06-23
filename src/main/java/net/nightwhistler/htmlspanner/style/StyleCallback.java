@@ -2,6 +2,7 @@ package net.nightwhistler.htmlspanner.style;
 
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.AlignmentSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
@@ -65,13 +66,21 @@ public class StyleCallback implements SpanCallback {
             }
 
             Log.d("StyleCallback", "Applying FontFamilySpan from " + start + " to " + end + " on text " + builder.subSequence(start, end));
+            Log.d("StyleCallback", "FontFamilySpan: " + newSpan );
+
             builder.setSpan(newSpan, start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        if ( useStyle.getFontSize() != null ) {
-            Log.d("StyleCallback", "Applying RelativeSizeSpan with size " + useStyle.getFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
-            builder.setSpan(new RelativeSizeSpan(useStyle.getFontSize()), start, end,
+        if ( useStyle.getRelativeFontSize() != null ) {
+            Log.d("StyleCallback", "Applying RelativeSizeSpan with size " + useStyle.getRelativeFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
+            builder.setSpan(new RelativeSizeSpan(useStyle.getRelativeFontSize()), start, end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        if ( useStyle.getAbsoluteFontSize() != null ) {
+            Log.d("StyleCallback", "Applying AbsoluteSizeSpan with size " + useStyle.getAbsoluteFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
+            builder.setSpan(new AbsoluteSizeSpan(useStyle.getAbsoluteFontSize()), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 

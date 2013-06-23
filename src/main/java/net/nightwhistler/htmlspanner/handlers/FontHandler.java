@@ -16,6 +16,7 @@
 
 package net.nightwhistler.htmlspanner.handlers;
 
+import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanStack;
 
@@ -30,9 +31,6 @@ import android.text.SpannableStringBuilder;
  * Handler for font-tags
  */
 public class FontHandler extends StyledTextHandler {
-	
-	private static final String SERIF = "serif";
-	private static final String SANS_SERIF = "sans-serif";
 
     public FontHandler() {
         super(new Style());
@@ -46,15 +44,13 @@ public class FontHandler extends StyledTextHandler {
 		String size = node.getAttributeByName("size");
 		String color = node.getAttributeByName("color");
 
-		if ( SERIF.equalsIgnoreCase(face) ) {
-			style = style.setFontFamily( getSpanner().getSerifFont());
-		} else if ( SANS_SERIF.equalsIgnoreCase(face)) {
-            style = style.setFontFamily( getSpanner().getSansSerifFont());
-		}
+        FontFamily family = getSpanner().getFont(face);
+
+		style = style.setFontFamily(family);
 
 		if ( size != null ) {
 			try {
-				style.setFontSize(HtmlSpanner.translateFontSize(size));
+				style = HtmlSpanner.setFontSize(style, size);
 			} catch (NumberFormatException e) {
 				//Ignore
 			}

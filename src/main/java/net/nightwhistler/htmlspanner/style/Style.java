@@ -18,7 +18,9 @@ public class Style {
 
     private final FontFamily fontFamily;
     private final TextAlignment textAlignment;
-    private final Float fontSize;
+    private final Float relativeFontSize;
+    private final Integer absoluteFontSize;
+
     private final FontWeight fontWeight;
     private final FontStyle fontStyle;
 
@@ -27,44 +29,53 @@ public class Style {
     public Style() {
         fontFamily = null;
         textAlignment = null;
-        fontSize = null;
+        relativeFontSize = null;
+        absoluteFontSize = null;
         fontWeight = null;
         fontStyle = null;
         color = null;
     }
 
-    public Style(FontFamily family, TextAlignment textAlignment, Float fontSize, FontWeight fontWeight, FontStyle fontStyle, Integer color ) {
+    public Style(FontFamily family, TextAlignment textAlignment, Float relativeFontSize,
+                 Integer absoluteFontSize, FontWeight fontWeight, FontStyle fontStyle, Integer color ) {
         this.fontFamily = family;
         this.textAlignment = textAlignment;
-        this.fontSize = fontSize;
+        this.relativeFontSize = relativeFontSize;
+        this.absoluteFontSize = absoluteFontSize;
         this.fontWeight = fontWeight;
         this.fontStyle = fontStyle;
         this.color = color;
     }
 
     public Style setFontFamily(FontFamily fontFamily) {
-        return new Style(fontFamily, this.textAlignment, this.fontSize, this.fontWeight, this.fontStyle, this.color );
+        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
+                this.fontWeight, this.fontStyle, this.color );
     }
 
 
     public Style setTextAlignment(TextAlignment alignment) {
-        return new Style(this.fontFamily, alignment, this.fontSize, this.fontWeight, this.fontStyle, this.color);
+        return new Style(this.fontFamily, alignment, this.relativeFontSize, this.absoluteFontSize, this.fontWeight, this.fontStyle, this.color);
     }
 
-    public Style setFontSize(Float fontSize) {
-        return new Style(this.fontFamily, this.textAlignment, fontSize, this.fontWeight, this.fontStyle, this.color);
+    public Style setRelativeFontSize(Float fontSize) {
+        return new Style(this.fontFamily, this.textAlignment, fontSize, this.absoluteFontSize, this.fontWeight, this.fontStyle, this.color);
+    }
+
+    public Style setAbsoluteFontSize(Integer absoluteFontSize) {
+        return new Style(this.fontFamily, this.textAlignment, this.relativeFontSize, absoluteFontSize, this.fontWeight, this.fontStyle, this.color);
     }
 
     public Style setFontWeight(FontWeight fontWeight) {
-        return new Style(fontFamily, this.textAlignment, this.fontSize, fontWeight, this.fontStyle, this.color);
+        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize, fontWeight, this.fontStyle, this.color);
     }
 
     public Style setFontStyle(FontStyle fontStyle) {
-        return new Style(fontFamily, this.textAlignment, this.fontSize, this.fontWeight, fontStyle, this.color);
+        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
+                this.fontWeight, fontStyle, this.color);
     }
 
     public Style setColor(Integer color) {
-        return new Style(fontFamily, this.textAlignment, this.fontSize, this.fontWeight, fontStyle, color);
+        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize, this.fontWeight, fontStyle, color);
     }
 
     public FontFamily getFontFamily() {
@@ -75,8 +86,12 @@ public class Style {
         return textAlignment;
     }
 
-    public Float getFontSize() {
-        return fontSize;
+    public Float getRelativeFontSize() {
+        return this.relativeFontSize;
+    }
+
+    public Integer getAbsoluteFontSize() {
+        return this.absoluteFontSize;
     }
 
     public FontWeight getFontWeight() {
@@ -96,27 +111,31 @@ public class Style {
         StringBuilder result = new StringBuilder( "{\n" );
 
         if ( fontFamily != null  ) {
-            result.append( "font-family: " + fontFamily + "\n");
+            result.append( "  font-family: " + fontFamily.getName() + "\n");
         }
 
         if ( textAlignment != null ) {
-            result.append( "text-alignment: " + textAlignment + "\n");
+            result.append( "  text-alignment: " + textAlignment + "\n");
         }
 
-        if ( fontSize != null ) {
-            result.append( "font-size: " + fontSize + "\n");
+        if ( relativeFontSize != null ) {
+            result.append( "  relative-font-size: " + relativeFontSize + "\n");
+        }
+
+        if ( absoluteFontSize != null ) {
+            result.append( "  absolute-font-size: " + relativeFontSize + "\n");
         }
 
         if ( fontWeight != null ) {
-            result.append( "font-weight: " + fontWeight + "\n" );
+            result.append( "  font-weight: " + fontWeight + "\n" );
         }
 
         if ( fontStyle != null ) {
-            result.append( "font-style: " + fontStyle + "\n" );
+            result.append( "  font-style: " + fontStyle + "\n" );
         }
 
         if ( color != null ) {
-            result.append("color: " + color + "\n");
+            result.append("  color: " + color + "\n");
         }
 
         result.append("}\n");

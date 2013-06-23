@@ -60,10 +60,7 @@ public class CSSUtil {
 
         if ( "font-size".equals(key)) {
             try {
-                float fontSize = HtmlSpanner.translateFontSize(value);
-                Log.d("CSSUtil", "Setting font-size: " + fontSize );
-                //return style.setFontSize(fontSize);
-                Style newStyle = style.setFontSize(fontSize);
+                Style newStyle = HtmlSpanner.setFontSize(style, value);
                 return newStyle;
             } catch ( NumberFormatException nfe ) {
                 Log.e("CSSUtil", "Can't parse font-size: " + value );

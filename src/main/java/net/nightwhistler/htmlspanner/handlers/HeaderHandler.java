@@ -52,7 +52,7 @@ public class HeaderHandler extends StyledTextHandler {
 
     @Override
     public Style getStyle() {
-        return super.getStyle().setFontSize(size)
+        return super.getStyle().setRelativeFontSize(size)
                 .setFontWeight(Style.FontWeight.BOLD);
     }
 
