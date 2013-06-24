@@ -31,7 +31,6 @@ public class RuleMatchingTest {
 
         assertTrue( rule.matches( nodeA ) );
         assertFalse( rule.matches( nodeB ) );
-
     }
 
     @Test

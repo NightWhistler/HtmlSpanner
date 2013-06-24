@@ -210,6 +210,8 @@ public class TableHandler extends TagNodeHandler {
                 return Alignment.ALIGN_CENTER;
             }
         }, start, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        builder.append("\n");
 	}
 
 	/**
