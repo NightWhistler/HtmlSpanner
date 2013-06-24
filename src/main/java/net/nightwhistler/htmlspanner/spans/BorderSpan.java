@@ -3,6 +3,7 @@ package net.nightwhistler.htmlspanner.spans;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.text.style.DynamicDrawableSpan;
@@ -21,6 +22,12 @@ public class BorderSpan extends DynamicDrawableSpan {
         paint.setColor(Color.GREEN);
         paint.setStyle(Paint.Style.STROKE);
 
+        Rect rect = new Rect();
+
+        //Get the text bounds into the Rect
+        paint.getTextBounds(text.toString(), start, end, rect);
+
+        //TODO: Use the rect to draw a border
         super.draw(canvas, text, start, end, x, top, y, bottom, paint);    //To change body of overridden methods use File | Settings | File Templates.
 
         canvas.drawText(text, start,end,x,y,paint);
