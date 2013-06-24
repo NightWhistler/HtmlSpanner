@@ -36,15 +36,36 @@ public class SpanStack {
 
         Style result = baseStyle;
 
+        Log.d("SpanStack", "Looking for matching CSS rules for node: "
+                + "<" + node.getName() + " id='" + option(node.getAttributeByName("id"))
+                + "' class='" + option(node.getAttributeByName("class")) + "'>");
+
+        int matches = 0;
+
         for ( MatchingRule rule: rules ) {
             if ( rule.matches(node) ) {
-                Log.d( "SpanStack", "Applying rule " + rule + " to tagNode " + node.getName() );
+                matches++;
+                Log.d( "SpanStack", "Got match on rule " + rule );
+
+                Style original = result;
                 result = rule.applyStyle(result);
+
+                Log.d("SpanStack", "Original style: " + original );
                 Log.d("SpanStack", "Resulting style: " + result);
             }
         }
 
+        Log.d("SpanStack", "Found " + matches + " matching rules.");
+
         return result;
+    }
+
+    private static String option( String s ) {
+        if ( s == null ) {
+            return "";
+        } else {
+            return s;
+        }
     }
 
     public void pushSpan( final Object span, final int start, final int end ) {

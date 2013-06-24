@@ -1,5 +1,6 @@
 package net.nightwhistler.htmlspanner.css;
 
+import android.util.Log;
 import com.osbcp.cssparser.PropertyValue;
 import com.osbcp.cssparser.Rule;
 import com.osbcp.cssparser.Selector;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Encapsulates a Rule, and allows matching.
+ * Compiled matcher / updater structure based on a Rule.
  *
  * This compiles a Rule into a Matcher structure which is stateless,
  * so it can be shared and reused.
@@ -21,37 +22,54 @@ import java.util.List;
 public class MatchingRule  {
 
     private List<List<TagNodeMatcher>> matchers = new ArrayList<List<TagNodeMatcher>>();
-    private Rule rule;
+    private List<CSSCompiler.StyleUpdater> styleUpdaters = new ArrayList<CSSCompiler.StyleUpdater>();
+
     private HtmlSpanner spanner;
+
+    private String asText;
 
     private static interface TagNodeMatcher {
         boolean matches( TagNode tagNode );
     }
 
+    private static interface StyleUpdater {
+        void updateStyle( Style style );
+    }
+
     public MatchingRule( HtmlSpanner spanner, Rule rule ) {
+
         this.spanner = spanner;
-        this.rule = rule;
 
         for ( Selector selector: rule.getSelectors() ) {
             List<TagNodeMatcher> selMatchers = createMatchersFromSelector( selector );
             this.matchers.add( selMatchers );
         }
+
+        for ( PropertyValue propertyValue: rule.getPropertyValues() ) {
+            CSSCompiler.StyleUpdater updater = CSSCompiler.getStyleUpdater(propertyValue.getProperty(),
+                    propertyValue.getValue());
+
+            if ( updater != null ) {
+                styleUpdaters.add( updater );
+            }
+        }
+
+        this.asText = rule.toString();
+    }
+
+    public String toString() {
+        return asText;
     }
 
     public Style applyStyle( final Style style ) {
 
         Style result = style;
 
-        for ( PropertyValue prop: rule.getPropertyValues() ) {
-            result = CSSUtil.mapToStyle( spanner, result, prop.getProperty(), prop.getValue() );
-        }
+       for ( CSSCompiler.StyleUpdater updater: styleUpdaters ) {
+           result = updater.updateStyle(result, spanner);
+       }
 
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return rule.toString();
     }
 
     private static List<TagNodeMatcher> createMatchersFromSelector( Selector selector ) {
@@ -127,13 +145,16 @@ public class MatchingRule  {
         @Override
         public boolean matches(TagNode tagNode) {
 
-            String classAttribute = tagNode.getAttributeByName("class");
+            if ( tagNode == null ) {
+                return false;
+            }
 
             //If a tag name is given it should match
-            if ( tagName.length() > 0 && ! tagName.equals(tagNode.getName() ) ) {
+            if (tagName != null && tagName.length() > 0 && ! tagName.equals(tagNode.getName() ) ) {
                 return  false;
             }
 
+            String classAttribute = tagNode.getAttributeByName("class");
             return classAttribute != null && classAttribute.equals(className);
         }
     }
@@ -147,7 +168,7 @@ public class MatchingRule  {
 
         @Override
         public boolean matches(TagNode tagNode) {
-            return tagName.equalsIgnoreCase( tagNode.getName() );
+            return tagNode != null && tagName.equalsIgnoreCase( tagNode.getName() );
         }
     }
 
@@ -160,6 +181,11 @@ public class MatchingRule  {
 
         @Override
         public boolean matches(TagNode tagNode) {
+
+            if ( tagNode == null ) {
+                return false;
+            }
+
             String idAttribute = tagNode.getAttributeByName("id");
             return idAttribute != null && idAttribute.equals( id );
         }

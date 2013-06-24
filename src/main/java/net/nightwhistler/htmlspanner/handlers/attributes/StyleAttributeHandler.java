@@ -1,11 +1,9 @@
 package net.nightwhistler.htmlspanner.handlers.attributes;
 
-import android.graphics.Color;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
-import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanStack;
-import net.nightwhistler.htmlspanner.css.CSSUtil;
+import net.nightwhistler.htmlspanner.css.CSSCompiler;
 import net.nightwhistler.htmlspanner.style.Style;
 import net.nightwhistler.htmlspanner.style.StyledTextHandler;
 import org.htmlcleaner.TagNode;
@@ -51,11 +49,12 @@ public class StyleAttributeHandler extends WrappingStyleHandler  {
             String key =  keyVal[0].toLowerCase().trim();
             String value = keyVal[1].toLowerCase().trim();
 
-            try {
-                style = CSSUtil.mapToStyle(getSpanner(), style, key, value);
-            } catch (IllegalArgumentException ie) {
-                Log.e("StyleAttributeHandler", "Unsupported value " + value + " for property " + key  );
+            CSSCompiler.StyleUpdater updater = CSSCompiler.getStyleUpdater(key, value);
+
+            if ( updater != null ) {
+                style = updater.updateStyle(style, getSpanner());
             }
+
         }
 
         return style;
