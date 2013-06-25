@@ -15,14 +15,13 @@
  */
 package net.nightwhistler.htmlspanner.handlers;
 
-import net.nightwhistler.htmlspanner.TagNodeHandler;
-import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
+import net.nightwhistler.htmlspanner.SpanStack;
 
+import net.nightwhistler.htmlspanner.style.Style;
+import net.nightwhistler.htmlspanner.style.StyledTextHandler;
 import org.htmlcleaner.TagNode;
 
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.RelativeSizeSpan;
 
 /**
  * Handles Headers, by assigning a relative text-size.
@@ -38,7 +37,7 @@ import android.text.style.RelativeSizeSpan;
  * @author Alex Kuiper
  * 
  */
-public class HeaderHandler extends TagNodeHandler {
+public class HeaderHandler extends StyledTextHandler {
 
 	private float size;
 
@@ -48,10 +47,16 @@ public class HeaderHandler extends TagNodeHandler {
 	 * @param size
 	 */
 	public HeaderHandler(float size) {
-		this.size = size;
+        this.size = size;
 	}
 
-	@Override
+    @Override
+    public Style getStyle() {
+        return super.getStyle().setRelativeFontSize(size)
+                .setFontWeight(Style.FontWeight.BOLD);
+    }
+
+    @Override
 	public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
 		if (builder.length() > 0
 				&& builder.charAt(builder.length() - 1) != '\n') {
@@ -61,27 +66,9 @@ public class HeaderHandler extends TagNodeHandler {
 
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end) {
+			int start, int end, Style style, SpanStack stack ) {
 
-		builder.setSpan(new RelativeSizeSpan(size), start, end,
-				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		
-		FontFamilySpan originalSpan = getFontFamilySpan(builder, start, end);
-
-		FontFamilySpan boldSpan;
-		
-		if ( originalSpan == null ) {
-			boldSpan = new FontFamilySpan(getSpanner()
-				.getDefaultFont());
-		} else {
-			boldSpan = new FontFamilySpan(originalSpan.getFontFamily());
-			boldSpan.setItalic(originalSpan.isItalic());
-		}
-		
-		boldSpan.setBold(true);
-
-		builder.setSpan(boldSpan, start, end,
-				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        super.handleTagNode(node, builder, start, end, style, stack);
 
 		appendNewLine(builder);
 		appendNewLine(builder);

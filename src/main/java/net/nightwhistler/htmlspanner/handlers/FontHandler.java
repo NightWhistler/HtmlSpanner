@@ -16,96 +16,57 @@
 
 package net.nightwhistler.htmlspanner.handlers;
 
-import net.nightwhistler.htmlspanner.TagNodeHandler;
-import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
+import net.nightwhistler.htmlspanner.FontFamily;
+import net.nightwhistler.htmlspanner.SpanStack;
 
+import net.nightwhistler.htmlspanner.css.CSSCompiler;
+import net.nightwhistler.htmlspanner.style.Style;
+import net.nightwhistler.htmlspanner.style.StyledTextHandler;
 import org.htmlcleaner.TagNode;
 
-import android.graphics.Color;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 
-public class FontHandler extends TagNodeHandler {
-	
-	private static final String SERIF = "serif";
-	private static final String SANS_SERIF = "sans-serif";
+/**
+ * Handler for font-tags
+ */
+public class FontHandler extends StyledTextHandler {
+
+    public FontHandler() {
+        super(new Style());
+    }
 
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end) {
-		
+			int start, int end, Style style, SpanStack spanStack) {
+
 		String face = node.getAttributeByName("face");
 		String size = node.getAttributeByName("size");
 		String color = node.getAttributeByName("color");
-		
-		FontFamilySpan originalSpan = getFontFamilySpan(builder, start, end);		
-		FontFamilySpan fontSpan;		
-		
-		if ( SERIF.equalsIgnoreCase(face) ) {
-			fontSpan = new FontFamilySpan(getSpanner().getSerifFont());
-		} else if ( SANS_SERIF.equalsIgnoreCase(face)) {
-			fontSpan = new FontFamilySpan(getSpanner().getSansSerifFont() );
-		} else if ( originalSpan != null ) {
-			fontSpan = new FontFamilySpan(originalSpan.getFontFamily());
-		} else {
-			fontSpan = new FontFamilySpan(getSpanner().getDefaultFont());
-		}
-		
-		if ( originalSpan != null ) {
-			fontSpan.setBold(originalSpan.isBold());
-			fontSpan.setItalic(originalSpan.isItalic());
-		}		
-		
-		builder.setSpan(fontSpan, start, end,
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        FontFamily family = getSpanner().getFont(face);
+
+		style = style.setFontFamily(family);
 
 		if ( size != null ) {
-			try {			
-				int fontSize = Integer.parseInt(size);
-				builder.setSpan(new RelativeSizeSpan(translateFontSize(fontSize)), start, end,
-						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            CSSCompiler.StyleUpdater updater = CSSCompiler.getStyleUpdater("font-size", size);
 
-			} catch (NumberFormatException e) {
-				//Ignore
-			}
+            if ( updater != null ) {
+                style = updater.updateStyle(style, getSpanner() );
+            }
 		}
 		
 		if ( color != null ) {
-			int fontColor = Color.BLACK;
 
-            try {
-                fontColor = Color.parseColor(color);
-            } catch ( IllegalArgumentException ia ) {
+            CSSCompiler.StyleUpdater updater = CSSCompiler.getStyleUpdater("color", color);
 
+            if ( updater != null ) {
+                style = updater.updateStyle(style, getSpanner() );
             }
-
-			builder.setSpan(new ForegroundColorSpan(fontColor), start, end,
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
+
+        super.handleTagNode(node, builder, start, end, style, spanStack);
 	}
 	
-	private static float translateFontSize( int fontSize ) {
-		
-		switch (fontSize ) {
-		case 1:
-			return 0.6f;
-		case 2:
-			return 0.8f;
-		case 3:
-			return 1.0f;
-		case 4:
-			return 1.2f;
-		case 5:
-			return 1.4f;
-		case 6:
-			return 1.6f;
-		case 7:
-			return 1.8f;
-		}
-		
-		return 1.0f;
-	}
+
 	
 }

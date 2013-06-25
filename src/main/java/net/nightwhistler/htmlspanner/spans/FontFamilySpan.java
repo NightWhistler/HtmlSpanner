@@ -39,8 +39,8 @@ public class FontFamilySpan extends TypefaceSpan {
 
 	public void setItalic(boolean italic) {
 		this.italic = italic;
-	}	
-	
+	}
+
 	public FontFamily getFontFamily() {
 		return fontFamily;
 	}
@@ -89,4 +89,14 @@ public class FontFamilySpan extends TypefaceSpan {
 			paint.setTypeface(tf.getBoldItalicTypeface());
 		}
 	}
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder("{\n");
+        builder.append( "  font-family: " + fontFamily.getName() + "\n" );
+        builder.append( "  bold: " + isBold() + "\n");
+        builder.append( "  italic: " + isItalic() + "\n" );
+        builder.append( "}");
+
+        return builder.toString();
+    }
 }

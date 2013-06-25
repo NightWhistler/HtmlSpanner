@@ -21,6 +21,7 @@ import java.util.List;
 import android.graphics.*;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 
 import org.htmlcleaner.ContentNode;
@@ -173,7 +174,7 @@ public class TableHandler extends TagNodeHandler {
 
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end) {
+			int start, int end, SpanStack spanStack) {
 
 		Table table = getTable(node);
 
@@ -186,8 +187,7 @@ public class TableHandler extends TagNodeHandler {
 			drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
 					drawable.getIntrinsicHeight());
 
-			builder.setSpan(new ImageSpan(drawable), start + i, builder.length(),
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			spanStack.pushSpan(new ImageSpan(drawable), start + i, builder.length());
 
 		}
 
@@ -210,6 +210,8 @@ public class TableHandler extends TagNodeHandler {
                 return Alignment.ALIGN_CENTER;
             }
         }, start, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        builder.append("\n");
 	}
 
 	/**

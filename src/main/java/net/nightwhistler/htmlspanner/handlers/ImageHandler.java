@@ -18,6 +18,7 @@ package net.nightwhistler.htmlspanner.handlers;
 import java.io.IOException;
 import java.net.URL;
 
+import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 
 import org.htmlcleaner.TagNode;
@@ -43,7 +44,7 @@ public class ImageHandler extends TagNodeHandler {
 
 	@Override
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end) {
+			int start, int end, SpanStack stack) {
 		String src = node.getAttributeByName("src");
 
 		builder.append("\uFFFC");
@@ -54,8 +55,8 @@ public class ImageHandler extends TagNodeHandler {
 			Drawable drawable = new BitmapDrawable(bitmap);
 			drawable.setBounds(0, 0, bitmap.getWidth() - 1,
 					bitmap.getHeight() - 1);
-			builder.setSpan(new ImageSpan(drawable), start, end,
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            stack.pushSpan( new ImageSpan(drawable), start, end );
 		}
 	}
 

@@ -16,6 +16,7 @@
 
 package net.nightwhistler.htmlspanner.handlers;
 
+import net.nightwhistler.htmlspanner.SpanStack;
 import org.htmlcleaner.TagNode;
 
 import android.text.Spannable;
@@ -43,10 +44,11 @@ public class MarginHandler extends TagNodeHandler {
 	}
 
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end) {
+			int start, int end, SpanStack spanStack) {
 
-		builder.setSpan(new LeadingMarginSpan.Standard(MARGIN_INDENT), start,
-				end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spanStack.pushSpan(new LeadingMarginSpan.Standard(MARGIN_INDENT), start,
+                end);
+
 		appendNewLine(builder);
 		appendNewLine(builder);
 	}

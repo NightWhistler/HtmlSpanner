@@ -15,6 +15,7 @@
  */
 package net.nightwhistler.htmlspanner.handlers;
 
+import net.nightwhistler.htmlspanner.SpanStack;
 import org.htmlcleaner.TagNode;
 
 import android.text.SpannableStringBuilder;
@@ -28,21 +29,25 @@ import net.nightwhistler.htmlspanner.TagNodeHandler;
  * @author Alex Kuiper
  * 
  */
-public class NewLineHandler extends TagNodeHandler {
+public class NewLineHandler extends WrappingHandler {
 
-	int numberOfNewLines;
+	private int numberOfNewLines;
 
 	/**
 	 * Creates this handler for a specified number of newlines.
 	 * 
 	 * @param howMany
 	 */
-	public NewLineHandler(int howMany) {
+	public NewLineHandler(int howMany, TagNodeHandler wrappedHandler) {
+        super(wrappedHandler);
 		this.numberOfNewLines = howMany;
 	}
 
 	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end) {
+			int start, int end, SpanStack spanStack) {
+
+        super.handleTagNode(node, builder, start, end, spanStack);
+
 		for (int i = 0; i < numberOfNewLines; i++) {
 			appendNewLine(builder);
 		}

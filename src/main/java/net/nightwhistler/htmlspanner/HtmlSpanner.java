@@ -20,26 +20,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.util.Log;
-import net.nightwhistler.htmlspanner.handlers.AlignmentHandler;
-import net.nightwhistler.htmlspanner.handlers.BoldHandler;
-import net.nightwhistler.htmlspanner.handlers.CenterHandler;
-import net.nightwhistler.htmlspanner.handlers.FontHandler;
-import net.nightwhistler.htmlspanner.handlers.HeaderHandler;
-import net.nightwhistler.htmlspanner.handlers.ImageHandler;
-import net.nightwhistler.htmlspanner.handlers.ItalicHandler;
-import net.nightwhistler.htmlspanner.handlers.LinkHandler;
-import net.nightwhistler.htmlspanner.handlers.ListItemHandler;
-import net.nightwhistler.htmlspanner.handlers.MarginHandler;
-import net.nightwhistler.htmlspanner.handlers.MonoSpaceHandler;
-import net.nightwhistler.htmlspanner.handlers.NewLineHandler;
-import net.nightwhistler.htmlspanner.handlers.PreHandler;
-import net.nightwhistler.htmlspanner.handlers.RelativeSizeHandler;
-import net.nightwhistler.htmlspanner.handlers.SubScriptHandler;
-import net.nightwhistler.htmlspanner.handlers.SuperScriptHandler;
+import com.osbcp.cssparser.Rule;
+import com.osbcp.cssparser.Selector;
+import net.nightwhistler.htmlspanner.handlers.*;
+import net.nightwhistler.htmlspanner.handlers.attributes.AlignmentAttributeHandler;
 
+import net.nightwhistler.htmlspanner.handlers.attributes.StyleAttributeHandler;
+import net.nightwhistler.htmlspanner.style.Style;
+import net.nightwhistler.htmlspanner.style.StyledTextHandler;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
@@ -67,16 +59,14 @@ public class HtmlSpanner {
 
 	private HtmlCleaner htmlCleaner;
 
-	private FontFamily defaultFont;
-	
-	private FontFamily serifFont;
-	private FontFamily sansSerifFont;
+    private FontResolver fontResolver;
+
 
 	/**
 	 * Creates a new HtmlSpanner using a default HtmlCleaner instance.
 	 */
 	public HtmlSpanner() {
-		this(createHtmlCleaner());
+		this(createHtmlCleaner(), new SystemFontResolver());
 	}
 
 	/**
@@ -86,40 +76,25 @@ public class HtmlSpanner {
 	 * 
 	 * @param cleaner
 	 */
-	public HtmlSpanner(HtmlCleaner cleaner) {
+	public HtmlSpanner(HtmlCleaner cleaner, FontResolver fontResolver) {
 		this.htmlCleaner = cleaner;
-		this.handlers = new HashMap<String, TagNodeHandler>();
-		this.defaultFont = new FontFamily("default", Typeface.DEFAULT);
-		this.serifFont = new FontFamily("serif", Typeface.SERIF);
-		this.sansSerifFont = new FontFamily("sans-serif", Typeface.SANS_SERIF);
+		this.fontResolver = fontResolver;
+        this.handlers = new HashMap<String, TagNodeHandler>();
 		
 		registerBuiltInHandlers();
-
 	}
 
-	public FontFamily getDefaultFont() {
-		return defaultFont;
-	}
-	
-	public void setDefaultFont(FontFamily defaultFont) {
-		this.defaultFont = defaultFont;
-	}
-	
-	public FontFamily getSansSerifFont() {
-		return sansSerifFont;
-	}
-	
-	public void setSansSerifFont(FontFamily sansSerifFont) {
-		this.sansSerifFont = sansSerifFont;
-	}
-	
-	public FontFamily getSerifFont() {
-		return serifFont;
-	}
-	
-	public void setSerifFont(FontFamily serifFont) {
-		this.serifFont = serifFont;
-	}
+	public FontResolver getFontResolver() {
+        return this.fontResolver;
+    }
+
+    public void setFontResolver( FontResolver fontResolver ) {
+        this.fontResolver = fontResolver;
+    }
+
+    public FontFamily getFont( String name ) {
+        return this.fontResolver.getFont(name);
+    }
 
 	/**
 	 * Switch to specify whether excess whitespace should be stripped from the
@@ -216,7 +191,10 @@ public class HtmlSpanner {
 	 */
 	public Spannable fromTagNode(TagNode node) {
 		SpannableStringBuilder result = new SpannableStringBuilder();
-		handleContent(result, node);
+        SpanStack stack = new SpanStack();
+		handleContent(result, node, stack);
+
+        stack.applySpans(result);
 
 		return result;
 	}
@@ -237,80 +215,85 @@ public class HtmlSpanner {
 		cleanerProperties.setIgnoreQuestAndExclam(true);
 		cleanerProperties.setUseEmptyElementTags(false);
 
-		cleanerProperties.setPruneTags("script,style,title");
+		cleanerProperties.setPruneTags("script,title");
 
 		return result;
 	}
 
-    private void handleContent(SpannableStringBuilder builder, Object node) {
+	private void handleContent(SpannableStringBuilder builder, Object node,
+			 SpanStack stack) {
+		if (node instanceof ContentNode) {
 
-        if (node instanceof TagNode) {
+			ContentNode contentNode = (ContentNode) node;
 
-            TagNode tagNode = (TagNode) node;
+			if (builder.length() > 0) {
+				char lastChar = builder.charAt(builder.length() - 1);
+				if (lastChar != ' ' && lastChar != '\n') {
+					builder.append(' ');
+				}
+			}
 
-            TagNodeHandler handler = this.handlers.get(tagNode.getName());
+			String text = TextUtil.replaceHtmlEntities(
+					contentNode.getContent().toString(), false);
 
-            int lengthBefore = builder.length();
-
-            if (handler != null) {
-                handler.beforeChildren(tagNode, builder);
+            if ( isStripExtraWhiteSpace() ) {
+                //Replace unicode non-breaking space with normal space.
+                text = text.replace( '\u00A0', ' ' );
             }
 
-            if (handler == null || !handler.rendersContent()) {
+            text = text.trim();
 
-                for (Object childNode : tagNode.getChildren()) {
-                    handleContent(builder, childNode);
-                }
-            }
+			builder.append(text);
 
-            int lengthAfter = builder.length();
+		} else if (node instanceof TagNode) {
+			applySpan(builder, (TagNode) node, stack);
+		}
+	}
 
-            if (handler != null) {
-                handler.handleTagNode(tagNode, builder, lengthBefore, lengthAfter);
-            }
+	private void applySpan(SpannableStringBuilder builder, TagNode node, SpanStack stack) {
 
-        } else if (node instanceof ContentNode) {
-            handleContentNode(builder, (ContentNode) node);
-        }
+		TagNodeHandler handler = this.handlers.get(node.getName());
+
+		int lengthBefore = builder.length();
+
+		if (handler != null) {
+			handler.beforeChildren(node, builder);
+		}
+
+		if (handler == null || !handler.rendersContent()) {
+
+			for (Object childNode : node.getChildren()) {
+				handleContent(builder, childNode, stack);
+			}
+		}
+
+		int lengthAfter = builder.length();
+
+		if (handler != null) {
+			handler.handleTagNode(node, builder, lengthBefore, lengthAfter, stack);
+		}
+	}
+
+
+    private static StyledTextHandler wrap( StyledTextHandler handler ) {
+        return new StyleAttributeHandler(new AlignmentAttributeHandler(handler));
     }
-
-
-    private void handleContentNode( SpannableStringBuilder builder, ContentNode contentNode ) {
-
-        if (builder.length() > 0) {
-            char lastChar = builder.charAt(builder.length() - 1);
-            if (lastChar != ' ' && lastChar != '\n') {
-                builder.append(' ');
-            }
-        }
-
-        String text = TextUtil.replaceHtmlEntities(
-                contentNode.getContent().toString(), false);
-
-        if ( isStripExtraWhiteSpace() ) {
-            //Replace unicode non-breaking space with normal space.
-            text = text.replace( '\u00A0', ' ' );
-        }
-
-        text = text.trim();
-
-        builder.append(text);
-    }
-
 
 	private void registerBuiltInHandlers() {
 
-		TagNodeHandler italicHandler = new ItalicHandler();
+		TagNodeHandler italicHandler = new StyledTextHandler(
+                new Style().setFontStyle(Style.FontStyle.ITALIC));
 
 		registerHandler("i", italicHandler);
-		registerHandler("strong", italicHandler);
+		registerHandler("em", italicHandler);
 		registerHandler("cite", italicHandler);
 		registerHandler("dfn", italicHandler);
 
-		TagNodeHandler boldHandler = new BoldHandler();
+		TagNodeHandler boldHandler = new StyledTextHandler(
+                new Style().setFontWeight(Style.FontWeight.BOLD));
 
 		registerHandler("b", boldHandler);
-		registerHandler("em", boldHandler);
+		registerHandler("strong", boldHandler);
 
 		TagNodeHandler marginHandler = new MarginHandler();
 
@@ -318,23 +301,34 @@ public class HtmlSpanner {
 		registerHandler("ul", marginHandler);
 		registerHandler("ol", marginHandler);
 
-		TagNodeHandler brHandler = new NewLineHandler(1);
+        registerHandler("code", wrap(new StyledTextHandler(
+                new Style().setFontFamily(fontResolver.getMonoSpaceFont()))));
+
+        registerHandler("style", new StyleNodeHandler() );
+
+        //We wrap an alignment-handler to support
+        //align attributes
+        StyledTextHandler blockAlignment = wrap(new StyledTextHandler());
+
+        TagNodeHandler brHandler = new NewLineHandler(1, blockAlignment);
 
 		registerHandler("br", brHandler);
 
-		TagNodeHandler pHandler = new NewLineHandler(2);
-		
-		//We wrap an alignment-handler to support
-		//align attributes
-		registerHandler("p", new AlignmentHandler(pHandler));
-		registerHandler("div", new AlignmentHandler(pHandler));
+        //And add 2 newlines at the end
+		TagNodeHandler pHandler = new NewLineHandler(2, blockAlignment);
 
-		registerHandler("h1", new HeaderHandler(1.5f));
-		registerHandler("h2", new HeaderHandler(1.4f));
-		registerHandler("h3", new HeaderHandler(1.3f));
-		registerHandler("h4", new HeaderHandler(1.2f));
-		registerHandler("h5", new HeaderHandler(1.1f));
-		registerHandler("h6", new HeaderHandler(1f));
+		registerHandler("p", pHandler);
+		registerHandler("div", pHandler);
+
+        registerHandler("span", blockAlignment );
+        registerHandler("body", blockAlignment);
+
+		registerHandler("h1", wrap(new HeaderHandler(1.5f)));
+		registerHandler("h2", wrap(new HeaderHandler(1.4f)));
+		registerHandler("h3", wrap(new HeaderHandler(1.3f)));
+		registerHandler("h4", wrap(new HeaderHandler(1.2f)));
+		registerHandler("h5", wrap(new HeaderHandler(1.1f)));
+		registerHandler("h6", wrap(new HeaderHandler(1f)));
 
 		TagNodeHandler monSpaceHandler = new MonoSpaceHandler();
 
@@ -344,10 +338,10 @@ public class HtmlSpanner {
 
 		registerHandler("pre", preHandler);
 
-		TagNodeHandler bigHandler = new RelativeSizeHandler(1.25f);
+		TagNodeHandler bigHandler = new StyledTextHandler(new Style().setRelativeFontSize(1.25f));
 		registerHandler("big", bigHandler);
 
-		TagNodeHandler smallHandler = new RelativeSizeHandler(0.8f);
+		TagNodeHandler smallHandler = new StyledTextHandler(new Style().setRelativeFontSize(0.8f));
 		registerHandler("small", smallHandler);
 
 		TagNodeHandler subHandler = new SubScriptHandler();
@@ -356,7 +350,7 @@ public class HtmlSpanner {
 		TagNodeHandler superHandler = new SuperScriptHandler();
 		registerHandler("sup", superHandler);
 
-		TagNodeHandler centerHandler = new CenterHandler();
+		TagNodeHandler centerHandler = new StyledTextHandler(new Style().setTextAlignment(Style.TextAlignment.CENTER));
 		registerHandler("center", centerHandler);
 
 		registerHandler("li", new ListItemHandler());
@@ -365,6 +359,7 @@ public class HtmlSpanner {
 		registerHandler("img", new ImageHandler());
 		
 		registerHandler("font", new FontHandler() );
+
 	}
 
 }
