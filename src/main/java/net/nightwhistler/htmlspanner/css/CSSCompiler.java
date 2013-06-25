@@ -2,21 +2,58 @@ package net.nightwhistler.htmlspanner.css;
 
 import android.graphics.Color;
 import android.util.Log;
+import com.osbcp.cssparser.PropertyValue;
+import com.osbcp.cssparser.Rule;
+import com.osbcp.cssparser.Selector;
 import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.style.Style;
+import org.htmlcleaner.TagNode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: alex
- * Date: 6/22/13
- * Time: 11:21 AM
- * To change this template use File | Settings | File Templates.
+ * Compiler for CSS Rules.
+ *
+ * The compiler takes the raw parsed form (a Rule) of a CSS rule
+ * and transforms it into an executable CompiledRule where all
+ * the parsing of values has already been done.
+ *
+ *
  */
 public class CSSCompiler {
 
     public static interface StyleUpdater {
         Style updateStyle( Style style, HtmlSpanner spanner );
+    }
+
+    public static interface TagNodeMatcher {
+        boolean matches( TagNode tagNode );
+    }
+
+    public static CompiledRule compile( Rule rule, HtmlSpanner spanner ) {
+
+        List<List<TagNodeMatcher>> matchers = new ArrayList<List<TagNodeMatcher>>();
+        List<StyleUpdater> styleUpdaters = new ArrayList<StyleUpdater>();
+
+        for ( Selector selector: rule.getSelectors() ) {
+            List<CSSCompiler.TagNodeMatcher> selMatchers = CSSCompiler.createMatchersFromSelector(selector);
+            matchers.add( selMatchers );
+        }
+
+        for ( PropertyValue propertyValue: rule.getPropertyValues() ) {
+            CSSCompiler.StyleUpdater updater = CSSCompiler.getStyleUpdater(propertyValue.getProperty(),
+                    propertyValue.getValue());
+
+            if ( updater != null ) {
+                styleUpdaters.add( updater );
+            }
+        }
+
+        String asText = rule.toString();
+
+        return new CompiledRule(spanner, matchers, styleUpdaters, asText );
     }
 
     public static Integer parseCSSColor( String colorString ) {
@@ -36,9 +73,102 @@ public class CSSCompiler {
         return Color.parseColor(colorString);
     }
 
+    public static List<TagNodeMatcher> createMatchersFromSelector( Selector selector ) {
+        List<TagNodeMatcher> matchers = new ArrayList<TagNodeMatcher>();
+
+        String selectorString = selector.toString();
+
+        String[] parts = selectorString.split("\\s");
+
+        //Create a reversed matcher list
+        for ( int i=parts.length -1; i >= 0; i-- ) {
+            matchers.add( createMatcherFromPart(parts[i]));
+        }
+
+        return matchers;
+    }
+
+    private static TagNodeMatcher createMatcherFromPart( String selectorPart ) {
+
+        //Match by class
+        if ( selectorPart.indexOf('.') != -1 ) {
+            return new ClassMatcher(selectorPart);
+        }
+
+        if ( selectorPart.startsWith("#") ) {
+            return new IdMatcher( selectorPart );
+        }
+
+        return new TagNameMatcher(selectorPart);
+    }
+
+
+
+    private static class ClassMatcher implements TagNodeMatcher {
+
+        private String tagName;
+        private String className;
+
+        private ClassMatcher( String selectorString ) {
+
+            String[] elements = selectorString.split("\\.");
+
+            if ( elements.length == 2 ) {
+                tagName = elements[0];
+                className = elements[1];
+            }
+        }
+
+        @Override
+        public boolean matches(TagNode tagNode) {
+
+            if ( tagNode == null ) {
+                return false;
+            }
+
+            //If a tag name is given it should match
+            if (tagName != null && tagName.length() > 0 && ! tagName.equals(tagNode.getName() ) ) {
+                return  false;
+            }
+
+            String classAttribute = tagNode.getAttributeByName("class");
+            return classAttribute != null && classAttribute.equals(className);
+        }
+    }
+
+    private static class TagNameMatcher implements TagNodeMatcher {
+        private String tagName;
+
+        private TagNameMatcher( String selectorString ) {
+            this.tagName = selectorString.trim();
+        }
+
+        @Override
+        public boolean matches(TagNode tagNode) {
+            return tagNode != null && tagName.equalsIgnoreCase( tagNode.getName() );
+        }
+    }
+
+    private static class IdMatcher implements TagNodeMatcher {
+        private String id;
+
+        private IdMatcher( String selectorString ) {
+            id = selectorString.substring(1);
+        }
+
+        @Override
+        public boolean matches(TagNode tagNode) {
+
+            if ( tagNode == null ) {
+                return false;
+            }
+
+            String idAttribute = tagNode.getAttributeByName("id");
+            return idAttribute != null && idAttribute.equals( id );
+        }
+    }
+
     public static StyleUpdater getStyleUpdater( final String key, final String value) {
-
-
 
         if ( "color".equals(key)) {
             try {

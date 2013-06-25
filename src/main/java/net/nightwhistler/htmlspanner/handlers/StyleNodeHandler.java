@@ -6,7 +6,7 @@ import com.osbcp.cssparser.CSSParser;
 import com.osbcp.cssparser.Rule;
 import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
-import net.nightwhistler.htmlspanner.css.MatchingRule;
+import net.nightwhistler.htmlspanner.css.CSSCompiler;
 import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.TagNode;
 
@@ -33,7 +33,7 @@ public class StyleNodeHandler extends TagNodeHandler {
     private void parseCSSFromText( StringBuilder text, SpanStack spanStack ) {
         try {
             for ( Rule rule: CSSParser.parse( text.toString() ) ) {
-                spanStack.registerRule( new MatchingRule( getSpanner(), rule ) );
+                spanStack.registerCompiledRule(CSSCompiler.compile(rule, getSpanner()));
             }
         } catch ( Exception e ) {
             Log.e( "StyleNodeHandler", "Unparseable CSS definition", e );

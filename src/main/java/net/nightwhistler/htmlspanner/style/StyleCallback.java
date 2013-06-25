@@ -70,7 +70,7 @@ public class StyleCallback implements SpanCallback {
         }
 
         if ( useStyle.getBackgroundColor() != null ) {
-            Log.d("StyleCallback", "Applying BackgroundColorSpan with color " + useStyle.getBackgroundColor() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
+            //Log.d("StyleCallback", "Applying BackgroundColorSpan with color " + useStyle.getBackgroundColor() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
             builder.setSpan(new BackgroundColorSpan(useStyle.getBackgroundColor()), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }

@@ -3,8 +3,7 @@ package net.nightwhistler.htmlspanner;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
-import com.osbcp.cssparser.Rule;
-import net.nightwhistler.htmlspanner.css.MatchingRule;
+import net.nightwhistler.htmlspanner.css.CompiledRule;
 import net.nightwhistler.htmlspanner.style.Style;
 import org.htmlcleaner.TagNode;
 
@@ -23,11 +22,11 @@ public class SpanStack {
 
     private Stack<SpanCallback> spanItemStack = new Stack<SpanCallback>();
 
-    private Set<MatchingRule> rules = new HashSet<MatchingRule>();
+    private Set<CompiledRule> rules = new HashSet<CompiledRule>();
 
-    public void registerRule( MatchingRule rule ) {
+    public void registerCompiledRule(CompiledRule rule) {
 
-        Log.d("SpanStack", "Registering new Rule: " + rule);
+        Log.d("SpanStack", "Registering new CompiledRule: " + rule);
 
         this.rules.add( rule );
     }
@@ -42,7 +41,7 @@ public class SpanStack {
 
         int matches = 0;
 
-        for ( MatchingRule rule: rules ) {
+        for ( CompiledRule rule: rules ) {
             if ( rule.matches(node) ) {
                 matches++;
                 Log.d( "SpanStack", "Got match on rule " + rule );
