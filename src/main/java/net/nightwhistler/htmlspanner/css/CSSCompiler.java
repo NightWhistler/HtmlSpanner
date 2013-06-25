@@ -34,6 +34,8 @@ public class CSSCompiler {
 
     public static CompiledRule compile( Rule rule, HtmlSpanner spanner ) {
 
+        Log.d("CSSCompiler", "Compiling rule " + rule );
+
         List<List<TagNodeMatcher>> matchers = new ArrayList<List<TagNodeMatcher>>();
         List<StyleUpdater> styleUpdaters = new ArrayList<StyleUpdater>();
 

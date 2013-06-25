@@ -25,9 +25,6 @@ public class SpanStack {
     private Set<CompiledRule> rules = new HashSet<CompiledRule>();
 
     public void registerCompiledRule(CompiledRule rule) {
-
-        Log.d("SpanStack", "Registering new CompiledRule: " + rule);
-
         this.rules.add( rule );
     }
 
