@@ -79,4 +79,8 @@ public class FontFamily {
 		return italicTypeface == null;
 	}
 
+    public String toString() {
+        return name;
+    }
+
 }

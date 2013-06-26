@@ -3,8 +3,7 @@ package net.nightwhistler.htmlspanner;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
-import com.osbcp.cssparser.Rule;
-import net.nightwhistler.htmlspanner.css.MatchingRule;
+import net.nightwhistler.htmlspanner.css.CompiledRule;
 import net.nightwhistler.htmlspanner.style.Style;
 import org.htmlcleaner.TagNode;
 
@@ -23,12 +22,9 @@ public class SpanStack {
 
     private Stack<SpanCallback> spanItemStack = new Stack<SpanCallback>();
 
-    private Set<MatchingRule> rules = new HashSet<MatchingRule>();
+    private Set<CompiledRule> rules = new HashSet<CompiledRule>();
 
-    public void registerRule( MatchingRule rule ) {
-
-        Log.d("SpanStack", "Registering new Rule: " + rule);
-
+    public void registerCompiledRule(CompiledRule rule) {
         this.rules.add( rule );
     }
 
@@ -36,15 +32,36 @@ public class SpanStack {
 
         Style result = baseStyle;
 
-        for ( MatchingRule rule: rules ) {
+        Log.d("SpanStack", "Looking for matching CSS rules for node: "
+                + "<" + node.getName() + " id='" + option(node.getAttributeByName("id"))
+                + "' class='" + option(node.getAttributeByName("class")) + "'>");
+
+        int matches = 0;
+
+        for ( CompiledRule rule: rules ) {
             if ( rule.matches(node) ) {
-                Log.d( "SpanStack", "Applying rule " + rule + " to tagNode " + node.getName() );
+                matches++;
+                Log.d( "SpanStack", "Got match on rule " + rule );
+
+                Style original = result;
                 result = rule.applyStyle(result);
+
+                Log.d("SpanStack", "Original style: " + original );
                 Log.d("SpanStack", "Resulting style: " + result);
             }
         }
 
+        Log.d("SpanStack", "Found " + matches + " matching rules.");
+
         return result;
+    }
+
+    private static String option( String s ) {
+        if ( s == null ) {
+            return "";
+        } else {
+            return s;
+        }
     }
 
     public void pushSpan( final Object span, final int start, final int end ) {

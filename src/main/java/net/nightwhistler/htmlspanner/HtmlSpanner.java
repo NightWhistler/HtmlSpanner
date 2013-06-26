@@ -274,50 +274,6 @@ public class HtmlSpanner {
 		}
 	}
 
-    private static float translateFontSize( int fontSize ) {
-
-        switch (fontSize ) {
-            case 1:
-                return 0.6f;
-            case 2:
-                return 0.8f;
-            case 3:
-                return 1.0f;
-            case 4:
-                return 1.2f;
-            case 5:
-                return 1.4f;
-            case 6:
-                return 1.6f;
-            case 7:
-                return 1.8f;
-        }
-
-        return 1.0f;
-    }
-
-    public static Style setFontSize( Style style, String fontSize ) {
-
-        if ( fontSize.endsWith("px") ) {
-            return style.setAbsoluteFontSize( Integer.parseInt( fontSize.substring(0, fontSize.length() -2) ));
-        }
-
-
-        if ( fontSize.endsWith("%") ) {
-            Log.d("HtmlSpanner", "translating percentage " + fontSize );
-            int percentage = Integer.parseInt( fontSize.substring(0, fontSize.length() -1 ) );
-
-            return style.setRelativeFontSize(percentage / 100f);
-        }
-
-        if ( fontSize.endsWith("em") ) {
-            String number = fontSize.substring(0, fontSize.length() - 2 );
-            return style.setRelativeFontSize( Float.parseFloat(number) );
-        }
-
-        //TODO: parse things like em and px, larger, smaller, etc.
-        return style.setRelativeFontSize( translateFontSize(Integer.parseInt(fontSize)) );
-    }
 
     private static StyledTextHandler wrap( StyledTextHandler handler ) {
         return new StyleAttributeHandler(new AlignmentAttributeHandler(handler));

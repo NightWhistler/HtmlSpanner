@@ -25,6 +25,7 @@ public class Style {
     private final FontStyle fontStyle;
 
     private final Integer color;
+    private final Integer backgroundColor;
 
     public Style() {
         fontFamily = null;
@@ -34,10 +35,11 @@ public class Style {
         fontWeight = null;
         fontStyle = null;
         color = null;
+        backgroundColor = null;
     }
 
     public Style(FontFamily family, TextAlignment textAlignment, Float relativeFontSize,
-                 Integer absoluteFontSize, FontWeight fontWeight, FontStyle fontStyle, Integer color ) {
+                 Integer absoluteFontSize, FontWeight fontWeight, FontStyle fontStyle, Integer color, Integer backgroundColor ) {
         this.fontFamily = family;
         this.textAlignment = textAlignment;
         this.relativeFontSize = relativeFontSize;
@@ -45,37 +47,46 @@ public class Style {
         this.fontWeight = fontWeight;
         this.fontStyle = fontStyle;
         this.color = color;
+        this.backgroundColor = backgroundColor;
     }
 
     public Style setFontFamily(FontFamily fontFamily) {
         return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
-                this.fontWeight, this.fontStyle, this.color );
+                this.fontWeight, this.fontStyle, this.color, this.backgroundColor );
     }
 
 
     public Style setTextAlignment(TextAlignment alignment) {
-        return new Style(this.fontFamily, alignment, this.relativeFontSize, this.absoluteFontSize, this.fontWeight, this.fontStyle, this.color);
+        return new Style(this.fontFamily, alignment, this.relativeFontSize, this.absoluteFontSize, this.fontWeight, this.fontStyle, this.color, this.backgroundColor);
     }
 
     public Style setRelativeFontSize(Float fontSize) {
-        return new Style(this.fontFamily, this.textAlignment, fontSize, this.absoluteFontSize, this.fontWeight, this.fontStyle, this.color);
+        return new Style(this.fontFamily, this.textAlignment, fontSize, this.absoluteFontSize, this.fontWeight, this.fontStyle, this.color, this.backgroundColor);
     }
 
     public Style setAbsoluteFontSize(Integer absoluteFontSize) {
-        return new Style(this.fontFamily, this.textAlignment, this.relativeFontSize, absoluteFontSize, this.fontWeight, this.fontStyle, this.color);
+        return new Style(this.fontFamily, this.textAlignment, this.relativeFontSize, absoluteFontSize, this.fontWeight, this.fontStyle, this.color, this.backgroundColor);
     }
 
     public Style setFontWeight(FontWeight fontWeight) {
-        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize, fontWeight, this.fontStyle, this.color);
+        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize, fontWeight, this.fontStyle, this.color, this.backgroundColor);
     }
 
     public Style setFontStyle(FontStyle fontStyle) {
         return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
-                this.fontWeight, fontStyle, this.color);
+                this.fontWeight, fontStyle, this.color, this.backgroundColor);
     }
 
     public Style setColor(Integer color) {
-        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize, this.fontWeight, fontStyle, color);
+        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize, this.fontWeight, fontStyle, color, this.backgroundColor);
+    }
+
+    public Style setBackgroundColor( Integer bgColor ) {
+        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize, this.fontWeight, fontStyle, this.color, bgColor );
+    }
+
+    public Integer getBackgroundColor() {
+        return this.backgroundColor;
     }
 
     public FontFamily getFontFamily() {
@@ -136,6 +147,10 @@ public class Style {
 
         if ( color != null ) {
             result.append("  color: " + color + "\n");
+        }
+
+        if ( backgroundColor != null ) {
+            result.append("  background-color: " + backgroundColor + "\n");
         }
 
         result.append("}\n");

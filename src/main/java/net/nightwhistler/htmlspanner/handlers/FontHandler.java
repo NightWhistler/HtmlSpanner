@@ -17,14 +17,13 @@
 package net.nightwhistler.htmlspanner.handlers;
 
 import net.nightwhistler.htmlspanner.FontFamily;
-import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanStack;
 
+import net.nightwhistler.htmlspanner.css.CSSCompiler;
 import net.nightwhistler.htmlspanner.style.Style;
 import net.nightwhistler.htmlspanner.style.StyledTextHandler;
 import org.htmlcleaner.TagNode;
 
-import android.graphics.Color;
 import android.text.SpannableStringBuilder;
 
 /**
@@ -49,23 +48,20 @@ public class FontHandler extends StyledTextHandler {
 		style = style.setFontFamily(family);
 
 		if ( size != null ) {
-			try {
-				style = HtmlSpanner.setFontSize(style, size);
-			} catch (NumberFormatException e) {
-				//Ignore
-			}
+            CSSCompiler.StyleUpdater updater = CSSCompiler.getStyleUpdater("font-size", size);
+
+            if ( updater != null ) {
+                style = updater.updateStyle(style, getSpanner() );
+            }
 		}
 		
 		if ( color != null ) {
-			int fontColor = Color.BLACK;
 
-            try {
-                fontColor = Color.parseColor(color);
-            } catch ( IllegalArgumentException ia ) {
+            CSSCompiler.StyleUpdater updater = CSSCompiler.getStyleUpdater("color", color);
 
+            if ( updater != null ) {
+                style = updater.updateStyle(style, getSpanner() );
             }
-
-			style = style.setColor(fontColor);
 		}
 
         super.handleTagNode(node, builder, start, end, style, spanStack);
