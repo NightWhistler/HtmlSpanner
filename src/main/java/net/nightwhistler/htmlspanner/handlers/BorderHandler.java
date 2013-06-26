@@ -1,6 +1,7 @@
 package net.nightwhistler.htmlspanner.handlers;
 
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 import net.nightwhistler.htmlspanner.spans.BorderSpan;
@@ -17,7 +18,8 @@ public class BorderHandler extends TagNodeHandler {
 
     @Override
     public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end, SpanStack spanStack) {
-        spanStack.pushSpan(new BorderSpan(), start, builder.length());
+        Log.d("BorderHandler", "Adding BorderSpan");
+        spanStack.pushSpan(new BorderSpan(), start, end);
     }
 
 
