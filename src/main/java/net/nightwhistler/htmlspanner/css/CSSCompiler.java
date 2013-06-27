@@ -340,7 +340,6 @@ public class CSSCompiler {
                 Log.e("CSSCompiler", "Can't parse font-size: " + value );
                 return null;
             }
-
         }
 
         Log.d("CSSCompiler", "Don't understand CSS property '" + key + "'. Ignoring it.");

@@ -15,10 +15,10 @@
  */
 package net.nightwhistler.htmlspanner.handlers;
 
+import android.util.Log;
 import net.nightwhistler.htmlspanner.SpanStack;
 
 import net.nightwhistler.htmlspanner.style.Style;
-import net.nightwhistler.htmlspanner.style.StyledTextHandler;
 import org.htmlcleaner.TagNode;
 
 import android.text.SpannableStringBuilder;
@@ -51,26 +51,29 @@ public class HeaderHandler extends StyledTextHandler {
 	}
 
     @Override
-    public Style getStyle() {
-        return super.getStyle().setRelativeFontSize(size)
-                .setFontWeight(Style.FontWeight.BOLD);
+    public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
+
+        Log.d("HeaderHandler", "Applying style " + getStyle() );
+
+        Style style = getStyle();
+
+        if (style.getDisplayStyle() == Style.DisplayStyle.BLOCK &&
+                builder.length() > 0
+                && builder.charAt(builder.length() - 1) != '\n') {
+            builder.append("\n");
+
+            Log.d("HeaderHandler", "Adding newline");
+        } else {
+            Log.d("HeaderHandler", "NOT adding newline");
+        }
     }
 
     @Override
-	public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
-		if (builder.length() > 0
-				&& builder.charAt(builder.length() - 1) != '\n') {
-			builder.append("\n");
-		}
-	}
+    public Style getStyle() {
+        return super.getStyle().setRelativeFontSize(size)
+                .setFontWeight(Style.FontWeight.BOLD)
+                .setDisplayStyle(Style.DisplayStyle.BLOCK)
+                .setRelativeMarginBottom(1.0f);
+    }
 
-	@Override
-	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end, Style style, SpanStack stack ) {
-
-        super.handleTagNode(node, builder, start, end, style, stack);
-
-		appendNewLine(builder);
-		appendNewLine(builder);
-	}
 }

@@ -2,15 +2,13 @@ package net.nightwhistler.htmlspanner.style;
 
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.*;
 import android.util.Log;
 import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanCallback;
-import net.nightwhistler.htmlspanner.spans.AlignNormalSpan;
-import net.nightwhistler.htmlspanner.spans.AlignOppositeSpan;
-import net.nightwhistler.htmlspanner.spans.CenterSpan;
-import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
+import net.nightwhistler.htmlspanner.spans.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -113,6 +111,12 @@ public class StyleCallback implements SpanCallback {
             builder.setSpan(alignSpan, start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+        }
+
+        if ( useStyle.getRelativeMarginBottom() != null ) {
+            Log.d("StyleCallback", "Applying MarginSpan from " + start + " to " + end + " on text " + builder.subSequence(start, end) );
+            builder.setSpan(new MarginSpan(useStyle.getRelativeMarginBottom()), start, end,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 

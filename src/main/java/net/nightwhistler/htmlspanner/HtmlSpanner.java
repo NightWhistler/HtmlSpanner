@@ -20,24 +20,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import android.util.Log;
-import com.osbcp.cssparser.Rule;
-import com.osbcp.cssparser.Selector;
 import net.nightwhistler.htmlspanner.handlers.*;
 import net.nightwhistler.htmlspanner.handlers.attributes.AlignmentAttributeHandler;
 
 import net.nightwhistler.htmlspanner.handlers.attributes.StyleAttributeHandler;
 import net.nightwhistler.htmlspanner.style.Style;
-import net.nightwhistler.htmlspanner.style.StyledTextHandler;
+import net.nightwhistler.htmlspanner.handlers.StyledTextHandler;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
 
-import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 
@@ -301,27 +296,35 @@ public class HtmlSpanner {
 		registerHandler("ul", marginHandler);
 		registerHandler("ol", marginHandler);
 
-        registerHandler("code", wrap(new StyledTextHandler(
-                new Style().setFontFamily(fontResolver.getMonoSpaceFont()))));
+        TagNodeHandler monSpaceHandler = wrap(new MonoSpaceHandler());
+
+        registerHandler("tt", monSpaceHandler);
+        registerHandler("code", monSpaceHandler);
 
         registerHandler("style", new StyleNodeHandler() );
 
         //We wrap an alignment-handler to support
         //align attributes
-        StyledTextHandler blockAlignment = wrap(new StyledTextHandler());
+        StyledTextHandler blockAlignment = wrap(new StyledTextHandler(
+                new Style().setDisplayStyle(Style.DisplayStyle.BLOCK)));
 
-        TagNodeHandler brHandler = new NewLineHandler(1, blockAlignment);
+        StyledTextHandler inlineAlignment = wrap(new StyledTextHandler());
+
+        TagNodeHandler brHandler = new NewLineHandler(1, inlineAlignment);
 
 		registerHandler("br", brHandler);
 
+        Style paragraphStyle = new Style().setDisplayStyle(Style.DisplayStyle.BLOCK)
+            .setRelativeMarginBottom(1.0f);
+
         //And add 2 newlines at the end
-		TagNodeHandler pHandler = new NewLineHandler(2, blockAlignment);
+		TagNodeHandler pHandler = wrap(new StyledTextHandler(paragraphStyle));
 
 		registerHandler("p", pHandler);
 		registerHandler("div", pHandler);
 
-        registerHandler("span", blockAlignment );
-        registerHandler("body", blockAlignment);
+        registerHandler("span", inlineAlignment );
+        registerHandler("body", inlineAlignment);
 
 		registerHandler("h1", wrap(new HeaderHandler(1.5f)));
 		registerHandler("h2", wrap(new HeaderHandler(1.4f)));
@@ -330,12 +333,7 @@ public class HtmlSpanner {
 		registerHandler("h5", wrap(new HeaderHandler(1.1f)));
 		registerHandler("h6", wrap(new HeaderHandler(1f)));
 
-		TagNodeHandler monSpaceHandler = new MonoSpaceHandler();
-
-		registerHandler("tt", monSpaceHandler);
-
 		TagNodeHandler preHandler = new PreHandler();
-
 		registerHandler("pre", preHandler);
 
 		TagNodeHandler bigHandler = new StyledTextHandler(new Style().setRelativeFontSize(1.25f));

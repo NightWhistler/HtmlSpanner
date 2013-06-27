@@ -4,27 +4,13 @@ HtmlSpanner started as the HTML rendering library for PageTurner, but looking th
 
 HtmlSpanner allows you full control over how tags are rendered and gives you all the data about the location of a tag in the text. This allows proper handling of anchors, tables, numbered lists and unordered lists.
 
-It currently renders:
-
-* ``<pre>`` tags
-* ``<i>``, ``<strong>``, ``<cite>``, ``<dfn>`` as italic text
-* ``<b>`` and ``<strong>`` as bold text
-* ``<blockquote>``
-* ``<ul>`` and ``<ol>`` with bullets and numbering
-* ``<br>`` and ``<p>`` with optional whitespace limiting
-* ``<h1>``..``<h6>``
-* ``<tt>``
-* ``<big>``, ``<small>``
-* ``<sup>`` and ``<sub>``
-* ``<center>``
-* ``<tables>``
-* ``<img>``
-* ``<a>``
-* ``<font>`` tags with size, face and color attributes
-
 The default link implementation just opens URLs, but it can be easily overridden to support anchors.
 
 HtmlSpanner uses HtmlCleaner to do most of the heavy lifting for parsing HTML files.
+
+# CSS support
+
+HtmlSpanner now also supports the most common subset of CSS: both <style> tags and style attributes are parsed by default, and the style of all built-in tags can be updated.
 
 # Usage
 In its simplest form, just call ``(new HtmlSpanner()).fromHtml()`` to get similar output as Android's ``Html.fromHtml()``.

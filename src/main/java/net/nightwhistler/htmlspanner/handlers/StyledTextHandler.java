@@ -1,4 +1,4 @@
-package net.nightwhistler.htmlspanner.style;
+package net.nightwhistler.htmlspanner.handlers;
 
 import android.graphics.Color;
 import android.text.Spannable;
@@ -13,6 +13,8 @@ import net.nightwhistler.htmlspanner.spans.AlignNormalSpan;
 import net.nightwhistler.htmlspanner.spans.AlignOppositeSpan;
 import net.nightwhistler.htmlspanner.spans.CenterSpan;
 import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
+import net.nightwhistler.htmlspanner.style.Style;
+import net.nightwhistler.htmlspanner.style.StyleCallback;
 import org.htmlcleaner.TagNode;
 
 /**
@@ -36,6 +38,15 @@ public class StyledTextHandler extends TagNodeHandler {
         return style;
     }
 
+    @Override
+    public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
+        if (getStyle().getDisplayStyle() == Style.DisplayStyle.BLOCK &&
+                builder.length() > 0
+                && builder.charAt(builder.length() - 1) != '\n') {
+            builder.append("\n");
+        }
+    }
+
     public final void handleTagNode(TagNode node, SpannableStringBuilder builder,
                                     int start, int end, SpanStack spanStack) {
         Style styleFromCSS = spanStack.getStyle( node, getStyle() );
@@ -45,6 +56,10 @@ public class StyledTextHandler extends TagNodeHandler {
     public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end, Style useStyle, SpanStack stack ) {
         stack.pushSpan(new StyleCallback(getSpanner().getFontResolver()
                 .getDefaultFont(), useStyle, start, end ));
+
+        if ( getStyle().getDisplayStyle() == Style.DisplayStyle.BLOCK ) {
+            appendNewLine(builder);
+        }
     }
 
 }

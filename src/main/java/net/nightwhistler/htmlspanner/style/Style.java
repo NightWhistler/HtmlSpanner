@@ -15,6 +15,7 @@ public class Style {
     public static enum TextAlignment { LEFT, CENTER, RIGHT };
     public static enum FontWeight {  NORMAL, BOLD }
     public static enum FontStyle { NORMAL, ITALIC }
+    public static enum DisplayStyle { BLOCK, INLINE };
 
     private final FontFamily fontFamily;
     private final TextAlignment textAlignment;
@@ -27,6 +28,10 @@ public class Style {
     private final Integer color;
     private final Integer backgroundColor;
 
+    private final DisplayStyle displayStyle;
+
+    private final Float relativeMarginBottom;
+
     public Style() {
         fontFamily = null;
         textAlignment = null;
@@ -36,10 +41,13 @@ public class Style {
         fontStyle = null;
         color = null;
         backgroundColor = null;
+        displayStyle = null;
+        relativeMarginBottom = null;
     }
 
     public Style(FontFamily family, TextAlignment textAlignment, Float relativeFontSize,
-                 Integer absoluteFontSize, FontWeight fontWeight, FontStyle fontStyle, Integer color, Integer backgroundColor ) {
+                 Integer absoluteFontSize, FontWeight fontWeight, FontStyle fontStyle, Integer color,
+                 Integer backgroundColor, DisplayStyle displayStyle, Float relativeMarginBottom ) {
         this.fontFamily = family;
         this.textAlignment = textAlignment;
         this.relativeFontSize = relativeFontSize;
@@ -48,42 +56,67 @@ public class Style {
         this.fontStyle = fontStyle;
         this.color = color;
         this.backgroundColor = backgroundColor;
+        this.displayStyle = displayStyle;
+        this.relativeMarginBottom = relativeMarginBottom;
     }
 
     public Style setFontFamily(FontFamily fontFamily) {
         return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
-                this.fontWeight, this.fontStyle, this.color, this.backgroundColor );
+                this.fontWeight, this.fontStyle, this.color, this.backgroundColor, this.displayStyle,
+                this.relativeMarginBottom );
     }
 
 
     public Style setTextAlignment(TextAlignment alignment) {
-        return new Style(this.fontFamily, alignment, this.relativeFontSize, this.absoluteFontSize, this.fontWeight, this.fontStyle, this.color, this.backgroundColor);
+        return new Style(this.fontFamily, alignment, this.relativeFontSize, this.absoluteFontSize, this.fontWeight,
+                this.fontStyle, this.color, this.backgroundColor, this.displayStyle, this.relativeMarginBottom );
     }
 
     public Style setRelativeFontSize(Float fontSize) {
-        return new Style(this.fontFamily, this.textAlignment, fontSize, this.absoluteFontSize, this.fontWeight, this.fontStyle, this.color, this.backgroundColor);
+        return new Style(this.fontFamily, this.textAlignment, fontSize, this.absoluteFontSize, this.fontWeight,
+                this.fontStyle, this.color, this.backgroundColor, this.displayStyle, this.relativeMarginBottom );
     }
 
     public Style setAbsoluteFontSize(Integer absoluteFontSize) {
-        return new Style(this.fontFamily, this.textAlignment, this.relativeFontSize, absoluteFontSize, this.fontWeight, this.fontStyle, this.color, this.backgroundColor);
+        return new Style(this.fontFamily, this.textAlignment, this.relativeFontSize, absoluteFontSize, this.fontWeight,
+                this.fontStyle, this.color, this.backgroundColor, this.displayStyle, this.relativeMarginBottom );
     }
 
     public Style setFontWeight(FontWeight fontWeight) {
-        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize, fontWeight, this.fontStyle, this.color, this.backgroundColor);
+        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize, fontWeight,
+                this.fontStyle, this.color, this.backgroundColor, this.displayStyle, this.relativeMarginBottom);
     }
 
     public Style setFontStyle(FontStyle fontStyle) {
         return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
-                this.fontWeight, fontStyle, this.color, this.backgroundColor);
+                this.fontWeight, fontStyle, this.color, this.backgroundColor
+                , this.displayStyle, this.relativeMarginBottom);
     }
 
     public Style setColor(Integer color) {
-        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize, this.fontWeight, fontStyle, color, this.backgroundColor);
+        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
+                this.fontWeight, fontStyle, color, this.backgroundColor,
+                this.displayStyle, this.relativeMarginBottom);
     }
 
     public Style setBackgroundColor( Integer bgColor ) {
-        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize, this.fontWeight, fontStyle, this.color, bgColor );
+        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
+                this.fontWeight, fontStyle, this.color, bgColor,
+                this.displayStyle, this.relativeMarginBottom );
     }
+
+    public Style setDisplayStyle( DisplayStyle displayStyle ) {
+        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
+                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                displayStyle, this.relativeMarginBottom );
+    }
+
+    public Style setRelativeMarginBottom( Float relativeMarginBottom ) {
+        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
+                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.displayStyle, relativeMarginBottom );
+    }
+
 
     public Integer getBackgroundColor() {
         return this.backgroundColor;
@@ -115,6 +148,14 @@ public class Style {
 
     public Integer getColor() {
         return this.color;
+    }
+
+    public DisplayStyle getDisplayStyle() {
+        return this.displayStyle;
+    }
+
+    public Float getRelativeMarginBottom() {
+        return this.relativeMarginBottom;
     }
 
     public String toString() {
@@ -151,6 +192,14 @@ public class Style {
 
         if ( backgroundColor != null ) {
             result.append("  background-color: " + backgroundColor + "\n");
+        }
+
+        if ( displayStyle != null ) {
+            result.append("  display: " + displayStyle + "\n");
+        }
+
+        if ( relativeMarginBottom != null ) {
+            result.append("  relative-margin-bottom: " + relativeMarginBottom + "\n" );
         }
 
         result.append("}\n");

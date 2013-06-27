@@ -5,7 +5,7 @@ import android.util.Log;
 import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.css.CSSCompiler;
 import net.nightwhistler.htmlspanner.style.Style;
-import net.nightwhistler.htmlspanner.style.StyledTextHandler;
+import net.nightwhistler.htmlspanner.handlers.StyledTextHandler;
 import org.htmlcleaner.TagNode;
 
 /**
@@ -16,6 +16,7 @@ public class StyleAttributeHandler extends WrappingStyleHandler  {
     public StyleAttributeHandler(StyledTextHandler wrapHandler) {
         super(wrapHandler);
     }
+
 
     @Override
     public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end, Style useStyle,

@@ -4,7 +4,7 @@ import android.text.SpannableStringBuilder;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.style.Style;
-import net.nightwhistler.htmlspanner.style.StyledTextHandler;
+import net.nightwhistler.htmlspanner.handlers.StyledTextHandler;
 import org.htmlcleaner.TagNode;
 
 /**
@@ -26,6 +26,13 @@ public class WrappingStyleHandler extends StyledTextHandler {
     @Override
     public Style getStyle() {
         return wrappedHandler.getStyle();
+    }
+
+    @Override
+    public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
+        if ( wrappedHandler != null ) {
+            wrappedHandler.beforeChildren(node, builder);
+        }
     }
 
     @Override
