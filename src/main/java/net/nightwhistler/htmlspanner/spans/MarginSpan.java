@@ -16,7 +16,6 @@ public class MarginSpan implements LineHeightSpan {
     private final float factor;
 
     public MarginSpan(float margin) {
-        //A margin of 1em means a factor of 2
         this.factor = margin;
     }
 
@@ -24,18 +23,15 @@ public class MarginSpan implements LineHeightSpan {
     public void chooseHeight(CharSequence text, int start, int end, int spanstartv, int v,
                              Paint.FontMetricsInt fm) {
 
-        Log.d("MarginSpan", "Got metrics: " + fm.top + "," + fm.ascent + ", " + fm.bottom + ", " + fm.descent);
-
         int height = Math.abs( fm.descent - fm.ascent );
+       // Log.d("MarginSpan", "Current height: " + height + " for text " + text.subSequence(start, end));
 
-        height = (int) (height * factor);
+       height = (int) (height * factor);
 
-        fm.descent += height;
+       fm.descent = fm.ascent + height;
+    //   fm.bottom += height;
 
-         /*
-        fm.top -= height;
-        fm.ascent -= height;
-        */
+      //  Log.d("MarginSpan", "Extra height: " + height + ", descent is " + fm.descent + " for text " + text.subSequence(start, end));
     }
 }
 

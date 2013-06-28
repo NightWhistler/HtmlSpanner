@@ -252,7 +252,7 @@ public class HtmlSpanner {
 		int lengthBefore = builder.length();
 
 		if (handler != null) {
-			handler.beforeChildren(node, builder);
+			handler.beforeChildren(node, builder, stack);
 		}
 
 		if (handler == null || !handler.rendersContent()) {
@@ -314,8 +314,9 @@ public class HtmlSpanner {
 
 		registerHandler("br", brHandler);
 
-        Style paragraphStyle = new Style().setDisplayStyle(Style.DisplayStyle.BLOCK)
-            .setRelativeMarginBottom(1.0f);
+        Style paragraphStyle = new Style()
+                .setDisplayStyle(Style.DisplayStyle.BLOCK)
+                .setRelativeMarginBottom(1.0f);
 
         //And add 2 newlines at the end
 		TagNodeHandler pHandler = wrap(new StyledTextHandler(paragraphStyle));
@@ -326,12 +327,12 @@ public class HtmlSpanner {
         registerHandler("span", inlineAlignment );
         registerHandler("body", inlineAlignment);
 
-		registerHandler("h1", wrap(new HeaderHandler(1.5f)));
-		registerHandler("h2", wrap(new HeaderHandler(1.4f)));
-		registerHandler("h3", wrap(new HeaderHandler(1.3f)));
-		registerHandler("h4", wrap(new HeaderHandler(1.2f)));
-		registerHandler("h5", wrap(new HeaderHandler(1.1f)));
-		registerHandler("h6", wrap(new HeaderHandler(1f)));
+		registerHandler("h1", wrap(new HeaderHandler(1.5f, 0.5f)));
+		registerHandler("h2", wrap(new HeaderHandler(1.4f, 0.6f)));
+		registerHandler("h3", wrap(new HeaderHandler(1.3f, 0.7f)));
+		registerHandler("h4", wrap(new HeaderHandler(1.2f, 0.8f)));
+		registerHandler("h5", wrap(new HeaderHandler(1.1f, 0.9f)));
+		registerHandler("h6", wrap(new HeaderHandler(1f, 1f)));
 
 		TagNodeHandler preHandler = new PreHandler();
 		registerHandler("pre", preHandler);

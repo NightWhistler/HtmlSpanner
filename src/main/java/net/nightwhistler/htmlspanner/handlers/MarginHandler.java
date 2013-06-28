@@ -35,7 +35,7 @@ public class MarginHandler extends TagNodeHandler {
 	private static int MARGIN_INDENT = 30;
 
 	@Override
-	public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
+	public void beforeChildren(TagNode node, SpannableStringBuilder builder, SpanStack spanStack) {
 
 		if (builder.length() > 0
 				&& builder.charAt(builder.length() - 1) != '\n') {

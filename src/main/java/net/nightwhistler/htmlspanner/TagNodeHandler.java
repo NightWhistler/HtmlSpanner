@@ -70,7 +70,7 @@ public abstract class TagNodeHandler {
 	 * @param node
 	 * @param builder
 	 */
-	public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
+	public void beforeChildren(TagNode node, SpannableStringBuilder builder, SpanStack spanStack) {
 
 	}
 

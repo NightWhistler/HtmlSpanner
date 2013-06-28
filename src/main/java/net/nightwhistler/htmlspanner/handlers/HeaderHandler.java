@@ -39,19 +39,21 @@ import android.text.SpannableStringBuilder;
  */
 public class HeaderHandler extends StyledTextHandler {
 
-	private float size;
+	private final float size;
+    private final float bottomMargin;
 
 	/**
 	 * Creates a HeaderHandler which gives
 	 * 
 	 * @param size
 	 */
-	public HeaderHandler(float size) {
+	public HeaderHandler(float size, float bottomMargin) {
         this.size = size;
+        this.bottomMargin = bottomMargin;
 	}
 
     @Override
-    public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
+    public void beforeChildren(TagNode node, SpannableStringBuilder builder, SpanStack spanStack) {
 
         Log.d("HeaderHandler", "Applying style " + getStyle() );
 
@@ -73,7 +75,7 @@ public class HeaderHandler extends StyledTextHandler {
         return super.getStyle().setRelativeFontSize(size)
                 .setFontWeight(Style.FontWeight.BOLD)
                 .setDisplayStyle(Style.DisplayStyle.BLOCK)
-                .setRelativeMarginBottom(1.0f);
+                .setRelativeMarginBottom(bottomMargin);
     }
 
 }

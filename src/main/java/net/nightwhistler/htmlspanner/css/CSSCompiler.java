@@ -342,6 +342,30 @@ public class CSSCompiler {
             }
         }
 
+        if ( "margin-bottom".equals(key) ) {
+
+            if ( value.equals("0") ) {
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setRelativeMarginBottom(0f);
+                    }
+                };
+            }
+
+            if ( value.endsWith("em") ) {
+                final Float number = Float.parseFloat(value.substring(0, value.length() - 2));
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        Log.d("CSSCompiler", "Applying style " + key + ": " + value );
+                        return style.setRelativeMarginBottom(number);
+                    }
+                };
+            }
+
+        }
+
         Log.d("CSSCompiler", "Don't understand CSS property '" + key + "'. Ignoring it.");
         return null;
     }

@@ -29,9 +29,9 @@ public class WrappingStyleHandler extends StyledTextHandler {
     }
 
     @Override
-    public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
+    public void beforeChildren(TagNode node, SpannableStringBuilder builder, SpanStack spanStack) {
         if ( wrappedHandler != null ) {
-            wrappedHandler.beforeChildren(node, builder);
+            wrappedHandler.beforeChildren(node, builder, spanStack);
         }
     }
 

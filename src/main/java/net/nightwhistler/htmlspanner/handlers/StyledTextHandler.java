@@ -39,8 +39,10 @@ public class StyledTextHandler extends TagNodeHandler {
     }
 
     @Override
-    public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
-        if (getStyle().getDisplayStyle() == Style.DisplayStyle.BLOCK &&
+    public void beforeChildren(TagNode node, SpannableStringBuilder builder, SpanStack spanStack) {
+        Style styleFromCSS = spanStack.getStyle( node, getStyle() );
+
+        if (styleFromCSS.getDisplayStyle() == Style.DisplayStyle.BLOCK &&
                 builder.length() > 0
                 && builder.charAt(builder.length() - 1) != '\n') {
             builder.append("\n");
@@ -54,12 +56,19 @@ public class StyledTextHandler extends TagNodeHandler {
     }
 
     public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end, Style useStyle, SpanStack stack ) {
-        stack.pushSpan(new StyleCallback(getSpanner().getFontResolver()
-                .getDefaultFont(), useStyle, start, end ));
 
         if ( getStyle().getDisplayStyle() == Style.DisplayStyle.BLOCK ) {
             appendNewLine(builder);
+
+            //If we have a bottom margin, we insert an extra newline. We'll manipulate the line height
+            //of this newline to create the margin.
+            if ( getStyle().getRelativeMarginBottom() != null && getStyle().getRelativeMarginBottom() > 0f ) {
+                appendNewLine(builder);
+            }
         }
+
+        stack.pushSpan(new StyleCallback(getSpanner().getFontResolver()
+                .getDefaultFont(), useStyle, start, builder.length() ));
     }
 
 }
