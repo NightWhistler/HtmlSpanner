@@ -19,8 +19,7 @@ public class Style {
 
     private final FontFamily fontFamily;
     private final TextAlignment textAlignment;
-    private final Float relativeFontSize;
-    private final Integer absoluteFontSize;
+    private final StyleValue fontSize;
 
     private final FontWeight fontWeight;
     private final FontStyle fontStyle;
@@ -30,93 +29,87 @@ public class Style {
 
     private final DisplayStyle displayStyle;
 
-    private final Float relativeMarginBottom;
+    private final StyleValue marginBottom;
+
 
     public Style() {
         fontFamily = null;
         textAlignment = null;
-        relativeFontSize = null;
-        absoluteFontSize = null;
+        fontSize = null;
         fontWeight = null;
         fontStyle = null;
         color = null;
         backgroundColor = null;
         displayStyle = null;
-        relativeMarginBottom = null;
+        marginBottom = null;
     }
 
-    public Style(FontFamily family, TextAlignment textAlignment, Float relativeFontSize,
-                 Integer absoluteFontSize, FontWeight fontWeight, FontStyle fontStyle, Integer color,
-                 Integer backgroundColor, DisplayStyle displayStyle, Float relativeMarginBottom ) {
+    public Style(FontFamily family, TextAlignment textAlignment, StyleValue fontSize,
+                 FontWeight fontWeight, FontStyle fontStyle, Integer color,
+                 Integer backgroundColor, DisplayStyle displayStyle, StyleValue marginBottom ) {
         this.fontFamily = family;
         this.textAlignment = textAlignment;
-        this.relativeFontSize = relativeFontSize;
-        this.absoluteFontSize = absoluteFontSize;
+        this.fontSize = fontSize;
+
         this.fontWeight = fontWeight;
         this.fontStyle = fontStyle;
         this.color = color;
         this.backgroundColor = backgroundColor;
         this.displayStyle = displayStyle;
-        this.relativeMarginBottom = relativeMarginBottom;
+        this.marginBottom = marginBottom;
     }
 
     public Style setFontFamily(FontFamily fontFamily) {
-        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
+        return new Style(fontFamily, this.textAlignment, this.fontSize,
                 this.fontWeight, this.fontStyle, this.color, this.backgroundColor, this.displayStyle,
-                this.relativeMarginBottom );
+                this.marginBottom );
     }
 
 
     public Style setTextAlignment(TextAlignment alignment) {
-        return new Style(this.fontFamily, alignment, this.relativeFontSize, this.absoluteFontSize, this.fontWeight,
-                this.fontStyle, this.color, this.backgroundColor, this.displayStyle, this.relativeMarginBottom );
+        return new Style(this.fontFamily, alignment, this.fontSize, this.fontWeight,
+                this.fontStyle, this.color, this.backgroundColor, this.displayStyle, this.marginBottom );
     }
 
-    public Style setRelativeFontSize(Float fontSize) {
-        return new Style(this.fontFamily, this.textAlignment, fontSize, this.absoluteFontSize, this.fontWeight,
-                this.fontStyle, this.color, this.backgroundColor, this.displayStyle, this.relativeMarginBottom );
-    }
-
-    public Style setAbsoluteFontSize(Integer absoluteFontSize) {
-        return new Style(this.fontFamily, this.textAlignment, this.relativeFontSize, absoluteFontSize, this.fontWeight,
-                this.fontStyle, this.color, this.backgroundColor, this.displayStyle, this.relativeMarginBottom );
+    public Style setFontSize(StyleValue fontSize) {
+        return new Style(this.fontFamily, this.textAlignment, fontSize, this.fontWeight,
+                this.fontStyle, this.color, this.backgroundColor, this.displayStyle, this.marginBottom );
     }
 
     public Style setFontWeight(FontWeight fontWeight) {
-        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize, fontWeight,
-                this.fontStyle, this.color, this.backgroundColor, this.displayStyle, this.relativeMarginBottom);
+        return new Style(fontFamily, this.textAlignment, this.fontSize, fontWeight,
+                this.fontStyle, this.color, this.backgroundColor, this.displayStyle, this.marginBottom);
     }
 
     public Style setFontStyle(FontStyle fontStyle) {
-        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
+        return new Style(fontFamily, this.textAlignment, this.fontSize,
                 this.fontWeight, fontStyle, this.color, this.backgroundColor
-                , this.displayStyle, this.relativeMarginBottom);
+                , this.displayStyle, this.marginBottom);
     }
 
     public Style setColor(Integer color) {
-        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
+        return new Style(fontFamily, this.textAlignment, this.fontSize,
                 this.fontWeight, fontStyle, color, this.backgroundColor,
-                this.displayStyle, this.relativeMarginBottom);
+                this.displayStyle, this.marginBottom);
     }
 
     public Style setBackgroundColor( Integer bgColor ) {
-        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
+        return new Style(fontFamily, this.textAlignment, this.fontSize,
                 this.fontWeight, fontStyle, this.color, bgColor,
-                this.displayStyle, this.relativeMarginBottom );
+                this.displayStyle, this.marginBottom );
     }
 
     public Style setDisplayStyle( DisplayStyle displayStyle ) {
-        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
+        return new Style(fontFamily, this.textAlignment, this.fontSize,
                 this.fontWeight, fontStyle, this.color, this.backgroundColor,
-                displayStyle, this.relativeMarginBottom );
+                displayStyle, this.marginBottom );
     }
 
-    public Style setRelativeMarginBottom( Float relativeMarginBottom ) {
-        return new Style(fontFamily, this.textAlignment, this.relativeFontSize, this.absoluteFontSize,
+    public Style setMarginBottom( StyleValue marginBottom ) {
+        return new Style(fontFamily, this.textAlignment, this.fontSize,
                 this.fontWeight, fontStyle, this.color, this.backgroundColor,
-                this.displayStyle, relativeMarginBottom );
+                this.displayStyle, marginBottom );
     }
-
 
     public Integer getBackgroundColor() {
         return this.backgroundColor;
@@ -130,12 +123,8 @@ public class Style {
         return textAlignment;
     }
 
-    public Float getRelativeFontSize() {
-        return this.relativeFontSize;
-    }
-
-    public Integer getAbsoluteFontSize() {
-        return this.absoluteFontSize;
+    public StyleValue getFontSize() {
+        return this.fontSize;
     }
 
     public FontWeight getFontWeight() {
@@ -154,8 +143,8 @@ public class Style {
         return this.displayStyle;
     }
 
-    public Float getRelativeMarginBottom() {
-        return this.relativeMarginBottom;
+    public StyleValue getMarginBottom() {
+        return this.marginBottom;
     }
 
     public String toString() {
@@ -170,12 +159,8 @@ public class Style {
             result.append( "  text-alignment: " + textAlignment + "\n");
         }
 
-        if ( relativeFontSize != null ) {
-            result.append( "  relative-font-size: " + relativeFontSize + "\n");
-        }
-
-        if ( absoluteFontSize != null ) {
-            result.append( "  absolute-font-size: " + relativeFontSize + "\n");
+        if ( fontSize != null ) {
+            result.append( "  font-size: " + fontSize + "\n");
         }
 
         if ( fontWeight != null ) {
@@ -198,8 +183,8 @@ public class Style {
             result.append("  display: " + displayStyle + "\n");
         }
 
-        if ( relativeMarginBottom != null ) {
-            result.append("  relative-margin-bottom: " + relativeMarginBottom + "\n" );
+        if ( marginBottom != null ) {
+            result.append("  margin-bottom: " + marginBottom + "\n" );
         }
 
         result.append("}\n");

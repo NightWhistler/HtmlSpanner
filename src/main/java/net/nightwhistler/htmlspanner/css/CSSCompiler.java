@@ -8,6 +8,7 @@ import com.osbcp.cssparser.Selector;
 import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.style.Style;
+import net.nightwhistler.htmlspanner.style.StyleValue;
 import org.htmlcleaner.TagNode;
 
 import java.util.ArrayList;
@@ -275,95 +276,49 @@ public class CSSCompiler {
 
         if ( "font-size".equals(key)) {
 
-            if ( value.endsWith("px") ) {
+            final StyleValue styleValue = StyleValue.parse( value );
 
-                try {
-                    final Integer fontSize = Integer.parseInt( value.substring(0, value.length() -2) );
-                    return new StyleUpdater() {
-                        @Override
-                        public Style updateStyle(Style style, HtmlSpanner spanner) {
-                            Log.d("CSSCompiler", "Applying style " + key + ": " + value );
-                            return style.setAbsoluteFontSize(fontSize);
-                        }
-                    };
-                } catch (NumberFormatException nfe ) {
-                    Log.e("CSSCompiler", "Can't parse font-size: " + value );
-                    return null;
-                }
-            }
+            if ( styleValue != null ) {
 
-            if ( value.endsWith("%") ) {
-                Log.d("CSSCompiler", "translating percentage " + value );
-                try {
-                    final int percentage = Integer.parseInt( value.substring(0, value.length() -1 ) );
-                    final float relativeFontSize = percentage / 100f;
-
-                    return new StyleUpdater() {
-                        @Override
-                        public Style updateStyle(Style style, HtmlSpanner spanner) {
-                            Log.d("CSSCompiler", "Applying style " + key + ": " + value );
-                            return style.setRelativeFontSize(relativeFontSize);
-                        }
-                    };
-                } catch ( NumberFormatException nfe ) {
-                    Log.e("CSSCompiler", "Can't parse font-size: " + value );
-                    return null;
-                }
-            }
-
-            if ( value.endsWith("em") ) {
-                try {
-                    final Float number = Float.parseFloat(value.substring(0, value.length() - 2));
-                    return new StyleUpdater() {
-                        @Override
-                        public Style updateStyle(Style style, HtmlSpanner spanner) {
-                            Log.d("CSSCompiler", "Applying style " + key + ": " + value );
-                            return style.setRelativeFontSize(number);
-                        }
-                    };
-                } catch ( NumberFormatException nfe ) {
-                    Log.e("CSSCompiler", "Can't parse font-size: " + value );
-                    return null;
-                }
-            }
-
-            try {
-                final Float number = translateFontSize(Integer.parseInt(value));
                 return new StyleUpdater() {
                     @Override
                     public Style updateStyle(Style style, HtmlSpanner spanner) {
                         Log.d("CSSCompiler", "Applying style " + key + ": " + value );
-                        return style.setRelativeFontSize(number);
+                        return style.setFontSize(styleValue);
                     }
                 };
-            } catch ( NumberFormatException nfe ) {
-                Log.e("CSSCompiler", "Can't parse font-size: " + value );
-                return null;
+
+            } else {
+
+                //Fonts have an extra legacy format where you just specify a plain number.
+                try {
+                    final Float number = translateFontSize(Integer.parseInt(value));
+                    return new StyleUpdater() {
+                        @Override
+                        public Style updateStyle(Style style, HtmlSpanner spanner) {
+                            Log.d("CSSCompiler", "Applying style " + key + ": " + value );
+                            return style.setFontSize(new StyleValue(number, StyleValue.Unit.EM));
+                        }
+                    };
+                } catch ( NumberFormatException nfe ) {
+                    Log.e("CSSCompiler", "Can't parse font-size: " + value );
+                    return null;
+                }
             }
         }
 
         if ( "margin-bottom".equals(key) ) {
 
-            if ( value.equals("0") ) {
+            final StyleValue styleValue = StyleValue.parse( value );
+
+            if ( styleValue != null ) {
                 return new StyleUpdater() {
                     @Override
                     public Style updateStyle(Style style, HtmlSpanner spanner) {
-                        return style.setRelativeMarginBottom(0f);
+                        return style.setMarginBottom(styleValue);
                     }
                 };
             }
-
-            if ( value.endsWith("em") ) {
-                final Float number = Float.parseFloat(value.substring(0, value.length() - 2));
-                return new StyleUpdater() {
-                    @Override
-                    public Style updateStyle(Style style, HtmlSpanner spanner) {
-                        Log.d("CSSCompiler", "Applying style " + key + ": " + value );
-                        return style.setRelativeMarginBottom(number);
-                    }
-                };
-            }
-
         }
 
         Log.d("CSSCompiler", "Don't understand CSS property '" + key + "'. Ignoring it.");

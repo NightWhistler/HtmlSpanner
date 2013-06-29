@@ -13,6 +13,7 @@ import net.nightwhistler.htmlspanner.TagNodeHandler;
 import net.nightwhistler.htmlspanner.spans.*;
 import net.nightwhistler.htmlspanner.style.Style;
 import net.nightwhistler.htmlspanner.style.StyleCallback;
+import net.nightwhistler.htmlspanner.style.StyleValue;
 import org.htmlcleaner.TagNode;
 
 /**
@@ -55,20 +56,27 @@ public class StyledTextHandler extends TagNodeHandler {
 
     public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end, Style useStyle, SpanStack stack ) {
 
-        if ( getStyle().getDisplayStyle() == Style.DisplayStyle.BLOCK ) {
+        if ( useStyle.getDisplayStyle() == Style.DisplayStyle.BLOCK ) {
             appendNewLine(builder);
 
             //If we have a bottom margin, we insert an extra newline. We'll manipulate the line height
             //of this newline to create the margin.
-            if ( getStyle().getRelativeMarginBottom() != null && getStyle().getRelativeMarginBottom() > 0f ) {
+            if ( useStyle.getMarginBottom() != null ) {
+
+                StyleValue styleValue = useStyle.getMarginBottom();
 
                 appendNewLine(builder);
 
                 Log.d("StyledTextHandler", "Applying MarginSpan from style " + useStyle + " from " + (end -1) + " to "
                         + end + " on text " + builder.subSequence(end -1, end) );
 
-                stack.pushSpan( new MarginSpan(useStyle.getRelativeMarginBottom() ),
+                if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
+                    stack.pushSpan( new MarginSpan( styleValue.getIntValue() ),
                         builder.length() -1, builder.length() );
+                } else {
+                    stack.pushSpan( new MarginSpan( styleValue.getFloatValue() ),
+                            builder.length() -1, builder.length() );
+                }
 
             }
         }

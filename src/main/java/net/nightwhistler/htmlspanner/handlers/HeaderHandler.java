@@ -19,6 +19,7 @@ import android.util.Log;
 import net.nightwhistler.htmlspanner.SpanStack;
 
 import net.nightwhistler.htmlspanner.style.Style;
+import net.nightwhistler.htmlspanner.style.StyleValue;
 import org.htmlcleaner.TagNode;
 
 import android.text.SpannableStringBuilder;
@@ -39,8 +40,8 @@ import android.text.SpannableStringBuilder;
  */
 public class HeaderHandler extends StyledTextHandler {
 
-	private final float size;
-    private final float bottomMargin;
+	private final StyleValue size;
+    private final StyleValue bottomMargin;
 
 	/**
 	 * Creates a HeaderHandler which gives
@@ -48,8 +49,8 @@ public class HeaderHandler extends StyledTextHandler {
 	 * @param size
 	 */
 	public HeaderHandler(float size, float bottomMargin) {
-        this.size = size;
-        this.bottomMargin = bottomMargin;
+        this.size = new StyleValue(size, StyleValue.Unit.EM);
+        this.bottomMargin = new StyleValue(bottomMargin, StyleValue.Unit.EM);
 	}
 
     @Override
@@ -72,10 +73,10 @@ public class HeaderHandler extends StyledTextHandler {
 
     @Override
     public Style getStyle() {
-        return super.getStyle().setRelativeFontSize(size)
+        return super.getStyle().setFontSize(size)
                 .setFontWeight(Style.FontWeight.BOLD)
                 .setDisplayStyle(Style.DisplayStyle.BLOCK)
-                .setRelativeMarginBottom(bottomMargin);
+                .setMarginBottom(bottomMargin);
     }
 
 }

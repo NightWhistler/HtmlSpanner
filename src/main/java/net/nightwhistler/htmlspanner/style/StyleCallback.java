@@ -73,16 +73,19 @@ public class StyleCallback implements SpanCallback {
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        if ( useStyle.getRelativeFontSize() != null ) {
-            //Log.d("StyleCallback", "Applying RelativeSizeSpan with size " + useStyle.getRelativeFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
-            builder.setSpan(new RelativeSizeSpan(useStyle.getRelativeFontSize()), start, end,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
+        if ( useStyle.getFontSize() != null ) {
 
-        if ( useStyle.getAbsoluteFontSize() != null ) {
-           // Log.d("StyleCallback", "Applying AbsoluteSizeSpan with size " + useStyle.getAbsoluteFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
-            builder.setSpan(new AbsoluteSizeSpan(useStyle.getAbsoluteFontSize()), start, end,
+            StyleValue styleValue = useStyle.getFontSize();
+
+            if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
+                // Log.d("StyleCallback", "Applying AbsoluteSizeSpan with size " + useStyle.getAbsoluteFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
+                builder.setSpan(new AbsoluteSizeSpan(styleValue.getIntValue()), start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else {
+                //Log.d("StyleCallback", "Applying RelativeSizeSpan with size " + useStyle.getRelativeFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
+                builder.setSpan(new RelativeSizeSpan(styleValue.getFloatValue()), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
         }
 
         if ( useStyle.getColor() != null ) {

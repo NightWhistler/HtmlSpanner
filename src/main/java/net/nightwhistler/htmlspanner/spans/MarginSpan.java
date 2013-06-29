@@ -13,10 +13,17 @@ import android.util.Log;
  */
 public class MarginSpan implements LineHeightSpan {
 
-    private final float factor;
+    private final Float factor;
+    private final Integer absolute;
 
-    public MarginSpan(float margin) {
+    public MarginSpan(Float margin) {
         this.factor = margin;
+        this.absolute = null;
+    }
+
+    public MarginSpan(Integer value ) {
+        this.absolute = value;
+        this.factor = null;
     }
 
     @Override
@@ -24,14 +31,15 @@ public class MarginSpan implements LineHeightSpan {
                              Paint.FontMetricsInt fm) {
 
         int height = Math.abs( fm.descent - fm.ascent );
-       // Log.d("MarginSpan", "Current height: " + height + " for text " + text.subSequence(start, end));
 
-       height = (int) (height * factor);
+        if ( factor != null ) {
+            height = (int) (height * factor);
+        } else if ( absolute != null ) {
+            height = absolute;
+        }
 
-       fm.descent = fm.ascent + height;
-    //   fm.bottom += height;
+        fm.descent = fm.ascent + height;
 
-      //  Log.d("MarginSpan", "Extra height: " + height + ", descent is " + fm.descent + " for text " + text.subSequence(start, end));
     }
 }
 

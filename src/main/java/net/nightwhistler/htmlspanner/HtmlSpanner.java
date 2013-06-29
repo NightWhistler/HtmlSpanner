@@ -28,6 +28,7 @@ import net.nightwhistler.htmlspanner.handlers.attributes.AlignmentAttributeHandl
 import net.nightwhistler.htmlspanner.handlers.attributes.StyleAttributeHandler;
 import net.nightwhistler.htmlspanner.style.Style;
 import net.nightwhistler.htmlspanner.handlers.StyledTextHandler;
+import net.nightwhistler.htmlspanner.style.StyleValue;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
@@ -316,10 +317,11 @@ public class HtmlSpanner {
 
         Style paragraphStyle = new Style()
                 .setDisplayStyle(Style.DisplayStyle.BLOCK)
-                .setRelativeMarginBottom(1.0f);
+                .setMarginBottom(
+                        new StyleValue(1.0f, StyleValue.Unit.EM));
 
-        //And add 2 newlines at the end
-		TagNodeHandler pHandler = wrap(new StyledTextHandler(paragraphStyle));
+                        //And add 2 newlines at the end
+                        TagNodeHandler pHandler = wrap(new StyledTextHandler(paragraphStyle));
 
 		registerHandler("p", pHandler);
 		registerHandler("div", pHandler);
@@ -337,10 +339,16 @@ public class HtmlSpanner {
 		TagNodeHandler preHandler = new PreHandler();
 		registerHandler("pre", preHandler);
 
-		TagNodeHandler bigHandler = new StyledTextHandler(new Style().setRelativeFontSize(1.25f));
+		TagNodeHandler bigHandler = new StyledTextHandler(
+                new Style().setFontSize(
+                        new StyleValue(1.25f, StyleValue.Unit.EM)));
+
 		registerHandler("big", bigHandler);
 
-		TagNodeHandler smallHandler = new StyledTextHandler(new Style().setRelativeFontSize(0.8f));
+		TagNodeHandler smallHandler = new StyledTextHandler(
+                new Style().setFontSize(
+                        new StyleValue(0.8f, StyleValue.Unit.EM)));
+
 		registerHandler("small", smallHandler);
 
 		TagNodeHandler subHandler = new SubScriptHandler();
