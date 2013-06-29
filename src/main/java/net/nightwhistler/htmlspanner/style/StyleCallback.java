@@ -116,6 +116,23 @@ public class StyleCallback implements SpanCallback {
 
         }
 
+        if ( useStyle.getTextIndent() != null ) {
+
+            StyleValue styleValue = useStyle.getTextIndent();
+
+            final int baseIndent = 10; //FIXME: this should be a dynamic value
+
+            if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
+                builder.setSpan(new LeadingMarginSpan.Standard(styleValue.getIntValue(), 0), start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            } else {
+                builder.setSpan(new LeadingMarginSpan.Standard( (int) (baseIndent * styleValue.getFloatValue()), 0), start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+        }
+
 
     }
 

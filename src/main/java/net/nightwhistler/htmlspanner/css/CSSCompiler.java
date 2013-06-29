@@ -321,6 +321,56 @@ public class CSSCompiler {
             }
         }
 
+        if ( "margin".equals( key ) ) {
+            String[] parts = value.split("\\s");
+
+            String bottomMarginString = "";
+
+            if ( parts.length == 1 || parts.length == 2 ) {
+                bottomMarginString = parts[0];
+            } else if ( parts.length == 3 || parts.length == 4) {
+                bottomMarginString = parts[2];
+            }
+
+            final StyleValue styleValue = StyleValue.parse( bottomMarginString );
+
+            if ( styleValue != null ) {
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setMarginBottom(styleValue);
+                    }
+                };
+            }
+        }
+
+        if ( "text-indent".equals(key) ) {
+            final StyleValue styleValue = StyleValue.parse( value );
+
+            if ( styleValue != null ) {
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setTextIndent(styleValue);
+                    }
+                };
+            }
+        }
+
+        if ( "display".equals( key ) ) {
+            try {
+                final Style.DisplayStyle displayStyle = Style.DisplayStyle.valueOf( value.toUpperCase() );
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setDisplayStyle(displayStyle);
+                    }
+                };
+            } catch (IllegalArgumentException ia) {
+                Log.e("CSSCompiler", "Can't parse display-value: " + value );
+            }
+        }
+
         Log.d("CSSCompiler", "Don't understand CSS property '" + key + "'. Ignoring it.");
         return null;
     }
