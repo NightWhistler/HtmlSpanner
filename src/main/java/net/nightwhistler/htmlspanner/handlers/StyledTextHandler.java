@@ -3,16 +3,14 @@ package net.nightwhistler.htmlspanner.handlers;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.AlignmentSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
-import net.nightwhistler.htmlspanner.spans.AlignNormalSpan;
-import net.nightwhistler.htmlspanner.spans.AlignOppositeSpan;
-import net.nightwhistler.htmlspanner.spans.CenterSpan;
-import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
+import net.nightwhistler.htmlspanner.spans.*;
 import net.nightwhistler.htmlspanner.style.Style;
 import net.nightwhistler.htmlspanner.style.StyleCallback;
 import org.htmlcleaner.TagNode;
@@ -63,7 +61,15 @@ public class StyledTextHandler extends TagNodeHandler {
             //If we have a bottom margin, we insert an extra newline. We'll manipulate the line height
             //of this newline to create the margin.
             if ( getStyle().getRelativeMarginBottom() != null && getStyle().getRelativeMarginBottom() > 0f ) {
+
                 appendNewLine(builder);
+
+                Log.d("StyledTextHandler", "Applying MarginSpan from style " + useStyle + " from " + (end -1) + " to "
+                        + end + " on text " + builder.subSequence(end -1, end) );
+
+                stack.pushSpan( new MarginSpan(useStyle.getRelativeMarginBottom() ),
+                        builder.length() -1, builder.length() );
+
             }
         }
 

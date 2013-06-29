@@ -113,11 +113,7 @@ public class StyleCallback implements SpanCallback {
 
         }
 
-        if ( useStyle.getRelativeMarginBottom() != null ) {
-            Log.d("StyleCallback", "Applying MarginSpan from style " + useStyle + " from " + (end -1) + " to " + end + " on text " + builder.subSequence(end -1, end) );
-            builder.setSpan(new MarginSpan(useStyle.getRelativeMarginBottom()), end -1, end,
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
+
     }
 
     /**
