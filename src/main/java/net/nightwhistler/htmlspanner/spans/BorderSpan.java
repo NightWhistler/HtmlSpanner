@@ -19,6 +19,16 @@ import android.util.Log;
  */
 public class BorderSpan implements LineBackgroundSpan {
 
+    private int start;
+    private int end;
+
+    public BorderSpan( int start, int end ) {
+        this.start = start;
+        this.end = end;
+
+    }
+
+
     @Override
     public void drawBackground(Canvas c, Paint p,
                                int left, int right,
@@ -26,48 +36,25 @@ public class BorderSpan implements LineBackgroundSpan {
                                CharSequence text, int start, int end,
                                int lnum) {
 
-        p.setColor(Color.GREEN);
-        p.setStyle(Paint.Style.FILL);
+        int originalColor = p.getColor();
 
-        //Get the text bounds into the Rect
-        //paint.getTextBounds(text.toString(), start, end, rect);
+        p.setStyle(Paint.Style.STROKE);
 
-        //TODO: Use the rect to draw a border
-        //super.draw(canvas, text, start, end, x, top, y, bottom, paint);    //To change body of overridden methods use File | Settings | File Templates.
+        if ( start <= this.start ) {
+            Log.d("BorderSpan", "Drawing first line");
+            c.drawLine(left, top, right, top, p);
+        } else if ( end >= this.end ) {
+            Log.d("BorderSpan", "Drawing last line");
+            c.drawLine(left, bottom, right, bottom, p);
+        }
 
-        //canvas.drawText(text, start,end,x,y,paint);
+        c.drawLine(left,top,left,bottom, p);
+        c.drawLine(right,top,right,bottom, p);
 
-        //To change body of implemented methods use File | Settings | File Templates.
 
-
-        Log.d("BorderSpan", "Drawing " + left + "," + top + "," + right + "," + bottom);
-        c.drawRect( left, top, right, bottom, p);
+        p.setColor(originalColor);
     }
 
-    /*
-    @Override
-    public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
-        paint.setColor(Color.GREEN);
-        paint.setStyle(Paint.Style.STROKE);
 
-        Rect rect = new Rect();
-
-        //Get the text bounds into the Rect
-        paint.getTextBounds(text.toString(), start, end, rect);
-
-        //TODO: Use the rect to draw a border
-        super.draw(canvas, text, start, end, x, top, y, bottom, paint);    //To change body of overridden methods use File | Settings | File Templates.
-
-        canvas.drawText(text, start,end,x,y,paint);
-    }
-
-    @Override
-    public Drawable getDrawable() {
-        Drawable drawable = new ShapeDrawable();
-        drawable.setBounds(0, 0, 20, 20 );
-
-        return drawable;
-    }
-    */
 }
 

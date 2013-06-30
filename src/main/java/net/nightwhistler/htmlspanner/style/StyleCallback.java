@@ -9,6 +9,7 @@ import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanCallback;
 import net.nightwhistler.htmlspanner.spans.*;
+import net.nightwhistler.htmlspanner.spans.BackgroundColorSpan;
 
 /**
  * Created with IntelliJ IDEA.

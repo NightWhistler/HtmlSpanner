@@ -94,7 +94,7 @@ public class StyledTextHandler extends TagNodeHandler {
         }
 
         stack.pushSpan(new StyleCallback(getSpanner().getFontResolver()
-                .getDefaultFont(), useStyle, start, builder.length() ));
+                .getDefaultFont(), useStyle, start, end ));
     }
 
 }

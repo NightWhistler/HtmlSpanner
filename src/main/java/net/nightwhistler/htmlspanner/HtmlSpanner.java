@@ -25,6 +25,7 @@ import java.util.Map;
 import net.nightwhistler.htmlspanner.handlers.*;
 import net.nightwhistler.htmlspanner.handlers.attributes.AlignmentAttributeHandler;
 
+import net.nightwhistler.htmlspanner.handlers.attributes.BorderAttributeHandler;
 import net.nightwhistler.htmlspanner.handlers.attributes.StyleAttributeHandler;
 import net.nightwhistler.htmlspanner.style.Style;
 import net.nightwhistler.htmlspanner.handlers.StyledTextHandler;
@@ -320,7 +321,7 @@ public class HtmlSpanner {
                         new StyleValue(1.0f, StyleValue.Unit.EM));
 
 
-        TagNodeHandler pHandler = wrap(new StyledTextHandler(paragraphStyle));
+        TagNodeHandler pHandler = new BorderAttributeHandler(wrap(new StyledTextHandler(paragraphStyle)));
 
         registerHandler("p", pHandler);
         registerHandler("div", pHandler);
@@ -358,8 +359,6 @@ public class HtmlSpanner {
 
         TagNodeHandler centerHandler = new StyledTextHandler(new Style().setTextAlignment(Style.TextAlignment.CENTER));
         registerHandler("center", centerHandler);
-
-        registerHandler("border", new BorderHandler() );
 
         registerHandler("li", new ListItemHandler());
 
