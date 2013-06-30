@@ -21,6 +21,7 @@ import android.graphics.Paint;
 import android.text.Layout;
 import android.text.Spanned;
 import android.text.style.LeadingMarginSpan;
+import net.nightwhistler.htmlspanner.HtmlSpanner;
 
 /**
  * This class is similar to Android's BulletSpan with the following differences:
@@ -38,7 +39,8 @@ public class ListItemSpan implements LeadingMarginSpan {
     private static final int BULLET_RADIUS = 3;
     private static final int NUMBER_RADIUS = 5;
 
-    public static final int STANDARD_GAP_WIDTH = 10;
+    //Gap should be about 1em
+    public static final int STANDARD_GAP_WIDTH = HtmlSpanner.HORIZONTAL_EM_WIDTH;
 
     public ListItemSpan() {
         mNumber = -1;

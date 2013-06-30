@@ -45,14 +45,19 @@ public class CSSCompiler {
             matchers.add( selMatchers );
         }
 
+        Style blank = new Style();
+
         for ( PropertyValue propertyValue: rule.getPropertyValues() ) {
             CSSCompiler.StyleUpdater updater = CSSCompiler.getStyleUpdater(propertyValue.getProperty(),
                     propertyValue.getValue());
 
             if ( updater != null ) {
                 styleUpdaters.add( updater );
+                blank = updater.updateStyle(blank, spanner);
             }
         }
+
+        Log.d("CSSCompiler", "Compiled rule: " + blank );
 
         String asText = rule.toString();
 
@@ -364,68 +369,7 @@ public class CSSCompiler {
         }
 
         if ( "margin".equals( key ) ) {
-            String[] parts = value.split("\\s");
-
-            String bottomMarginString = "";
-            String topMarginString = "";
-            String leftMarginString = "";
-            String rightMarginString = "";
-
-            //See http://www.w3schools.com/css/css_margin.asp
-
-            if ( parts.length == 1 ) {
-                bottomMarginString = parts[0];
-                topMarginString = parts[0];
-                leftMarginString = parts[0];
-                rightMarginString = parts[0];
-            } else if ( parts.length == 2 ) {
-                topMarginString = parts[0];
-                bottomMarginString = parts[0];
-                leftMarginString = parts[1];
-                rightMarginString = parts[1];
-            } else if ( parts.length == 3 ) {
-                topMarginString = parts[0];
-                leftMarginString = parts[1];
-                rightMarginString = parts[1];
-                bottomMarginString = parts[2];
-            } else if ( parts.length == 4 ) {
-                topMarginString = parts[0];
-                rightMarginString = parts[1];
-                bottomMarginString = parts[2];
-                leftMarginString = parts[3];
-            }
-
-            final StyleValue marginBottom = StyleValue.parse( bottomMarginString );
-            final StyleValue marginTop = StyleValue.parse( topMarginString );
-            final StyleValue marginLeft = StyleValue.parse( leftMarginString );
-            final StyleValue marginRight = StyleValue.parse( rightMarginString );
-
-            if ( marginBottom != null ) {
-                return new StyleUpdater() {
-                    @Override
-                    public Style updateStyle(Style style, HtmlSpanner spanner) {
-                        Style resultStyle = style;
-
-                        if ( marginBottom != null ) {
-                            resultStyle =  resultStyle.setMarginBottom(marginBottom);
-                        }
-
-                        if ( marginTop != null ) {
-                            resultStyle = resultStyle.setMarginTop(marginTop);
-                        }
-
-                        if ( marginLeft != null ) {
-                            resultStyle = resultStyle.setMarginLeft(marginLeft);
-                        }
-
-                        if ( marginRight != null ) {
-                            resultStyle = resultStyle.setMarginRight(marginRight);
-                        }
-
-                        return resultStyle;
-                    }
-                };
-            }
+            return parseMargin( value );
         }
 
         if ( "text-indent".equals(key) ) {
@@ -452,7 +396,59 @@ public class CSSCompiler {
                 };
             } catch (IllegalArgumentException ia) {
                 Log.e("CSSCompiler", "Can't parse display-value: " + value );
+                return null;
             }
+        }
+
+        if ( "border-style".equals( key ) ) {
+            try {
+                final Style.BorderStyle borderStyle = Style.BorderStyle.valueOf(value.toUpperCase());
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setBorderStyle( borderStyle );
+                    }
+                };
+            } catch (IllegalArgumentException ia) {
+                Log.e("CSSCompiler", "Could not parse border-style " + value );
+                return null;
+            }
+        }
+
+        if ( "border-color".equals( key ) ) {
+            try {
+                final Integer borderColor = parseCSSColor(value);
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setBorderColor( borderColor );
+                    }
+                };
+            } catch (IllegalArgumentException ia) {
+                Log.e("CSSCompiler", "Could not parse border-color " + value );
+                return null;
+            }
+        }
+
+        if ( "border-width".equals( key ) ) {
+
+            final StyleValue borderWidth = StyleValue.parse(value);
+            if ( borderWidth != null ) {
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setBorderWidth( borderWidth );
+                    }
+                };
+            } else {
+                Log.e("CSSCompiler", "Could not parse border-color " + value );
+                return null;
+            }
+        }
+
+
+        if ( "border".equals( key ) ) {
+           return parseBorder( value );
         }
 
         Log.d("CSSCompiler", "Don't understand CSS property '" + key + "'. Ignoring it.");
@@ -481,5 +477,148 @@ public class CSSCompiler {
         return 1.0f;
     }
 
+    /**
+     * Parses a border definition.
+     *
+     * Border definitions are a complete mess, since the order is not set.
+     *
+     * @param borderDefinition
+     * @return
+     */
+    private static StyleUpdater parseBorder( String borderDefinition ) {
+
+        String[] parts = borderDefinition.split("\\s");
+
+        StyleValue borderWidth = null;
+        Integer borderColor = null;
+        Style.BorderStyle borderStyle = null;
+
+        for ( String part: parts ) {
+
+            Log.d("CSSParser", "Trying to parse " + part );
+
+            if ( borderWidth == null ) {
+
+                borderWidth = StyleValue.parse( part );
+
+                if ( borderWidth != null ) {
+                    Log.d("CSSParser", "Parsed " + part + " as border-width");
+                    continue;
+                }
+            }
+
+            if ( borderColor == null ) {
+                try {
+                    borderColor = parseCSSColor(part);
+                    Log.d("CSSParser", "Parsed " + part + " as border-color");
+                    continue;
+                } catch ( IllegalArgumentException ia ) {
+                    //try next one
+                }
+            }
+
+            if ( borderStyle == null ) {
+                try {
+                    borderStyle = Style.BorderStyle.valueOf(part.toUpperCase());
+                    Log.d("CSSParser", "Parsed " + part + " as border-style");
+                    continue;
+                } catch ( IllegalArgumentException ia ) {
+                    //next loop iteration
+                }
+            }
+
+            Log.d("CSSParser", "Could not make sense of border-spec " + part );
+        }
+
+        final StyleValue finalBorderWidth = borderWidth;
+        final Integer finalBorderColor = borderColor;
+        final Style.BorderStyle finalBorderStyle = borderStyle;
+
+        return new StyleUpdater() {
+            @Override
+            public Style updateStyle(Style style, HtmlSpanner spanner) {
+
+                if ( finalBorderColor != null ) {
+                    style = style.setBorderColor(finalBorderColor);
+                }
+
+                if ( finalBorderWidth != null ) {
+                    style = style.setBorderWidth( finalBorderWidth );
+                }
+
+                if ( finalBorderStyle != null ) {
+                    style = style.setBorderStyle( finalBorderStyle );
+                }
+
+                return style;
+            }
+        };
+
+    }
+
+    private static StyleUpdater parseMargin( String marginValue ) {
+
+        String[] parts = marginValue.split("\\s");
+
+        String bottomMarginString = "";
+        String topMarginString = "";
+        String leftMarginString = "";
+        String rightMarginString = "";
+
+        //See http://www.w3schools.com/css/css_margin.asp
+
+        if ( parts.length == 1 ) {
+            bottomMarginString = parts[0];
+            topMarginString = parts[0];
+            leftMarginString = parts[0];
+            rightMarginString = parts[0];
+        } else if ( parts.length == 2 ) {
+            topMarginString = parts[0];
+            bottomMarginString = parts[0];
+            leftMarginString = parts[1];
+            rightMarginString = parts[1];
+        } else if ( parts.length == 3 ) {
+            topMarginString = parts[0];
+            leftMarginString = parts[1];
+            rightMarginString = parts[1];
+            bottomMarginString = parts[2];
+        } else if ( parts.length == 4 ) {
+            topMarginString = parts[0];
+            rightMarginString = parts[1];
+            bottomMarginString = parts[2];
+            leftMarginString = parts[3];
+        }
+
+        final StyleValue marginBottom = StyleValue.parse( bottomMarginString );
+        final StyleValue marginTop = StyleValue.parse( topMarginString );
+        final StyleValue marginLeft = StyleValue.parse( leftMarginString );
+        final StyleValue marginRight = StyleValue.parse( rightMarginString );
+
+
+        return new StyleUpdater() {
+            @Override
+            public Style updateStyle(Style style, HtmlSpanner spanner) {
+                Style resultStyle = style;
+
+                if ( marginBottom != null ) {
+                    resultStyle =  resultStyle.setMarginBottom(marginBottom);
+                }
+
+                if ( marginTop != null ) {
+                    resultStyle = resultStyle.setMarginTop(marginTop);
+                }
+
+                if ( marginLeft != null ) {
+                    resultStyle = resultStyle.setMarginLeft(marginLeft);
+                }
+
+                if ( marginRight != null ) {
+                    resultStyle = resultStyle.setMarginRight(marginRight);
+                }
+
+                return resultStyle;
+            }
+        };
+    }
 
 }

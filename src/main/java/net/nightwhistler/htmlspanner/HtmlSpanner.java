@@ -50,6 +50,13 @@ import android.text.SpannableStringBuilder;
  */
 public class HtmlSpanner {
 
+    /**
+     * Temporary constant for the width of 1 horizontal em
+     * Used for calculating margins.
+     */
+    public static final int HORIZONTAL_EM_WIDTH = 10;
+
+
     private Map<String, TagNodeHandler> handlers;
 
     private boolean stripExtraWhiteSpace = false;
@@ -195,6 +202,8 @@ public class HtmlSpanner {
 
         return result;
     }
+
+
 
     private static HtmlCleaner createHtmlCleaner() {
         HtmlCleaner result = new HtmlCleaner();

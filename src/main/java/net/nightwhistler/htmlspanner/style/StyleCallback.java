@@ -2,14 +2,11 @@ package net.nightwhistler.htmlspanner.style;
 
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.style.*;
-import android.util.Log;
 import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanCallback;
 import net.nightwhistler.htmlspanner.spans.*;
-import net.nightwhistler.htmlspanner.spans.BackgroundColorSpan;
 
 /**
  * Created with IntelliJ IDEA.
@@ -74,6 +71,11 @@ public class StyleCallback implements SpanCallback {
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
+        if ( useStyle.getBorderStyle() != null ) {
+            builder.setSpan(new BorderSpan(useStyle, start, end), start, end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
         if ( useStyle.getFontSize() != null ) {
 
             StyleValue styleValue = useStyle.getFontSize();
@@ -118,9 +120,6 @@ public class StyleCallback implements SpanCallback {
         }
 
 
-        final int baseIndent = 10; //FIXME: this should be a dynamic value
-
-
         if ( useStyle.getTextIndent() != null ) {
 
             StyleValue styleValue = useStyle.getTextIndent();
@@ -130,7 +129,7 @@ public class StyleCallback implements SpanCallback {
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             } else {
-                builder.setSpan(new LeadingMarginSpan.Standard( (int) (baseIndent * styleValue.getFloatValue()), 0), start, end,
+                builder.setSpan(new LeadingMarginSpan.Standard( (int) ( HtmlSpanner.HORIZONTAL_EM_WIDTH * styleValue.getFloatValue()), 0), start, end,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 
@@ -147,7 +146,7 @@ public class StyleCallback implements SpanCallback {
                 }
 
             } else if ( styleValue.getFloatValue() > 0f ) {
-                builder.setSpan(new LeadingMarginSpan.Standard( (int) (baseIndent * styleValue.getFloatValue())), start, end,
+                builder.setSpan(new LeadingMarginSpan.Standard( (int) (HtmlSpanner.HORIZONTAL_EM_WIDTH * styleValue.getFloatValue())), start, end,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }

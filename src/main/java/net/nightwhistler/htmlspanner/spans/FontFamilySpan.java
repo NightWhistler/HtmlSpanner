@@ -63,6 +63,11 @@ public class FontFamilySpan extends TypefaceSpan {
 		applyCustomTypeFace(paint, this.fontFamily);
 	}
 
+    public void updateMeasureState(Paint paint) {
+        applyCustomTypeFace(paint, this.fontFamily);
+    }
+
+
 	private void applyCustomTypeFace(Paint paint, FontFamily tf) {
 
 		paint.setAntiAlias(true);
