@@ -1,13 +1,6 @@
 package net.nightwhistler.htmlspanner.handlers;
 
-import android.graphics.Color;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.AlignmentSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 import net.nightwhistler.htmlspanner.spans.*;
@@ -39,12 +32,34 @@ public class StyledTextHandler extends TagNodeHandler {
 
     @Override
     public void beforeChildren(TagNode node, SpannableStringBuilder builder, SpanStack spanStack) {
-        Style styleFromCSS = spanStack.getStyle( node, getStyle() );
 
-        if (styleFromCSS.getDisplayStyle() == Style.DisplayStyle.BLOCK &&
-                builder.length() > 0
-                && builder.charAt(builder.length() - 1) != '\n') {
-            builder.append("\n");
+        Style useStyle = spanStack.getStyle( node, getStyle() );
+
+        if (builder.length() > 0 &&  useStyle.getDisplayStyle() == Style.DisplayStyle.BLOCK ) {
+
+            if ( builder.charAt(builder.length() -1) != '\n' ) {
+                builder.append('\n');
+            }
+
+            //If we have a top margin, we insert an extra newline. We'll manipulate the line height
+            //of this newline to create the margin.
+            if ( useStyle.getMarginTop() != null ) {
+
+                StyleValue styleValue = useStyle.getMarginTop();
+
+                if ( builder.length() > 1 && builder.charAt( builder.length() - 2) != '\n' ) {
+                    builder.append('\n');
+                }
+
+                if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
+                    spanStack.pushSpan( new VerticalMarginSpan( styleValue.getIntValue() ),
+                            builder.length() -1, builder.length() );
+                } else {
+                    spanStack.pushSpan( new VerticalMarginSpan( styleValue.getFloatValue() ),
+                            builder.length() -1, builder.length() );
+                }
+
+            }
         }
     }
 
@@ -67,14 +82,11 @@ public class StyledTextHandler extends TagNodeHandler {
 
                 appendNewLine(builder);
 
-                Log.d("StyledTextHandler", "Applying MarginSpan from style " + useStyle + " from " + (end -1) + " to "
-                        + end + " on text " + builder.subSequence(end -1, end) );
-
                 if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
-                    stack.pushSpan( new MarginSpan( styleValue.getIntValue() ),
+                    stack.pushSpan( new VerticalMarginSpan( styleValue.getIntValue() ),
                         builder.length() -1, builder.length() );
                 } else {
-                    stack.pushSpan( new MarginSpan( styleValue.getFloatValue() ),
+                    stack.pushSpan( new VerticalMarginSpan( styleValue.getFloatValue() ),
                             builder.length() -1, builder.length() );
                 }
 

@@ -41,42 +41,26 @@ import android.text.SpannableStringBuilder;
 public class HeaderHandler extends StyledTextHandler {
 
 	private final StyleValue size;
-    private final StyleValue bottomMargin;
+    private final StyleValue margin;
 
 	/**
 	 * Creates a HeaderHandler which gives
 	 * 
 	 * @param size
 	 */
-	public HeaderHandler(float size, float bottomMargin) {
+	public HeaderHandler(float size, float margin) {
         this.size = new StyleValue(size, StyleValue.Unit.EM);
-        this.bottomMargin = new StyleValue(bottomMargin, StyleValue.Unit.EM);
+        this.margin = new StyleValue(margin, StyleValue.Unit.EM);
 	}
-
-    @Override
-    public void beforeChildren(TagNode node, SpannableStringBuilder builder, SpanStack spanStack) {
-
-        Log.d("HeaderHandler", "Applying style " + getStyle() );
-
-        Style style = getStyle();
-
-        if (style.getDisplayStyle() == Style.DisplayStyle.BLOCK &&
-                builder.length() > 0
-                && builder.charAt(builder.length() - 1) != '\n') {
-            builder.append("\n");
-
-            Log.d("HeaderHandler", "Adding newline");
-        } else {
-            Log.d("HeaderHandler", "NOT adding newline");
-        }
-    }
 
     @Override
     public Style getStyle() {
         return super.getStyle().setFontSize(size)
                 .setFontWeight(Style.FontWeight.BOLD)
                 .setDisplayStyle(Style.DisplayStyle.BLOCK)
-                .setMarginBottom(bottomMargin);
+                .setMarginBottom(margin)
+                .setMarginTop(margin);
+
     }
 
 }

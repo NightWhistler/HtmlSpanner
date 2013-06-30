@@ -30,7 +30,11 @@ public class Style {
     private final DisplayStyle displayStyle;
 
     private final StyleValue textIndent;
+
+    private final StyleValue marginTop;
     private final StyleValue marginBottom;
+    private final StyleValue marginLeft;
+    private final StyleValue marginRight;
 
 
     public Style() {
@@ -44,11 +48,15 @@ public class Style {
         displayStyle = null;
         marginBottom = null;
         textIndent = null;
+        marginTop = null;
+        marginLeft = null;
+        marginRight = null;
     }
 
     public Style(FontFamily family, TextAlignment textAlignment, StyleValue fontSize,
                  FontWeight fontWeight, FontStyle fontStyle, Integer color,
-                 Integer backgroundColor, DisplayStyle displayStyle, StyleValue marginBottom,
+                 Integer backgroundColor, DisplayStyle displayStyle, StyleValue marginTop,
+                 StyleValue marginBottom, StyleValue marginLeft, StyleValue marginRight,
                  StyleValue textIndent ) {
         this.fontFamily = family;
         this.textAlignment = textAlignment;
@@ -61,67 +69,97 @@ public class Style {
         this.displayStyle = displayStyle;
         this.marginBottom = marginBottom;
         this.textIndent = textIndent;
+        this.marginTop = marginTop;
+        this.marginLeft = marginLeft;
+        this.marginRight = marginRight;
     }
 
     public Style setFontFamily(FontFamily fontFamily) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
                 this.fontWeight, this.fontStyle, this.color, this.backgroundColor, this.displayStyle,
-                this.marginBottom, this.textIndent );
+                this.marginTop, this.marginBottom, this.marginLeft, this.marginRight, this.textIndent );
     }
 
 
     public Style setTextAlignment(TextAlignment alignment) {
         return new Style(this.fontFamily, alignment, this.fontSize, this.fontWeight,
                 this.fontStyle, this.color, this.backgroundColor, this.displayStyle,
-                this.marginBottom, this.textIndent );
+                this.marginTop, this.marginBottom, this.marginLeft, this.marginRight, this.textIndent );
     }
 
     public Style setFontSize(StyleValue fontSize) {
         return new Style(this.fontFamily, this.textAlignment, fontSize, this.fontWeight,
                 this.fontStyle, this.color, this.backgroundColor, this.displayStyle,
-                this.marginBottom, this.textIndent );
+                this.marginTop, this.marginBottom, this.marginLeft, this.marginRight, this.textIndent );
     }
 
     public Style setFontWeight(FontWeight fontWeight) {
         return new Style(fontFamily, this.textAlignment, this.fontSize, fontWeight,
                 this.fontStyle, this.color, this.backgroundColor, this.displayStyle,
-                this.marginBottom, this.textIndent);
+                this.marginTop, this.marginBottom, this.marginLeft, this.marginRight, this.textIndent);
     }
 
     public Style setFontStyle(FontStyle fontStyle) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, fontStyle, this.color, this.backgroundColor
-                , this.displayStyle, this.marginBottom, this.textIndent);
+                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
+                this.textIndent);
     }
 
     public Style setColor(Integer color) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
                 this.fontWeight, fontStyle, color, this.backgroundColor,
-                this.displayStyle, this.marginBottom, this.textIndent);
+                this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
+                this.textIndent);
     }
 
     public Style setBackgroundColor( Integer bgColor ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
                 this.fontWeight, fontStyle, this.color, bgColor,
-                this.displayStyle, this.marginBottom, this.textIndent );
+                this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
+                this.textIndent );
     }
 
     public Style setDisplayStyle( DisplayStyle displayStyle ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
                 this.fontWeight, fontStyle, this.color, this.backgroundColor,
-                displayStyle, this.marginBottom, this.textIndent );
+                displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
+                this.textIndent );
     }
 
     public Style setMarginBottom( StyleValue marginBottom ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
                 this.fontWeight, fontStyle, this.color, this.backgroundColor,
-                this.displayStyle, marginBottom, this.textIndent );
+                this.displayStyle, this.marginTop, marginBottom, this.marginLeft,
+                this.marginRight,this.textIndent );
+    }
+
+    public Style setMarginTop( StyleValue marginTop ) {
+        return new Style(fontFamily, this.textAlignment, this.fontSize,
+                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.displayStyle, marginTop, this.marginBottom, this.marginLeft,
+                this.marginRight,this.textIndent );
+    }
+
+    public Style setMarginLeft( StyleValue marginLeft ) {
+        return new Style(fontFamily, this.textAlignment, this.fontSize,
+                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.displayStyle, this.marginTop, this.marginBottom, marginLeft,
+                this.marginRight,this.textIndent );
+    }
+
+    public Style setMarginRight( StyleValue marginRight ) {
+        return new Style(fontFamily, this.textAlignment, this.fontSize,
+                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft,
+                marginRight,this.textIndent );
     }
 
     public Style setTextIndent( StyleValue textIndent ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
                 this.fontWeight, fontStyle, this.color, this.backgroundColor,
-                this.displayStyle, this.marginBottom, textIndent );
+                this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
+                textIndent );
     }
 
     public Integer getBackgroundColor() {
@@ -158,6 +196,18 @@ public class Style {
 
     public StyleValue getMarginBottom() {
         return this.marginBottom;
+    }
+
+    public StyleValue getMarginTop() {
+        return this.marginTop;
+    }
+
+    public StyleValue getMarginLeft() {
+        return this.marginLeft;
+    }
+
+    public StyleValue getMarginRight() {
+        return this.marginRight;
     }
 
     public StyleValue getTextIndent() {
@@ -200,8 +250,20 @@ public class Style {
             result.append("  display: " + displayStyle + "\n");
         }
 
+        if ( marginTop != null ) {
+            result.append("  margin-top: " + marginTop + "\n" );
+        }
+
         if ( marginBottom != null ) {
             result.append("  margin-bottom: " + marginBottom + "\n" );
+        }
+
+        if ( marginLeft != null ) {
+            result.append("  margin-left: " + marginLeft + "\n" );
+        }
+
+        if ( marginRight != null ) {
+            result.append("  margin-right: " + marginRight + "\n" );
         }
 
         if ( textIndent != null ) {

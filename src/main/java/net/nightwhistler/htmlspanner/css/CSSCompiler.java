@@ -321,24 +321,108 @@ public class CSSCompiler {
             }
         }
 
-        if ( "margin".equals( key ) ) {
-            String[] parts = value.split("\\s");
+        if ( "margin-top".equals(key) ) {
 
-            String bottomMarginString = "";
-
-            if ( parts.length == 1 || parts.length == 2 ) {
-                bottomMarginString = parts[0];
-            } else if ( parts.length == 3 || parts.length == 4) {
-                bottomMarginString = parts[2];
-            }
-
-            final StyleValue styleValue = StyleValue.parse( bottomMarginString );
+            final StyleValue styleValue = StyleValue.parse( value );
 
             if ( styleValue != null ) {
                 return new StyleUpdater() {
                     @Override
                     public Style updateStyle(Style style, HtmlSpanner spanner) {
-                        return style.setMarginBottom(styleValue);
+                        return style.setMarginTop(styleValue);
+                    }
+                };
+            }
+        }
+
+        if ( "margin-left".equals(key) ) {
+
+            final StyleValue styleValue = StyleValue.parse( value );
+
+            if ( styleValue != null ) {
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setMarginLeft(styleValue);
+                    }
+                };
+            }
+        }
+
+        if ( "margin-right".equals(key) ) {
+
+            final StyleValue styleValue = StyleValue.parse( value );
+
+            if ( styleValue != null ) {
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setMarginRight(styleValue);
+                    }
+                };
+            }
+        }
+
+        if ( "margin".equals( key ) ) {
+            String[] parts = value.split("\\s");
+
+            String bottomMarginString = "";
+            String topMarginString = "";
+            String leftMarginString = "";
+            String rightMarginString = "";
+
+            //See http://www.w3schools.com/css/css_margin.asp
+
+            if ( parts.length == 1 ) {
+                bottomMarginString = parts[0];
+                topMarginString = parts[0];
+                leftMarginString = parts[0];
+                rightMarginString = parts[0];
+            } else if ( parts.length == 2 ) {
+                topMarginString = parts[0];
+                bottomMarginString = parts[0];
+                leftMarginString = parts[1];
+                rightMarginString = parts[1];
+            } else if ( parts.length == 3 ) {
+                topMarginString = parts[0];
+                leftMarginString = parts[1];
+                rightMarginString = parts[1];
+                bottomMarginString = parts[2];
+            } else if ( parts.length == 4 ) {
+                topMarginString = parts[0];
+                rightMarginString = parts[1];
+                bottomMarginString = parts[2];
+                leftMarginString = parts[3];
+            }
+
+            final StyleValue marginBottom = StyleValue.parse( bottomMarginString );
+            final StyleValue marginTop = StyleValue.parse( topMarginString );
+            final StyleValue marginLeft = StyleValue.parse( leftMarginString );
+            final StyleValue marginRight = StyleValue.parse( rightMarginString );
+
+            if ( marginBottom != null ) {
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        Style resultStyle = style;
+
+                        if ( marginBottom != null ) {
+                            resultStyle =  resultStyle.setMarginBottom(marginBottom);
+                        }
+
+                        if ( marginTop != null ) {
+                            resultStyle = resultStyle.setMarginTop(marginTop);
+                        }
+
+                        if ( marginLeft != null ) {
+                            resultStyle = resultStyle.setMarginLeft(marginLeft);
+                        }
+
+                        if ( marginRight != null ) {
+                            resultStyle = resultStyle.setMarginRight(marginRight);
+                        }
+
+                        return resultStyle;
                     }
                 };
             }

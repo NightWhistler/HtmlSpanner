@@ -116,11 +116,13 @@ public class StyleCallback implements SpanCallback {
 
         }
 
+
+        final int baseIndent = 10; //FIXME: this should be a dynamic value
+
+
         if ( useStyle.getTextIndent() != null ) {
 
             StyleValue styleValue = useStyle.getTextIndent();
-
-            final int baseIndent = 10; //FIXME: this should be a dynamic value
 
             if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
                 builder.setSpan(new LeadingMarginSpan.Standard(styleValue.getIntValue(), 0), start, end,
@@ -133,6 +135,21 @@ public class StyleCallback implements SpanCallback {
 
         }
 
+        /* We ignore negative horizontal margins, since that would cause the text to be rendered off-screen */
+        if ( useStyle.getMarginLeft() != null ) {
+            StyleValue styleValue = useStyle.getMarginLeft();
+
+            if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
+                if ( styleValue.getIntValue() > 0 ) {
+                    builder.setSpan(new LeadingMarginSpan.Standard(styleValue.getIntValue() ), start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+
+            } else if ( styleValue.getFloatValue() > 0f ) {
+                builder.setSpan(new LeadingMarginSpan.Standard( (int) (baseIndent * styleValue.getFloatValue())), start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
 
     }
 

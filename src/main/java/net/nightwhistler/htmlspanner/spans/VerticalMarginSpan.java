@@ -5,23 +5,24 @@ import android.text.style.LineHeightSpan;
 import android.util.Log;
 
 /**
- * Created with IntelliJ IDEA.
- * User: alex
- * Date: 6/26/13
- * Time: 7:38 AM
- * To change this template use File | Settings | File Templates.
+ * Span used to implement the top- and bottom margin of blocks.
+ *
+ * Generally this is placed on a blank line, so that the height of
+ * that line can be changed to create a margin.
+ *
+ * @author Alex Kuiper
  */
-public class MarginSpan implements LineHeightSpan {
+public class VerticalMarginSpan implements LineHeightSpan {
 
     private final Float factor;
     private final Integer absolute;
 
-    public MarginSpan(Float margin) {
+    public VerticalMarginSpan(Float margin) {
         this.factor = margin;
         this.absolute = null;
     }
 
-    public MarginSpan(Integer value ) {
+    public VerticalMarginSpan(Integer value) {
         this.absolute = value;
         this.factor = null;
     }
