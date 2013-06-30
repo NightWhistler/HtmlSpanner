@@ -21,7 +21,6 @@ import net.nightwhistler.htmlspanner.SpanStack;
 
 import net.nightwhistler.htmlspanner.css.CSSCompiler;
 import net.nightwhistler.htmlspanner.style.Style;
-import net.nightwhistler.htmlspanner.style.StyledTextHandler;
 import org.htmlcleaner.TagNode;
 
 import android.text.SpannableStringBuilder;

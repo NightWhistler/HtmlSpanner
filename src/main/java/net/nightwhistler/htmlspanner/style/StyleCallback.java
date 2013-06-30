@@ -2,15 +2,13 @@ package net.nightwhistler.htmlspanner.style;
 
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.*;
 import android.util.Log;
 import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanCallback;
-import net.nightwhistler.htmlspanner.spans.AlignNormalSpan;
-import net.nightwhistler.htmlspanner.spans.AlignOppositeSpan;
-import net.nightwhistler.htmlspanner.spans.CenterSpan;
-import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
+import net.nightwhistler.htmlspanner.spans.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -75,16 +73,19 @@ public class StyleCallback implements SpanCallback {
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        if ( useStyle.getRelativeFontSize() != null ) {
-            //Log.d("StyleCallback", "Applying RelativeSizeSpan with size " + useStyle.getRelativeFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
-            builder.setSpan(new RelativeSizeSpan(useStyle.getRelativeFontSize()), start, end,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
+        if ( useStyle.getFontSize() != null ) {
 
-        if ( useStyle.getAbsoluteFontSize() != null ) {
-           // Log.d("StyleCallback", "Applying AbsoluteSizeSpan with size " + useStyle.getAbsoluteFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
-            builder.setSpan(new AbsoluteSizeSpan(useStyle.getAbsoluteFontSize()), start, end,
+            StyleValue styleValue = useStyle.getFontSize();
+
+            if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
+                // Log.d("StyleCallback", "Applying AbsoluteSizeSpan with size " + useStyle.getAbsoluteFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
+                builder.setSpan(new AbsoluteSizeSpan(styleValue.getIntValue()), start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else {
+                //Log.d("StyleCallback", "Applying RelativeSizeSpan with size " + useStyle.getRelativeFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
+                builder.setSpan(new RelativeSizeSpan(styleValue.getFloatValue()), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
         }
 
         if ( useStyle.getColor() != null ) {
@@ -114,6 +115,42 @@ public class StyleCallback implements SpanCallback {
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         }
+
+
+        final int baseIndent = 10; //FIXME: this should be a dynamic value
+
+
+        if ( useStyle.getTextIndent() != null ) {
+
+            StyleValue styleValue = useStyle.getTextIndent();
+
+            if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
+                builder.setSpan(new LeadingMarginSpan.Standard(styleValue.getIntValue(), 0), start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            } else {
+                builder.setSpan(new LeadingMarginSpan.Standard( (int) (baseIndent * styleValue.getFloatValue()), 0), start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+        }
+
+        /* We ignore negative horizontal margins, since that would cause the text to be rendered off-screen */
+        if ( useStyle.getMarginLeft() != null ) {
+            StyleValue styleValue = useStyle.getMarginLeft();
+
+            if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
+                if ( styleValue.getIntValue() > 0 ) {
+                    builder.setSpan(new LeadingMarginSpan.Standard(styleValue.getIntValue() ), start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+
+            } else if ( styleValue.getFloatValue() > 0f ) {
+                builder.setSpan(new LeadingMarginSpan.Standard( (int) (baseIndent * styleValue.getFloatValue())), start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+
     }
 
     /**

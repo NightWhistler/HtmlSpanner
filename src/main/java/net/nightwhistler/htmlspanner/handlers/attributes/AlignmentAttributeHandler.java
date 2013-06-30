@@ -17,7 +17,7 @@ package net.nightwhistler.htmlspanner.handlers.attributes;
 
 import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.style.Style;
-import net.nightwhistler.htmlspanner.style.StyledTextHandler;
+import net.nightwhistler.htmlspanner.handlers.StyledTextHandler;
 import org.htmlcleaner.TagNode;
 
 import android.text.SpannableStringBuilder;

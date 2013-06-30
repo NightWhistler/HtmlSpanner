@@ -15,10 +15,12 @@
  */
 package net.nightwhistler.htmlspanner.handlers;
 
+import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 import net.nightwhistler.htmlspanner.TextUtil;
 
+import net.nightwhistler.htmlspanner.spans.FontFamilySpan;
 import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.TagNode;
 
@@ -61,7 +63,8 @@ public class PreHandler extends TagNodeHandler {
 
 		builder.append(buffer.toString());
 
-		spanStack.pushSpan(new TypefaceSpan("monospace"), start, builder.length());
+        FontFamily monoSpace = getSpanner().getFontResolver().getMonoSpaceFont();
+		spanStack.pushSpan(new FontFamilySpan(monoSpace), start, builder.length());
 		appendNewLine(builder);
 		appendNewLine(builder);
 	}

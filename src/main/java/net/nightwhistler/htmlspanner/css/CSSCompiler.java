@@ -8,6 +8,7 @@ import com.osbcp.cssparser.Selector;
 import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.style.Style;
+import net.nightwhistler.htmlspanner.style.StyleValue;
 import org.htmlcleaner.TagNode;
 
 import java.util.ArrayList;
@@ -275,72 +276,183 @@ public class CSSCompiler {
 
         if ( "font-size".equals(key)) {
 
-            if ( value.endsWith("px") ) {
+            final StyleValue styleValue = StyleValue.parse( value );
 
-                try {
-                    final Integer fontSize = Integer.parseInt( value.substring(0, value.length() -2) );
-                    return new StyleUpdater() {
-                        @Override
-                        public Style updateStyle(Style style, HtmlSpanner spanner) {
-                            Log.d("CSSCompiler", "Applying style " + key + ": " + value );
-                            return style.setAbsoluteFontSize(fontSize);
-                        }
-                    };
-                } catch (NumberFormatException nfe ) {
-                    Log.e("CSSCompiler", "Can't parse font-size: " + value );
-                    return null;
-                }
-            }
+            if ( styleValue != null ) {
 
-            if ( value.endsWith("%") ) {
-                Log.d("CSSCompiler", "translating percentage " + value );
-                try {
-                    final int percentage = Integer.parseInt( value.substring(0, value.length() -1 ) );
-                    final float relativeFontSize = percentage / 100f;
-
-                    return new StyleUpdater() {
-                        @Override
-                        public Style updateStyle(Style style, HtmlSpanner spanner) {
-                            Log.d("CSSCompiler", "Applying style " + key + ": " + value );
-                            return style.setRelativeFontSize(relativeFontSize);
-                        }
-                    };
-                } catch ( NumberFormatException nfe ) {
-                    Log.e("CSSCompiler", "Can't parse font-size: " + value );
-                    return null;
-                }
-            }
-
-            if ( value.endsWith("em") ) {
-                try {
-                    final Float number = Float.parseFloat(value.substring(0, value.length() - 2));
-                    return new StyleUpdater() {
-                        @Override
-                        public Style updateStyle(Style style, HtmlSpanner spanner) {
-                            Log.d("CSSCompiler", "Applying style " + key + ": " + value );
-                            return style.setRelativeFontSize(number);
-                        }
-                    };
-                } catch ( NumberFormatException nfe ) {
-                    Log.e("CSSCompiler", "Can't parse font-size: " + value );
-                    return null;
-                }
-            }
-
-            try {
-                final Float number = translateFontSize(Integer.parseInt(value));
                 return new StyleUpdater() {
                     @Override
                     public Style updateStyle(Style style, HtmlSpanner spanner) {
                         Log.d("CSSCompiler", "Applying style " + key + ": " + value );
-                        return style.setRelativeFontSize(number);
+                        return style.setFontSize(styleValue);
                     }
                 };
-            } catch ( NumberFormatException nfe ) {
-                Log.e("CSSCompiler", "Can't parse font-size: " + value );
-                return null;
+
+            } else {
+
+                //Fonts have an extra legacy format where you just specify a plain number.
+                try {
+                    final Float number = translateFontSize(Integer.parseInt(value));
+                    return new StyleUpdater() {
+                        @Override
+                        public Style updateStyle(Style style, HtmlSpanner spanner) {
+                            Log.d("CSSCompiler", "Applying style " + key + ": " + value );
+                            return style.setFontSize(new StyleValue(number, StyleValue.Unit.EM));
+                        }
+                    };
+                } catch ( NumberFormatException nfe ) {
+                    Log.e("CSSCompiler", "Can't parse font-size: " + value );
+                    return null;
+                }
+            }
+        }
+
+        if ( "margin-bottom".equals(key) ) {
+
+            final StyleValue styleValue = StyleValue.parse( value );
+
+            if ( styleValue != null ) {
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setMarginBottom(styleValue);
+                    }
+                };
+            }
+        }
+
+        if ( "margin-top".equals(key) ) {
+
+            final StyleValue styleValue = StyleValue.parse( value );
+
+            if ( styleValue != null ) {
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setMarginTop(styleValue);
+                    }
+                };
+            }
+        }
+
+        if ( "margin-left".equals(key) ) {
+
+            final StyleValue styleValue = StyleValue.parse( value );
+
+            if ( styleValue != null ) {
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setMarginLeft(styleValue);
+                    }
+                };
+            }
+        }
+
+        if ( "margin-right".equals(key) ) {
+
+            final StyleValue styleValue = StyleValue.parse( value );
+
+            if ( styleValue != null ) {
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setMarginRight(styleValue);
+                    }
+                };
+            }
+        }
+
+        if ( "margin".equals( key ) ) {
+            String[] parts = value.split("\\s");
+
+            String bottomMarginString = "";
+            String topMarginString = "";
+            String leftMarginString = "";
+            String rightMarginString = "";
+
+            //See http://www.w3schools.com/css/css_margin.asp
+
+            if ( parts.length == 1 ) {
+                bottomMarginString = parts[0];
+                topMarginString = parts[0];
+                leftMarginString = parts[0];
+                rightMarginString = parts[0];
+            } else if ( parts.length == 2 ) {
+                topMarginString = parts[0];
+                bottomMarginString = parts[0];
+                leftMarginString = parts[1];
+                rightMarginString = parts[1];
+            } else if ( parts.length == 3 ) {
+                topMarginString = parts[0];
+                leftMarginString = parts[1];
+                rightMarginString = parts[1];
+                bottomMarginString = parts[2];
+            } else if ( parts.length == 4 ) {
+                topMarginString = parts[0];
+                rightMarginString = parts[1];
+                bottomMarginString = parts[2];
+                leftMarginString = parts[3];
             }
 
+            final StyleValue marginBottom = StyleValue.parse( bottomMarginString );
+            final StyleValue marginTop = StyleValue.parse( topMarginString );
+            final StyleValue marginLeft = StyleValue.parse( leftMarginString );
+            final StyleValue marginRight = StyleValue.parse( rightMarginString );
+
+            if ( marginBottom != null ) {
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        Style resultStyle = style;
+
+                        if ( marginBottom != null ) {
+                            resultStyle =  resultStyle.setMarginBottom(marginBottom);
+                        }
+
+                        if ( marginTop != null ) {
+                            resultStyle = resultStyle.setMarginTop(marginTop);
+                        }
+
+                        if ( marginLeft != null ) {
+                            resultStyle = resultStyle.setMarginLeft(marginLeft);
+                        }
+
+                        if ( marginRight != null ) {
+                            resultStyle = resultStyle.setMarginRight(marginRight);
+                        }
+
+                        return resultStyle;
+                    }
+                };
+            }
+        }
+
+        if ( "text-indent".equals(key) ) {
+            final StyleValue styleValue = StyleValue.parse( value );
+
+            if ( styleValue != null ) {
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setTextIndent(styleValue);
+                    }
+                };
+            }
+        }
+
+        if ( "display".equals( key ) ) {
+            try {
+                final Style.DisplayStyle displayStyle = Style.DisplayStyle.valueOf( value.toUpperCase() );
+                return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        return style.setDisplayStyle(displayStyle);
+                    }
+                };
+            } catch (IllegalArgumentException ia) {
+                Log.e("CSSCompiler", "Can't parse display-value: " + value );
+            }
         }
 
         Log.d("CSSCompiler", "Don't understand CSS property '" + key + "'. Ignoring it.");

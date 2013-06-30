@@ -24,53 +24,53 @@ import android.text.style.LeadingMarginSpan;
 
 /**
  * This class is similar to Android's BulletSpan with the following differences:
- * 
+ *
  * - Less options
- * 
+ *
  * - Instead of drawing a circle we are using a utf8 sign as a bullet (for more
  * compatibility)
- * 
+ *
  * - Also supports ordered lists with numbers in front of the item
  */
 public class ListItemSpan implements LeadingMarginSpan {
-	private final int mNumber;
+    private final int mNumber;
 
-	private static final int BULLET_RADIUS = 3;
-	private static final int NUMBER_RADIUS = 5;
+    private static final int BULLET_RADIUS = 3;
+    private static final int NUMBER_RADIUS = 5;
 
-	public static final int STANDARD_GAP_WIDTH = 2;
+    public static final int STANDARD_GAP_WIDTH = 10;
 
-	public ListItemSpan() {
-		mNumber = -1;
-	}
+    public ListItemSpan() {
+        mNumber = -1;
+    }
 
-	public ListItemSpan(int number) {
-		mNumber = number;
-	}
+    public ListItemSpan(int number) {
+        mNumber = number;
+    }
 
-	public int getLeadingMargin(boolean first) {
-		if (mNumber != -1) {
-			return 2 * NUMBER_RADIUS + STANDARD_GAP_WIDTH;
-		} else {
-			return 2 * BULLET_RADIUS + STANDARD_GAP_WIDTH;
-		}
-	}
+    public int getLeadingMargin(boolean first) {
+        if (mNumber != -1) {
+            return 2 * NUMBER_RADIUS + STANDARD_GAP_WIDTH;
+        } else {
+            return 2 * BULLET_RADIUS + STANDARD_GAP_WIDTH;
+        }
+    }
 
-	public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top,
-			int baseline, int bottom, CharSequence text, int start, int end,
-			boolean first, Layout l) {
-		if (((Spanned) text).getSpanStart(this) == start) {
-			Paint.Style style = p.getStyle();
+    public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top,
+                                  int baseline, int bottom, CharSequence text, int start, int end,
+                                  boolean first, Layout l) {
+        if (((Spanned) text).getSpanStart(this) == start) {
+            Paint.Style style = p.getStyle();
 
-			p.setStyle(Paint.Style.FILL);
+            p.setStyle(Paint.Style.FILL);
 
-			if (mNumber != -1) {
-				c.drawText(mNumber + ".", x + dir, baseline, p);
-			} else {
-				c.drawText("\u2022", x + dir, baseline, p);
-			}
+            if (mNumber != -1) {
+                c.drawText(mNumber + ".", x + dir, baseline, p);
+            } else {
+                c.drawText("\u2022", x + dir, baseline, p);
+            }
 
-			p.setStyle(style);
-		}
-	}
+            p.setStyle(style);
+        }
+    }
 }

@@ -15,10 +15,11 @@
  */
 package net.nightwhistler.htmlspanner.handlers;
 
+import android.util.Log;
 import net.nightwhistler.htmlspanner.SpanStack;
 
 import net.nightwhistler.htmlspanner.style.Style;
-import net.nightwhistler.htmlspanner.style.StyledTextHandler;
+import net.nightwhistler.htmlspanner.style.StyleValue;
 import org.htmlcleaner.TagNode;
 
 import android.text.SpannableStringBuilder;
@@ -39,38 +40,27 @@ import android.text.SpannableStringBuilder;
  */
 public class HeaderHandler extends StyledTextHandler {
 
-	private float size;
+	private final StyleValue size;
+    private final StyleValue margin;
 
 	/**
 	 * Creates a HeaderHandler which gives
 	 * 
 	 * @param size
 	 */
-	public HeaderHandler(float size) {
-        this.size = size;
+	public HeaderHandler(float size, float margin) {
+        this.size = new StyleValue(size, StyleValue.Unit.EM);
+        this.margin = new StyleValue(margin, StyleValue.Unit.EM);
 	}
 
     @Override
     public Style getStyle() {
-        return super.getStyle().setRelativeFontSize(size)
-                .setFontWeight(Style.FontWeight.BOLD);
+        return super.getStyle().setFontSize(size)
+                .setFontWeight(Style.FontWeight.BOLD)
+                .setDisplayStyle(Style.DisplayStyle.BLOCK)
+                .setMarginBottom(margin)
+                .setMarginTop(margin);
+
     }
 
-    @Override
-	public void beforeChildren(TagNode node, SpannableStringBuilder builder) {
-		if (builder.length() > 0
-				&& builder.charAt(builder.length() - 1) != '\n') {
-			builder.append("\n");
-		}
-	}
-
-	@Override
-	public void handleTagNode(TagNode node, SpannableStringBuilder builder,
-			int start, int end, Style style, SpanStack stack ) {
-
-        super.handleTagNode(node, builder, start, end, style, stack);
-
-		appendNewLine(builder);
-		appendNewLine(builder);
-	}
 }

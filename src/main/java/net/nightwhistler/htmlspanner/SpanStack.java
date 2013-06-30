@@ -7,9 +7,7 @@ import net.nightwhistler.htmlspanner.css.CompiledRule;
 import net.nightwhistler.htmlspanner.style.Style;
 import org.htmlcleaner.TagNode;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,34 +22,43 @@ public class SpanStack {
 
     private Set<CompiledRule> rules = new HashSet<CompiledRule>();
 
+    private Map<TagNode, List<CompiledRule>> lookupCache = new HashMap<TagNode, List<CompiledRule>>();
+
     public void registerCompiledRule(CompiledRule rule) {
         this.rules.add( rule );
     }
 
     public Style getStyle( TagNode node, Style baseStyle ) {
 
-        Style result = baseStyle;
+        if ( ! lookupCache.containsKey(node) ) {
 
-        Log.d("SpanStack", "Looking for matching CSS rules for node: "
-                + "<" + node.getName() + " id='" + option(node.getAttributeByName("id"))
-                + "' class='" + option(node.getAttributeByName("class")) + "'>");
+            Log.d("SpanStack", "Looking for matching CSS rules for node: "
+                    + "<" + node.getName() + " id='" + option(node.getAttributeByName("id"))
+                    + "' class='" + option(node.getAttributeByName("class")) + "'>");
 
-        int matches = 0;
-
-        for ( CompiledRule rule: rules ) {
-            if ( rule.matches(node) ) {
-                matches++;
-                Log.d( "SpanStack", "Got match on rule " + rule );
-
-                Style original = result;
-                result = rule.applyStyle(result);
-
-                Log.d("SpanStack", "Original style: " + original );
-                Log.d("SpanStack", "Resulting style: " + result);
+            List<CompiledRule> matchingRules = new ArrayList<CompiledRule>();
+            for ( CompiledRule rule: rules ) {
+                if ( rule.matches(node)) {
+                    matchingRules.add(rule);
+                }
             }
+
+            Log.d("SpanStack", "Found " + matchingRules.size() + " matching rules.");
+            lookupCache.put(node, matchingRules);
         }
 
-        Log.d("SpanStack", "Found " + matches + " matching rules.");
+        Style result = baseStyle;
+
+        for ( CompiledRule rule: lookupCache.get(node) ) {
+
+            Log.d( "SpanStack", "Applying rule " + rule );
+
+            Style original = result;
+            result = rule.applyStyle(result);
+
+            Log.d("SpanStack", "Original style: " + original );
+            Log.d("SpanStack", "Resulting style: " + result);
+        }
 
         return result;
     }
