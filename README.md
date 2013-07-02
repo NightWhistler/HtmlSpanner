@@ -10,7 +10,7 @@ HtmlSpanner uses HtmlCleaner to do most of the heavy lifting for parsing HTML fi
 
 # CSS support
 
-HtmlSpanner now also supports the most common subset of CSS: both <style> tags and style attributes are parsed by default, and the style of all built-in tags can be updated.
+HtmlSpanner now also supports the most common subset of CSS: both style tags and style attributes are parsed by default, and the style of all built-in tags can be updated.
 
 # Usage
 In its simplest form, just call ``(new HtmlSpanner()).fromHtml()`` to get similar output as Android's ``Html.fromHtml()``.
