@@ -139,6 +139,7 @@ public class TableHandler extends TagNodeHandler {
 	private TextPaint getTextPaint() {
 		TextPaint textPaint = new TextPaint();
 		textPaint.setColor(this.textColor);
+        textPaint.linkColor = this.textColor;
 		textPaint.setAntiAlias(true);
 		textPaint.setTextSize(this.textSize);
 		textPaint.setTypeface(this.typeFace);
