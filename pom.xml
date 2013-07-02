@@ -9,6 +9,12 @@
 
   <name>htmlspanner</name>
   <url>http://maven.apache.org</url>
+  <repositories>
+		<repository>
+			<id>PageTurner Repo</id>
+			<url>http://repo.pageturner-reader.org</url>
+		</repository>
+  </repositories>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
