@@ -125,11 +125,11 @@ public class StyleCallback implements SpanCallback {
             StyleValue styleValue = useStyle.getTextIndent();
 
             if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
-                builder.setSpan(new LeadingMarginSpan.Standard(styleValue.getIntValue(), 0), start, end,
+                builder.setSpan(new LeadingMarginSpan.Standard(styleValue.getIntValue(), 0), start, start +1,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             } else {
-                builder.setSpan(new LeadingMarginSpan.Standard( (int) ( HtmlSpanner.HORIZONTAL_EM_WIDTH * styleValue.getFloatValue()), 0), start, end,
+                builder.setSpan(new LeadingMarginSpan.Standard( (int) ( HtmlSpanner.HORIZONTAL_EM_WIDTH * styleValue.getFloatValue()), 0), start, start +1,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 
