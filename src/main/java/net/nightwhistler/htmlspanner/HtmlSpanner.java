@@ -65,6 +65,8 @@ public class HtmlSpanner {
 
     private FontResolver fontResolver;
 
+    private boolean allowStyling;
+
 
     /**
      * Creates a new HtmlSpanner using a default HtmlCleaner instance.
@@ -117,6 +119,27 @@ public class HtmlSpanner {
      */
     public boolean isStripExtraWhiteSpace() {
         return stripExtraWhiteSpace;
+    }
+
+    /**
+     * Indicates whether the text style may be updated.
+     *
+     * If this is set to false, all CSS is ignored
+     * and the basic built-in style is used.
+     *
+     * @return
+     */
+    public boolean isAllowStyling() {
+        return allowStyling;
+    }
+
+    /**
+     * Switch to specify is CSS style should be used.
+     *
+     * @param value
+     */
+    public void setAllowStyling( boolean value ) {
+        this.allowStyling = value;
     }
 
     /**

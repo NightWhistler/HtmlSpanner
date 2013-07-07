@@ -77,11 +77,16 @@ public class BorderSpan implements LineBackgroundSpan {
             p.setColor( style.getBorderColor() );
         }
 
+        int strokeWidth;
 
         if ( style.getBorderWidth() != null && style.getBorderWidth().getUnit() == StyleValue.Unit.PX ) {
-            int strokeWidth = style.getBorderWidth().getIntValue();
-            p.setStrokeWidth( strokeWidth );
+            strokeWidth = style.getBorderWidth().getIntValue();
+        } else {
+            strokeWidth = 1;
         }
+
+        p.setStrokeWidth( strokeWidth );
+        right -= strokeWidth;
 
         p.setStyle(Paint.Style.STROKE);
 

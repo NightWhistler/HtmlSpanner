@@ -18,14 +18,16 @@ public class StyleNodeHandler extends TagNodeHandler {
     @Override
     public void handleTagNode(TagNode node, SpannableStringBuilder builder, int start, int end, SpanStack spanStack) {
 
-        if ( node.getChildren().size() == 1 ) {
-            Object childNode = node.getChildren().get(0);
+        if ( getSpanner().isAllowStyling() ) {
 
-            if ( childNode instanceof ContentNode ) {
-                parseCSSFromText( ( (ContentNode) childNode ).getContent(),
-                        spanStack );
+            if ( node.getChildren().size() == 1 ) {
+                Object childNode = node.getChildren().get(0);
+
+                if ( childNode instanceof ContentNode ) {
+                    parseCSSFromText( ( (ContentNode) childNode ).getContent(),
+                            spanStack );
+                }
             }
-
         }
 
     }
