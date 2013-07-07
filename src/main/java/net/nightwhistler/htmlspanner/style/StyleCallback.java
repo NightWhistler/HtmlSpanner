@@ -65,12 +65,14 @@ public class StyleCallback implements SpanCallback {
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        if ( useStyle.getBackgroundColor() != null ) {
+        //If there's no border, we use a BackgroundColorSpan to draw colour behind the text
+        if ( useStyle.getBackgroundColor() != null  && useStyle.getBorderStyle() == null ) {
             //Log.d("StyleCallback", "Applying BackgroundColorSpan with color " + useStyle.getBackgroundColor() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
-            builder.setSpan(new BackgroundColorSpan(useStyle.getBackgroundColor()), start, end,
+              builder.setSpan(new BackgroundColorSpan(useStyle.getBackgroundColor()), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
+        //If there is a border, the BorderSpan will also draw the background colour if needed.
         if ( useStyle.getBorderStyle() != null ) {
             builder.setSpan(new BorderSpan(useStyle, start, end), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
