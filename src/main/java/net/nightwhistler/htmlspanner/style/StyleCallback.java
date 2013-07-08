@@ -8,6 +8,8 @@ import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanCallback;
 import net.nightwhistler.htmlspanner.spans.*;
 
+import static java.lang.Math.min;
+
 /**
  * Created with IntelliJ IDEA.
  * User: alex
@@ -127,11 +129,12 @@ public class StyleCallback implements SpanCallback {
             StyleValue styleValue = useStyle.getTextIndent();
 
             if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
-                builder.setSpan(new LeadingMarginSpan.Standard(styleValue.getIntValue(), 0), start, start +1,
+                builder.setSpan(new LeadingMarginSpan.Standard(styleValue.getIntValue(), 0), start, min(end, start +1),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             } else {
-                builder.setSpan(new LeadingMarginSpan.Standard( (int) ( HtmlSpanner.HORIZONTAL_EM_WIDTH * styleValue.getFloatValue()), 0), start, start +1,
+                builder.setSpan(new LeadingMarginSpan.Standard( (int)
+                        ( HtmlSpanner.HORIZONTAL_EM_WIDTH * styleValue.getFloatValue()), 0), start, min(end, start +1),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 
@@ -148,7 +151,8 @@ public class StyleCallback implements SpanCallback {
                 }
 
             } else if ( styleValue.getFloatValue() > 0f ) {
-                builder.setSpan(new LeadingMarginSpan.Standard( (int) (HtmlSpanner.HORIZONTAL_EM_WIDTH * styleValue.getFloatValue())), start, end,
+                builder.setSpan(new LeadingMarginSpan.Standard(
+                        (int) (HtmlSpanner.HORIZONTAL_EM_WIDTH * styleValue.getFloatValue())), start, end,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
