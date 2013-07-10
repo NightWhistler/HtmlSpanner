@@ -56,7 +56,7 @@ public class ImageHandler extends TagNodeHandler {
 			drawable.setBounds(0, 0, bitmap.getWidth() - 1,
 					bitmap.getHeight() - 1);
 
-            stack.pushSpan( new ImageSpan(drawable), start, end );
+            stack.pushSpan( new ImageSpan(drawable), start, builder.length() );
 		}
 	}
 
