@@ -25,6 +25,11 @@ public class TextUtil {
 		REPLACEMENTS.put("&gt;", ">");
 		REPLACEMENTS.put("&sect;", "§");
 
+        REPLACEMENTS.put("&ldquo;", "“");
+        REPLACEMENTS.put("&rdquo;", "”");
+        REPLACEMENTS.put("&lsquo;", "‘");
+        REPLACEMENTS.put("&rsquo;", "’");
+
 	}
 
 	/**
