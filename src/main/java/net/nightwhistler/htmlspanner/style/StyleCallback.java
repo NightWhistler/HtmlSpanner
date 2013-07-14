@@ -33,7 +33,7 @@ public class StyleCallback implements SpanCallback {
     }
 
     @Override
-    public void applySpan(SpannableStringBuilder builder) {
+    public void applySpan(HtmlSpanner spanner, SpannableStringBuilder builder) {
 
         if ( useStyle.getFontFamily() != null || useStyle.getFontStyle() != null || useStyle.getFontWeight() != null ) {
 
@@ -68,7 +68,7 @@ public class StyleCallback implements SpanCallback {
         }
 
         //If there's no border, we use a BackgroundColorSpan to draw colour behind the text
-        if ( useStyle.getBackgroundColor() != null  && useStyle.getBorderStyle() == null ) {
+        if ( spanner.isUseColoursFromStyle() &&  useStyle.getBackgroundColor() != null  && useStyle.getBorderStyle() == null ) {
             //Log.d("StyleCallback", "Applying BackgroundColorSpan with color " + useStyle.getBackgroundColor() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
               builder.setSpan(new BackgroundColorSpan(useStyle.getBackgroundColor()), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -76,7 +76,7 @@ public class StyleCallback implements SpanCallback {
 
         //If there is a border, the BorderSpan will also draw the background colour if needed.
         if ( useStyle.getBorderStyle() != null ) {
-            builder.setSpan(new BorderSpan(useStyle, start, end), start, end,
+            builder.setSpan(new BorderSpan(useStyle, start, end, spanner.isUseColoursFromStyle()), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
@@ -95,7 +95,7 @@ public class StyleCallback implements SpanCallback {
             }
         }
 
-        if ( useStyle.getColor() != null ) {
+        if ( spanner.isUseColoursFromStyle() && useStyle.getColor() != null ) {
             //Log.d("StyleCallback", "Applying ForegroundColorSpan from " + start + " to " + end + " on text " + builder.subSequence(start, end) );
             builder.setSpan(new ForegroundColorSpan(useStyle.getColor()), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

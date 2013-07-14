@@ -56,7 +56,7 @@ public class FontHandler extends StyledTextHandler {
                 }
             }
 
-            if ( color != null ) {
+            if ( color != null && getSpanner().isUseColoursFromStyle() ) {
 
                 CSSCompiler.StyleUpdater updater = CSSCompiler.getStyleUpdater("color", color);
 

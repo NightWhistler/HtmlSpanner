@@ -65,7 +65,15 @@ public class HtmlSpanner {
 
     private FontResolver fontResolver;
 
-    private boolean allowStyling;
+    /**
+     * Switch to determine if CSS is used
+     */
+    private boolean allowStyling = true;
+
+    /**
+     * If CSS colours are used
+     */
+    private boolean useColoursFromStyle = true;
 
 
     /**
@@ -140,6 +148,20 @@ public class HtmlSpanner {
      */
     public void setAllowStyling( boolean value ) {
         this.allowStyling = value;
+    }
+
+    /**
+     * Switch to specify if the colours from CSS
+     * should override user-specified colours.
+     *
+     * @param value
+     */
+    public void setUseColoursFromStyle( boolean value ) {
+        this.useColoursFromStyle = value;
+    }
+
+    public boolean isUseColoursFromStyle() {
+        return this.useColoursFromStyle;
     }
 
     /**
@@ -221,7 +243,7 @@ public class HtmlSpanner {
         SpanStack stack = new SpanStack();
         handleContent(result, node, stack);
 
-        stack.applySpans(result);
+        stack.applySpans(this, result);
 
         return result;
     }
@@ -283,13 +305,18 @@ public class HtmlSpanner {
 
         TagNodeHandler handler = this.handlers.get(node.getName());
 
-        int lengthBefore = builder.length();
-
-        if (handler != null) {
-            handler.beforeChildren(node, builder, stack);
+        if ( handler == null ) {
+            handler = new StyledTextHandler();
+            handler.setSpanner(this);
         }
 
-        if (handler == null || !handler.rendersContent()) {
+        int lengthBefore = builder.length();
+
+
+        handler.beforeChildren(node, builder, stack);
+
+
+        if ( !handler.rendersContent() ) {
 
             for (Object childNode : node.getChildren()) {
                 handleContent(builder, childNode, stack);
@@ -297,10 +324,7 @@ public class HtmlSpanner {
         }
 
         int lengthAfter = builder.length();
-
-        if (handler != null) {
-            handler.handleTagNode(node, builder, lengthBefore, lengthAfter, stack);
-        }
+        handler.handleTagNode(node, builder, lengthBefore, lengthAfter, stack);
     }
 
 
@@ -342,7 +366,6 @@ public class HtmlSpanner {
         //align attributes
 
         StyledTextHandler inlineAlignment = wrap(new StyledTextHandler());
-
         TagNodeHandler brHandler = new NewLineHandler(1, inlineAlignment);
 
         registerHandler("br", brHandler);
@@ -357,9 +380,6 @@ public class HtmlSpanner {
 
         registerHandler("p", pHandler);
         registerHandler("div", pHandler);
-
-        registerHandler("span", inlineAlignment );
-        registerHandler("body", inlineAlignment);
 
         registerHandler("h1", wrap(new HeaderHandler(1.5f, 0.5f)));
         registerHandler("h2", wrap(new HeaderHandler(1.4f, 0.6f)));

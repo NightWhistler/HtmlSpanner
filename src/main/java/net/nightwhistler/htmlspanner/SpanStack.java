@@ -75,7 +75,7 @@ public class SpanStack {
 
         SpanCallback callback = new SpanCallback() {
             @Override
-            public void applySpan(SpannableStringBuilder builder) {
+            public void applySpan(HtmlSpanner spanner, SpannableStringBuilder builder) {
                 builder.setSpan(span, start, end,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
@@ -88,9 +88,9 @@ public class SpanStack {
         spanItemStack.push(callback);
     }
 
-    public void applySpans( SpannableStringBuilder builder ) {
+    public void applySpans(HtmlSpanner spanner, SpannableStringBuilder builder ) {
         while ( ! spanItemStack.isEmpty() ) {
-            spanItemStack.pop().applySpan(builder);
+            spanItemStack.pop().applySpan(spanner, builder);
         }
     }
 

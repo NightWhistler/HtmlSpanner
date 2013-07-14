@@ -27,11 +27,14 @@ public class BorderSpan implements LineBackgroundSpan {
 
     private Style style;
 
-    public BorderSpan( Style style, int start, int end ) {
+    private boolean usecolour;
+
+    public BorderSpan( Style style, int start, int end, boolean usecolour ) {
         this.start = start;
         this.end = end;
 
         this.style = style;
+        this.usecolour = usecolour;
     }
 
 
@@ -66,14 +69,14 @@ public class BorderSpan implements LineBackgroundSpan {
         int originalColor = p.getColor();
         float originalStrokeWidth = p.getStrokeWidth();
 
-        if ( style.getBackgroundColor() != null ) {
+        if ( usecolour && style.getBackgroundColor() != null ) {
             p.setColor(style.getBackgroundColor());
             p.setStyle(Paint.Style.FILL);
 
             c.drawRect(left,top,right,bottom,p);
         }
 
-        if ( style.getBorderColor() != null ) {
+        if ( usecolour && style.getBorderColor() != null ) {
             p.setColor( style.getBorderColor() );
         }
 
