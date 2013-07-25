@@ -1,6 +1,7 @@
 package net.nightwhistler.htmlspanner.handlers;
 
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 import net.nightwhistler.htmlspanner.spans.*;
@@ -40,27 +41,27 @@ public class StyledTextHandler extends TagNodeHandler {
             if ( builder.charAt(builder.length() -1) != '\n' ) {
                 builder.append('\n');
             }
-
-            //If we have a top margin, we insert an extra newline. We'll manipulate the line height
-            //of this newline to create the margin.
-            if ( useStyle.getMarginTop() != null ) {
-
-                StyleValue styleValue = useStyle.getMarginTop();
-
-                if ( builder.length() > 1 && builder.charAt( builder.length() - 2) != '\n' ) {
-                    builder.append('\n');
-                }
-
-                if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
-                    spanStack.pushSpan( new VerticalMarginSpan( styleValue.getIntValue() ),
-                            builder.length() -1, builder.length() );
-                } else {
-                    spanStack.pushSpan( new VerticalMarginSpan( styleValue.getFloatValue() ),
-                            builder.length() -1, builder.length() );
-                }
-
-            }
         }
+
+        //If we have a top margin, we insert an extra newline. We'll manipulate the line height
+        //of this newline to create the margin.
+        if ( useStyle.getMarginTop() != null ) {
+
+            StyleValue styleValue = useStyle.getMarginTop();
+
+            builder.append('\n');
+
+            if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
+                spanStack.pushSpan( new VerticalMarginSpan( styleValue.getIntValue() ),
+                        builder.length() -1, builder.length() );
+            } else {
+                spanStack.pushSpan( new VerticalMarginSpan( styleValue.getFloatValue() ),
+                        builder.length() -1, builder.length() );
+            }
+
+        }
+
+
     }
 
     public final void handleTagNode(TagNode node, SpannableStringBuilder builder,
@@ -82,9 +83,11 @@ public class StyledTextHandler extends TagNodeHandler {
 
                 appendNewLine(builder);
 
+                Log.d("StyledTextHandler", "Putting verticalspan (margin-bottom) on " + builder.length());
+
                 if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
                     stack.pushSpan( new VerticalMarginSpan( styleValue.getIntValue() ),
-                        builder.length() -1, builder.length() );
+                            builder.length() -1, builder.length() );
                 } else {
                     stack.pushSpan( new VerticalMarginSpan( styleValue.getFloatValue() ),
                             builder.length() -1, builder.length() );
@@ -94,7 +97,7 @@ public class StyledTextHandler extends TagNodeHandler {
         }
 
         stack.pushSpan(new StyleCallback(getSpanner().getFontResolver()
-                .getDefaultFont(), useStyle, start, end ));
+                .getDefaultFont(), useStyle, start, builder.length() ));
     }
 
 }
