@@ -57,8 +57,12 @@ public class TextUtil {
 		}
 
 		while (matcher.find()) {
-			matcher.appendReplacement(result,
+            try {
+			    matcher.appendReplacement(result,
 					getReplacement(matcher, replacements));
+            } catch ( ArrayIndexOutOfBoundsException i ) {
+                //Ignore, seems to be a matcher bug
+            }
 		}
 		matcher.appendTail(result);
 		return result.toString();
