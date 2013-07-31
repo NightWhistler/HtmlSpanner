@@ -104,33 +104,29 @@ public class TableHandler extends TagNodeHandler {
 		return true;
 	}
 
-	private void readNode(Object node, Table table) {
+    private void readNode(Object node, Table table) {
 
-		// We can't handle plain content nodes within the table.
-		if (node instanceof ContentNode) {
-			return;
-		}
+        // We can't handle plain content nodes within the table.
+        if ( node instanceof TagNode ) {
 
-		TagNode tagNode = (TagNode) node;
+            TagNode tagNode = (TagNode) node;
 
-		if (tagNode.getName().equals("td")) {
-			Spanned result = this.getSpanner().fromTagNode(tagNode);
+            if (tagNode.getName().equals("td")) {
+                Spanned result = this.getSpanner().fromTagNode(tagNode);
+                table.addCell(result);
+                return;
+            }
 
-            Log.d("TableHandler", "Got cell content: " + result);
+            if (tagNode.getName().equals("tr")) {
+                table.addRow();
+            }
 
-			table.addCell(result);
-			return;
-		}
+            for (Object child : tagNode.getChildren()) {
+                readNode(child, table);
+            }
+        }
 
-		if (tagNode.getName().equals("tr")) {
-			table.addRow();
-		}
-
-		for (Object child : tagNode.getChildren()) {
-			readNode(child, table);
-		}
-
-	}
+    }
 
 	private Table getTable(TagNode node) {
 
