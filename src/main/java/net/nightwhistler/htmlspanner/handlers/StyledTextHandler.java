@@ -83,8 +83,6 @@ public class StyledTextHandler extends TagNodeHandler {
 
                 appendNewLine(builder);
 
-                Log.d("StyledTextHandler", "Putting verticalspan (margin-bottom) on " + builder.length());
-
                 if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
                     stack.pushSpan( new VerticalMarginSpan( styleValue.getIntValue() ),
                             builder.length() -1, builder.length() );

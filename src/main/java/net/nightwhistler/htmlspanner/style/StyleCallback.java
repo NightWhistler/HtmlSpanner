@@ -3,6 +3,7 @@ package net.nightwhistler.htmlspanner.style;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.*;
+import android.util.Log;
 import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
 import net.nightwhistler.htmlspanner.SpanCallback;
@@ -128,13 +129,23 @@ public class StyleCallback implements SpanCallback {
 
             StyleValue styleValue = useStyle.getTextIndent();
 
+            int marginStart = start;
+            while ( marginStart < end && builder.charAt(marginStart) == '\n' ) {
+                marginStart++;
+            }
+
+            int marginEnd = min( end, marginStart +1 );
+
+            Log.d("StyleCallback", "Applying LeadingMarginSpan from " + marginStart + " to " + marginEnd +
+                    " on text " + builder.subSequence(marginStart, marginEnd));
+
             if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
-                builder.setSpan(new LeadingMarginSpan.Standard(styleValue.getIntValue(), 0), start, min(end, start +1),
+                builder.setSpan(new LeadingMarginSpan.Standard(styleValue.getIntValue(), 0), marginStart, marginEnd,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             } else {
                 builder.setSpan(new LeadingMarginSpan.Standard( (int)
-                        ( HtmlSpanner.HORIZONTAL_EM_WIDTH * styleValue.getFloatValue()), 0), start, min(end, start +1),
+                        ( HtmlSpanner.HORIZONTAL_EM_WIDTH * styleValue.getFloatValue()), 0), marginStart, marginEnd,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 
