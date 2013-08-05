@@ -86,13 +86,17 @@ public class StyleCallback implements SpanCallback {
             StyleValue styleValue = useStyle.getFontSize();
 
             if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
-                // Log.d("StyleCallback", "Applying AbsoluteSizeSpan with size " + useStyle.getAbsoluteFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
-                builder.setSpan(new AbsoluteSizeSpan(styleValue.getIntValue()), start, end,
+                if ( styleValue.getIntValue() > 0 ) {
+                    // Log.d("StyleCallback", "Applying AbsoluteSizeSpan with size " + useStyle.getAbsoluteFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
+                    builder.setSpan(new AbsoluteSizeSpan(styleValue.getIntValue()), start, end,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             } else {
-                //Log.d("StyleCallback", "Applying RelativeSizeSpan with size " + useStyle.getRelativeFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
-                builder.setSpan(new RelativeSizeSpan(styleValue.getFloatValue()), start, end,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if ( styleValue.getFloatValue() > 0f ) {
+                    //Log.d("StyleCallback", "Applying RelativeSizeSpan with size " + useStyle.getRelativeFontSize() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
+                    builder.setSpan(new RelativeSizeSpan(styleValue.getFloatValue()), start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             }
         }
 
@@ -140,13 +144,17 @@ public class StyleCallback implements SpanCallback {
                     " on text " + builder.subSequence(marginStart, marginEnd));
 
             if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
-                builder.setSpan(new LeadingMarginSpan.Standard(styleValue.getIntValue(), 0), marginStart, marginEnd,
+                if ( styleValue.getIntValue() > 0 ) {
+                    builder.setSpan(new LeadingMarginSpan.Standard(styleValue.getIntValue(), 0), marginStart, marginEnd,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
 
             } else {
-                builder.setSpan(new LeadingMarginSpan.Standard( (int)
+                if ( styleValue.getFloatValue() > 0f ) {
+                    builder.setSpan(new LeadingMarginSpan.Standard( (int)
                         ( HtmlSpanner.HORIZONTAL_EM_WIDTH * styleValue.getFloatValue()), 0), marginStart, marginEnd,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             }
 
         }

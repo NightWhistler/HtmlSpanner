@@ -49,14 +49,18 @@ public class StyledTextHandler extends TagNodeHandler {
 
             StyleValue styleValue = useStyle.getMarginTop();
 
-            builder.append('\n');
-
             if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
-                spanStack.pushSpan( new VerticalMarginSpan( styleValue.getIntValue() ),
+                if ( styleValue.getIntValue() > 0 ) {
+                    builder.append('\n');
+                    spanStack.pushSpan( new VerticalMarginSpan( styleValue.getIntValue() ),
                         builder.length() -1, builder.length() );
+                }
             } else {
-                spanStack.pushSpan( new VerticalMarginSpan( styleValue.getFloatValue() ),
+                if ( styleValue.getFloatValue() > 0f ) {
+                    builder.append('\n');
+                    spanStack.pushSpan( new VerticalMarginSpan( styleValue.getFloatValue() ),
                         builder.length() -1, builder.length() );
+                }
             }
 
         }
@@ -81,14 +85,19 @@ public class StyledTextHandler extends TagNodeHandler {
 
                 StyleValue styleValue = useStyle.getMarginBottom();
 
-                appendNewLine(builder);
-
                 if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
-                    stack.pushSpan( new VerticalMarginSpan( styleValue.getIntValue() ),
+                    if ( styleValue.getIntValue() > 0 ) {
+                        appendNewLine(builder);
+                        stack.pushSpan( new VerticalMarginSpan( styleValue.getIntValue() ),
                             builder.length() -1, builder.length() );
+                    }
                 } else {
-                    stack.pushSpan( new VerticalMarginSpan( styleValue.getFloatValue() ),
+                    if ( styleValue.getFloatValue() > 0f ) {
+                        appendNewLine(builder);
+
+                        stack.pushSpan( new VerticalMarginSpan( styleValue.getFloatValue() ),
                             builder.length() -1, builder.length() );
+                    }
                 }
 
             }
