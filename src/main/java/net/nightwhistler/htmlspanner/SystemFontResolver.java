@@ -56,23 +56,26 @@ public class SystemFontResolver implements FontResolver {
 
     public FontFamily getFont( String name ) {
 
-        String[] parts = name.split(",(\\s)*");
+        if ( name != null && name.length() > 0 ) {
 
-        for ( int i = 0; i < parts.length; i++ ) {
+            String[] parts = name.split(",(\\s)*");
 
-            String fontName = parts[i];
+            for ( int i = 0; i < parts.length; i++ ) {
 
-            if ( fontName.startsWith("\"") && fontName.endsWith("\"")) {
-                fontName = fontName.substring(1, fontName.length() -1 );
-            }
+                String fontName = parts[i];
 
-            if ( fontName.startsWith("\'") && fontName.endsWith("\'")) {
-                fontName = fontName.substring(1, fontName.length() -1 );
-            }
+                if ( fontName.startsWith("\"") && fontName.endsWith("\"")) {
+                    fontName = fontName.substring(1, fontName.length() -1 );
+                }
 
-            FontFamily fam = resolveFont(fontName);
-            if ( fam != null ) {
-                return fam;
+                if ( fontName.startsWith("\'") && fontName.endsWith("\'")) {
+                    fontName = fontName.substring(1, fontName.length() -1 );
+                }
+
+                FontFamily fam = resolveFont(fontName);
+                if ( fam != null ) {
+                    return fam;
+                }
             }
         }
 
