@@ -109,8 +109,9 @@ public abstract class TagNodeHandler {
 	 * enabled).
 	 * 
 	 * @param builder
+     * @return true if a newline was added
 	 */
-	protected void appendNewLine(SpannableStringBuilder builder) {
+	protected boolean appendNewLine(SpannableStringBuilder builder) {
 
 		int len = builder.length();
 
@@ -118,10 +119,12 @@ public abstract class TagNodeHandler {
 			// Should never have more than 2 \n characters in a row.
 			if (len > 2 && builder.charAt(len - 1) == '\n'
 					&& builder.charAt(len - 2) == '\n') {
-				return;
+				return false;
 			}
 		}
 
 		builder.append("\n");
+
+        return true;
 	}
 }

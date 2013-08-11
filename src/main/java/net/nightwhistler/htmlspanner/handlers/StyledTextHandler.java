@@ -51,15 +51,17 @@ public class StyledTextHandler extends TagNodeHandler {
 
             if ( styleValue.getUnit() == StyleValue.Unit.PX ) {
                 if ( styleValue.getIntValue() > 0 ) {
-                    builder.append('\n');
-                    spanStack.pushSpan( new VerticalMarginSpan( styleValue.getIntValue() ),
-                        builder.length() -1, builder.length() );
+                    if ( appendNewLine(builder) ) {
+                        spanStack.pushSpan( new VerticalMarginSpan( styleValue.getIntValue() ),
+                            builder.length() -1, builder.length() );
+                    }
                 }
             } else {
                 if ( styleValue.getFloatValue() > 0f ) {
-                    builder.append('\n');
-                    spanStack.pushSpan( new VerticalMarginSpan( styleValue.getFloatValue() ),
-                        builder.length() -1, builder.length() );
+                    if ( appendNewLine(builder) ) {
+                        spanStack.pushSpan( new VerticalMarginSpan( styleValue.getFloatValue() ),
+                            builder.length() -1, builder.length() );
+                    }
                 }
             }
 
