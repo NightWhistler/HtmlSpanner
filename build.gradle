@@ -16,7 +16,6 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:18.0.+'
     compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.2'
     compile 'com.osbcp.cssparser:cssparser:1.5'
 }
