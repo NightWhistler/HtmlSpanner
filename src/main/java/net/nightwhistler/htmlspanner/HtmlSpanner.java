@@ -277,13 +277,6 @@ public class HtmlSpanner {
 
             ContentNode contentNode = (ContentNode) node;
 
-            if (builder.length() > 0) {
-                char lastChar = builder.charAt(builder.length() - 1);
-                if (lastChar != ' ' && lastChar != '\n') {
-                    builder.append(' ');
-                }
-            }
-
             String text = TextUtil.replaceHtmlEntities(
                     contentNode.getContent().toString(), false);
 
@@ -292,7 +285,8 @@ public class HtmlSpanner {
                 text = text.replace( '\u00A0', ' ' );
             }
 
-            text = text.trim();
+            //Replace whitespace of more than 1 space/tab with a single space
+            text = text.replace( "[ \t]+", " ");
 
             builder.append(text);
 
