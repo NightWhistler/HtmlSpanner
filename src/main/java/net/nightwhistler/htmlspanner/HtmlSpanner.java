@@ -285,9 +285,6 @@ public class HtmlSpanner {
                 text = text.replace( '\u00A0', ' ' );
             }
 
-            //Replace whitespace of more than 1 space/tab with a single space
-            text = text.replace( "[ \t]+", " ");
-
             builder.append(text);
 
         } else if (node instanceof TagNode) {

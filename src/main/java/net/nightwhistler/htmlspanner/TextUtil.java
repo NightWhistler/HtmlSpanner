@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class TextUtil {
 
 	private static Pattern SPECIAL_CHAR_WHITESPACE = Pattern
-			.compile("(\t| +|&[a-z]*;|&#x?([a-f]|[A-F]|[0-9])*;|\n)");
+			.compile("(\t+| +|&[a-z]*;|&#x?([a-f]|[A-F]|[0-9])*;| *\n+ *)");
 
 	private static Pattern SPECIAL_CHAR_NO_WHITESPACE = Pattern
 			.compile("(&[a-z]*;|&#x?([a-f]|[A-F]|[0-9])*;)");
