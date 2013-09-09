@@ -22,6 +22,7 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.util.Log;
 import net.nightwhistler.htmlspanner.handlers.*;
 import net.nightwhistler.htmlspanner.handlers.attributes.AlignmentAttributeHandler;
 
@@ -285,7 +286,9 @@ public class HtmlSpanner {
                 text = text.replace( '\u00A0', ' ' );
             }
 
-            builder.append(text);
+            if ( text.trim().length() > 0 ) {
+                builder.append(text);
+            }
 
         } else if (node instanceof TagNode) {
             applySpan(builder, (TagNode) node, stack);
