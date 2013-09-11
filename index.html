@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Htmlspanner : Android HTML rendering library with CSS support" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Htmlspanner</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/NightWhistler/HtmlSpanner">View on GitHub</a>
+
+          <h1 id="project_title">Htmlspanner</h1>
+          <h2 id="project_tagline">Android HTML rendering library with CSS support</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/NightWhistler/HtmlSpanner/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/NightWhistler/HtmlSpanner/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="android-html-rendering-library" class="anchor" href="#android-html-rendering-library"><span class="octicon octicon-link"></span></a>Android HTML rendering library</h1>
+
+<p>HtmlSpanner started as the HTML rendering library for PageTurner, but looking through some questions on StackOverflow I noticed how many people were struggling with the infamous <code>Html.fromHtml()</code> and getting its results to display properly in TextViews.</p>
+
+<p>HtmlSpanner allows you full control over how tags are rendered and gives you all the data about the location of a tag in the text. This allows proper handling of anchors, tables, numbered lists and unordered lists.</p>
+
+<p>The default link implementation just opens URLs, but it can be easily overridden to support anchors.</p>
+
+<p>HtmlSpanner uses HtmlCleaner to do most of the heavy lifting for parsing HTML files.</p>
+
+<h1>
+<a name="css-support" class="anchor" href="#css-support"><span class="octicon octicon-link"></span></a>CSS support</h1>
+
+<p>HtmlSpanner now also supports the most common subset of CSS: both style tags and style attributes are parsed by default, and the style of all built-in tags can be updated.</p>
+
+<h1>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h1>
+
+<p>In its simplest form, just call <code>(new HtmlSpanner()).fromHtml()</code> to get similar output as Android's <code>Html.fromHtml()</code>.</p>
+
+<h1>
+<a name="htmlcleaner-source" class="anchor" href="#htmlcleaner-source"><span class="octicon octicon-link"></span></a>HTMLCleaner Source</h1>
+
+<p>see <a href="http://htmlcleaner.sourceforge.net/index.php">http://htmlcleaner.sourceforge.net/index.php</a></p>
+
+<p>The fork under <a href="https://github.com/amplafi/htmlcleaner">https://github.com/amplafi/htmlcleaner</a> can not be used on Android &lt;= 2.1 as it uses java.lang.String.isEmpty</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Htmlspanner maintained by <a href="https://github.com/NightWhistler">NightWhistler</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
