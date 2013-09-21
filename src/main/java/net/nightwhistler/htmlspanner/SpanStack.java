@@ -10,11 +10,11 @@ import org.htmlcleaner.TagNode;
 import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: alex
- * Date: 5/6/13
- * Time: 2:59 PM
- * To change this template use File | Settings | File Templates.
+ * Simple stack structure that Spans can be pushed on.
+ *
+ * Handles the lookup and application of CSS styles.
+ *
+ * @author Alex Kuiper
  */
 public class SpanStack {
 
@@ -32,7 +32,7 @@ public class SpanStack {
 
         if ( ! lookupCache.containsKey(node) ) {
 
-            Log.d("SpanStack", "Looking for matching CSS rules for node: "
+            Log.v("SpanStack", "Looking for matching CSS rules for node: "
                     + "<" + node.getName() + " id='" + option(node.getAttributeByName("id"))
                     + "' class='" + option(node.getAttributeByName("class")) + "'>");
 
@@ -43,7 +43,7 @@ public class SpanStack {
                 }
             }
 
-            Log.d("SpanStack", "Found " + matchingRules.size() + " matching rules.");
+            Log.v("SpanStack", "Found " + matchingRules.size() + " matching rules.");
             lookupCache.put(node, matchingRules);
         }
 
@@ -51,13 +51,13 @@ public class SpanStack {
 
         for ( CompiledRule rule: lookupCache.get(node) ) {
 
-            Log.d( "SpanStack", "Applying rule " + rule );
+            Log.v( "SpanStack", "Applying rule " + rule );
 
             Style original = result;
             result = rule.applyStyle(result);
 
-            Log.d("SpanStack", "Original style: " + original );
-            Log.d("SpanStack", "Resulting style: " + result);
+            Log.v("SpanStack", "Original style: " + original );
+            Log.v("SpanStack", "Resulting style: " + result);
         }
 
         return result;
