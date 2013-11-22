@@ -242,7 +242,8 @@ public class HtmlSpanner {
     public Spannable fromTagNode(TagNode node) {
         SpannableStringBuilder result = new SpannableStringBuilder();
         SpanStack stack = new SpanStack();
-        handleContent(result, node, stack);
+
+        applySpan( result, node, stack );
 
         stack.applySpans(this, result);
 
@@ -274,25 +275,21 @@ public class HtmlSpanner {
 
     private void handleContent(SpannableStringBuilder builder, Object node,
                                SpanStack stack) {
-        if (node instanceof ContentNode) {
+        ContentNode contentNode = (ContentNode) node;
 
-            ContentNode contentNode = (ContentNode) node;
+        String text = TextUtil.replaceHtmlEntities(
+                contentNode.getContent().toString(), false);
 
-            String text = TextUtil.replaceHtmlEntities(
-                    contentNode.getContent().toString(), false);
-
-            if ( isStripExtraWhiteSpace() ) {
-                //Replace unicode non-breaking space with normal space.
-                text = text.replace( '\u00A0', ' ' );
-            }
-
-            if ( text.trim().length() > 0 ) {
-                builder.append(text);
-            }
-
-        } else if (node instanceof TagNode) {
-            applySpan(builder, (TagNode) node, stack);
+        if ( isStripExtraWhiteSpace() ) {
+            //Replace unicode non-breaking space with normal space.
+            text = text.replace( '\u00A0', ' ' );
         }
+
+        if ( text.trim().length() > 0 ) {
+            builder.append(text);
+        }
+
+
     }
 
     private void applySpan(SpannableStringBuilder builder, TagNode node, SpanStack stack) {
@@ -306,14 +303,17 @@ public class HtmlSpanner {
 
         int lengthBefore = builder.length();
 
-
         handler.beforeChildren(node, builder, stack);
-
 
         if ( !handler.rendersContent() ) {
 
             for (Object childNode : node.getChildren()) {
-                handleContent(builder, childNode, stack);
+
+                if ( childNode instanceof ContentNode ) {
+                    handleContent( builder, childNode, stack );
+                } else if ( childNode instanceof TagNode ) {
+                    applySpan( builder, (TagNode) childNode, stack );
+                }
             }
         }
 
