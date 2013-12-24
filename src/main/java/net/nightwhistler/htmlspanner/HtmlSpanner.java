@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.util.Log;
+import net.nightwhistler.htmlspanner.exception.ParsingCancelledException;
 import net.nightwhistler.htmlspanner.handlers.*;
 import net.nightwhistler.htmlspanner.handlers.attributes.AlignmentAttributeHandler;
 
@@ -161,6 +162,7 @@ public class HtmlSpanner {
         this.useColoursFromStyle = value;
     }
 
+
     public boolean isUseColoursFromStyle() {
         return this.useColoursFromStyle;
     }
@@ -196,7 +198,11 @@ public class HtmlSpanner {
      * @return a Spanned version of the text.
      */
     public Spannable fromHtml(String html) {
-        return fromTagNode(this.htmlCleaner.clean(html));
+        return fromTagNode(this.htmlCleaner.clean(html), null);
+    }
+
+    public Spannable fromHtml(String html, CancellationCallback cancellationCallback) {
+        return fromTagNode(this.htmlCleaner.clean(html), cancellationCallback);
     }
 
     /**
@@ -207,7 +213,11 @@ public class HtmlSpanner {
      * @throws IOException
      */
     public Spannable fromHtml(Reader reader) throws IOException {
-        return fromTagNode(this.htmlCleaner.clean(reader));
+        return fromTagNode(this.htmlCleaner.clean(reader), null);
+    }
+
+    public Spannable fromHtml(Reader reader, CancellationCallback cancellationCallback) throws IOException {
+        return fromTagNode(this.htmlCleaner.clean(reader), cancellationCallback);
     }
 
     /**
@@ -218,7 +228,11 @@ public class HtmlSpanner {
      * @throws IOException
      */
     public Spannable fromHtml(InputStream inputStream) throws IOException {
-        return fromTagNode(this.htmlCleaner.clean(inputStream));
+        return fromTagNode(this.htmlCleaner.clean(inputStream), null);
+    }
+
+    public Spannable fromHtml(InputStream inputStream, CancellationCallback cancellationCallback) throws IOException {
+        return fromTagNode(this.htmlCleaner.clean(inputStream), cancellationCallback);
     }
 
     /**
@@ -239,11 +253,11 @@ public class HtmlSpanner {
      * @param node
      * @return
      */
-    public Spannable fromTagNode(TagNode node) {
+    public Spannable fromTagNode(TagNode node, CancellationCallback cancellationCallback) {
         SpannableStringBuilder result = new SpannableStringBuilder();
         SpanStack stack = new SpanStack();
 
-        applySpan( result, node, stack );
+        applySpan( result, node, stack, cancellationCallback );
 
         stack.applySpans(this, result);
 
@@ -273,8 +287,17 @@ public class HtmlSpanner {
         return result;
     }
 
+    private void checkForCancellation( CancellationCallback cancellationCallback ) {
+        if ( cancellationCallback != null && cancellationCallback.isCancelled() ) {
+            throw new ParsingCancelledException();
+        }
+    }
+
     private void handleContent(SpannableStringBuilder builder, Object node,
-                               SpanStack stack) {
+                               SpanStack stack, CancellationCallback cancellationCallback ) {
+
+        checkForCancellation(cancellationCallback);
+
         ContentNode contentNode = (ContentNode) node;
 
         String text = TextUtil.replaceHtmlEntities(
@@ -288,11 +311,12 @@ public class HtmlSpanner {
         if ( text.trim().length() > 0 ) {
             builder.append(text);
         }
-
-
     }
 
-    private void applySpan(SpannableStringBuilder builder, TagNode node, SpanStack stack) {
+    private void applySpan(SpannableStringBuilder builder, TagNode node, SpanStack stack,
+                           CancellationCallback cancellationCallback) {
+
+        checkForCancellation(cancellationCallback);
 
         TagNodeHandler handler = this.handlers.get(node.getName());
 
@@ -310,9 +334,9 @@ public class HtmlSpanner {
             for (Object childNode : node.getChildren()) {
 
                 if ( childNode instanceof ContentNode ) {
-                    handleContent( builder, childNode, stack );
+                    handleContent( builder, childNode, stack, cancellationCallback );
                 } else if ( childNode instanceof TagNode ) {
-                    applySpan( builder, (TagNode) childNode, stack );
+                    applySpan( builder, (TagNode) childNode, stack, cancellationCallback );
                 }
             }
         }
@@ -413,6 +437,10 @@ public class HtmlSpanner {
 
         registerHandler("font", new FontHandler() );
 
+    }
+
+    public static interface CancellationCallback {
+        boolean isCancelled();
     }
 
 }
