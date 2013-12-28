@@ -73,15 +73,20 @@ public class SpanStack {
 
     public void pushSpan( final Object span, final int start, final int end ) {
 
-        SpanCallback callback = new SpanCallback() {
-            @Override
-            public void applySpan(HtmlSpanner spanner, SpannableStringBuilder builder) {
-                builder.setSpan(span, start, end,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-        };
+        if ( end > start ) {
+            SpanCallback callback = new SpanCallback() {
+                @Override
+                public void applySpan(HtmlSpanner spanner, SpannableStringBuilder builder) {
+                    builder.setSpan(span, start, end,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            };
 
-        spanItemStack.push(callback);
+            spanItemStack.push(callback);
+        } else {
+            Log.d( "SpanStack", "refusing to put span of type " + span.getClass().getSimpleName()
+                    + " and length " + (end - start) );
+        }
     }
 
     public void pushSpan( SpanCallback callback ) {
