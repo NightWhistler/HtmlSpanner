@@ -3,9 +3,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.5.+'
+        classpath 'com.android.tools.build:gradle:1.0.0'
     }
 }
+
 apply plugin: 'android-library'
 
 repositories {
@@ -22,11 +23,29 @@ dependencies {
 
 android {
     compileSdkVersion 17
-    buildToolsVersion "17.0.0"
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
         minSdkVersion 7
         targetSdkVersion 17
+    }
+}
+
+android {
+    lintOptions {
+         abortOnError false
+    }
+}
+
+apply plugin: 'sonar-runner'
+
+sonarRunner {
+    sonarProperties {
+        property "sonar.sourceEncoding", "UTF-8"
+//        property "sonar.profile", "Android Lint"
+        property "sonar.sources", "src"
+        property "sonar.binaries", file("${project.buildDir}/intermediates/classes/debug") 
+       // property "sonar.libraries", "android.sourceSets.main.runtimeClasspath"
     }
 }
 
