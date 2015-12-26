@@ -40,7 +40,7 @@ public class ListItemHandler extends TagNodeHandler {
 
 		int i = 1;
 
-		for (Object child : node.getParent().getChildren()) {
+		for (Object child : node.getParent().getAllChildren()) {
 			if (child == node) {
 				return i;
 			}

@@ -20,8 +20,8 @@ public class StyleNodeHandler extends TagNodeHandler {
 
         if ( getSpanner().isAllowStyling() ) {
 
-            if ( node.getChildren().size() == 1 ) {
-                Object childNode = node.getChildren().get(0);
+            if ( node.getAllChildren().size() == 1 ) {
+                Object childNode = node.getAllChildren().get(0);
 
                 if ( childNode instanceof ContentNode ) {
                     parseCSSFromText( ( (ContentNode) childNode ).getContent(),
@@ -32,9 +32,9 @@ public class StyleNodeHandler extends TagNodeHandler {
 
     }
 
-    private void parseCSSFromText( StringBuilder text, SpanStack spanStack ) {
+    private void parseCSSFromText( String text, SpanStack spanStack ) {
         try {
-            for ( Rule rule: CSSParser.parse( text.toString() ) ) {
+            for ( Rule rule: CSSParser.parse( text ) ) {
                 spanStack.registerCompiledRule(CSSCompiler.compile(rule, getSpanner()));
             }
         } catch ( Exception e ) {
