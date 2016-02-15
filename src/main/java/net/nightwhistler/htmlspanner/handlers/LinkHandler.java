@@ -15,12 +15,12 @@
  */
 package net.nightwhistler.htmlspanner.handlers;
 
+
 import net.nightwhistler.htmlspanner.SpanStack;
 import net.nightwhistler.htmlspanner.TagNodeHandler;
 
 import org.htmlcleaner.TagNode;
 
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.URLSpan;
 

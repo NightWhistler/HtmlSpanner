@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.2'
+    compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.16'
     compile 'com.osbcp.cssparser:cssparser:1.5'
 }
 

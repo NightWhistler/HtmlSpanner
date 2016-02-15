@@ -30,6 +30,9 @@ public class TextUtil {
         REPLACEMENTS.put("&lsquo;", "‘");
         REPLACEMENTS.put("&rsquo;", "’");
 
+		REPLACEMENTS.put("&ndash;", "\u2013");
+		REPLACEMENTS.put("&mdash;", "\u2014");
+		REPLACEMENTS.put("&horbar;", "\u2015");
 	}
 
 	/**
