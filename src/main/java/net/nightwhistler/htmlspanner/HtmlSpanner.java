@@ -437,6 +437,10 @@ public class HtmlSpanner {
 
         registerHandler("font", new FontHandler() );
 
+        Style spanStyle = new Style().setDisplayStyle(Style.DisplayStyle.INLINE);
+        TagNodeHandler spanHandler = new BorderAttributeHandler(wrap(new StyledTextHandler(spanStyle)));
+        registerHandler("span", spanHandler);
+
     }
 
     public static interface CancellationCallback {
