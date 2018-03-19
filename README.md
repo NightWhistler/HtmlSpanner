@@ -12,6 +12,60 @@ HtmlSpanner uses HtmlCleaner to do most of the heavy lifting for parsing HTML fi
 
 HtmlSpanner now also supports the most common subset of CSS: both style tags and style attributes are parsed by default, and the style of all built-in tags can be updated.
 
+# Supported Tags
+
+* i
+* em
+* cite
+* dfn
+* b
+* strong
+* blockquote
+* ul
+* ol
+* tt
+* code
+* style
+* br
+* p
+* div
+* h1
+* h2
+* h3
+* h4
+* h5
+* h6
+* pre
+* big
+* small
+* sub
+* sup
+* center
+* li
+* a
+* img
+* font
+* span
+
+# Supported Style Attributes
+
+* font-family
+* text-alignment
+* font-size
+* font-weight
+* font-style
+* color
+* background-color
+* display
+* margin-top
+* margin-bottom
+* margin-left
+* margin-right
+* text-indent
+* border-style
+* border-color
+* border-style
+
 # Usage
 In its simplest form, just call ``(new HtmlSpanner()).fromHtml()`` to get similar output as Android's ``Html.fromHtml()``.
 
@@ -19,3 +73,4 @@ In its simplest form, just call ``(new HtmlSpanner()).fromHtml()`` to get simila
 see http://htmlcleaner.sourceforge.net/index.php
 
 The fork under https://github.com/amplafi/htmlcleaner can not be used on Android <= 2.1 as it uses java.lang.String.isEmpty
+
