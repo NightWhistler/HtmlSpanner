@@ -4,7 +4,7 @@
 
   <groupId>net.nightwhistler.htmlspanner</groupId>
   <artifactId>htmlspanner</artifactId>
-  <version>0.5-SNAPSHOT</version>
+  <version>0.6-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>htmlspanner</name>
