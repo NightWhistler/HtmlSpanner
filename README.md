@@ -67,6 +67,16 @@ HtmlSpanner now also supports the most common subset of CSS: both style tags and
 * border-style
 
 # Usage
+1. add following in root project
+  allprojects {
+    maven { url 'https://jitpack.io' }
+    }
+  }
+
+2. add 
+## compile 'com.github.NightWhistler:HtmlSpanner:0.4'##
+in app module
+
 In its simplest form, just call ``(new HtmlSpanner()).fromHtml()`` to get similar output as Android's ``Html.fromHtml()``.
 
 # HTMLCleaner Source
