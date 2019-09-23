@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.util.Log;
+
+import net.nightwhistler.htmlspanner.css.CSSCompiler;
 import net.nightwhistler.htmlspanner.exception.ParsingCancelledException;
 import net.nightwhistler.htmlspanner.handlers.*;
 import net.nightwhistler.htmlspanner.handlers.attributes.AlignmentAttributeHandler;
@@ -32,6 +34,7 @@ import net.nightwhistler.htmlspanner.handlers.attributes.StyleAttributeHandler;
 import net.nightwhistler.htmlspanner.style.Style;
 import net.nightwhistler.htmlspanner.handlers.StyledTextHandler;
 import net.nightwhistler.htmlspanner.style.StyleValue;
+
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
@@ -40,15 +43,17 @@ import org.htmlcleaner.TagNode;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 
+import com.osbcp.cssparser.CSSParser;
+import com.osbcp.cssparser.Rule;
+
 /**
  * HtmlSpanner provides an alternative to Html.fromHtml() from the Android
  * libraries.
- *
+ * <p>
  * In its simplest form, just call new HtmlSpanner().fromHtml() to get a similar
  * result. The real strength is in being able to register custom NodeHandlers.
  *
  * @author work
- *
  */
 public class HtmlSpanner {
 
@@ -87,7 +92,7 @@ public class HtmlSpanner {
 
     /**
      * Creates a new HtmlSpanner using the given HtmlCleaner instance.
-     *
+     * <p>
      * This allows for a custom-configured HtmlCleaner.
      *
      * @param cleaner
@@ -104,11 +109,11 @@ public class HtmlSpanner {
         return this.fontResolver;
     }
 
-    public void setFontResolver( FontResolver fontResolver ) {
+    public void setFontResolver(FontResolver fontResolver) {
         this.fontResolver = fontResolver;
     }
 
-    public FontFamily getFont( String name ) {
+    public FontFamily getFont(String name) {
         return this.fontResolver.getFont(name);
     }
 
@@ -133,7 +138,7 @@ public class HtmlSpanner {
 
     /**
      * Indicates whether the text style may be updated.
-     *
+     * <p>
      * If this is set to false, all CSS is ignored
      * and the basic built-in style is used.
      *
@@ -148,7 +153,7 @@ public class HtmlSpanner {
      *
      * @param value
      */
-    public void setAllowStyling( boolean value ) {
+    public void setAllowStyling(boolean value) {
         this.allowStyling = value;
     }
 
@@ -158,7 +163,7 @@ public class HtmlSpanner {
      *
      * @param value
      */
-    public void setUseColoursFromStyle( boolean value ) {
+    public void setUseColoursFromStyle(boolean value) {
         this.useColoursFromStyle = value;
     }
 
@@ -169,7 +174,7 @@ public class HtmlSpanner {
 
     /**
      * Registers a new custom TagNodeHandler.
-     *
+     * <p>
      * If a TagNodeHandler was already registered for the specified tagName it
      * will be overwritten.
      *
@@ -194,11 +199,36 @@ public class HtmlSpanner {
      * Parses the text in the given String.
      *
      * @param html
-     *
      * @return a Spanned version of the text.
      */
     public Spannable fromHtml(String html) {
         return fromTagNode(this.htmlCleaner.clean(html), null);
+    }
+
+    public Spannable fromHtml(String html, String css) {
+        return fromTagNode(htmlCleaner.clean(html), css, null);
+    }
+
+    private Spannable fromTagNode(TagNode node, String css, CancellationCallback cancellationCallback) {
+        SpannableStringBuilder result = new SpannableStringBuilder();
+        SpanStack stack = new SpanStack();
+
+        parseCSSFromText(css, stack);
+        applySpan(result, node, stack, cancellationCallback);
+
+        stack.applySpans(this, result);
+
+        return result;
+    }
+
+    private void parseCSSFromText(String css, SpanStack spanStack) {
+        try {
+            for (Rule rule : CSSParser.parse(css)) {
+                spanStack.registerCompiledRule(CSSCompiler.compile(rule, this));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public Spannable fromHtml(String html, CancellationCallback cancellationCallback) {
@@ -237,7 +267,7 @@ public class HtmlSpanner {
 
     /**
      * Gets the currently registered handler for this tag.
-     *
+     * <p>
      * Used so it can be wrapped.
      *
      * @param tagName
@@ -257,13 +287,12 @@ public class HtmlSpanner {
         SpannableStringBuilder result = new SpannableStringBuilder();
         SpanStack stack = new SpanStack();
 
-        applySpan( result, node, stack, cancellationCallback );
+        applySpan(result, node, stack, cancellationCallback);
 
         stack.applySpans(this, result);
 
         return result;
     }
-
 
 
     private static HtmlCleaner createHtmlCleaner() {
@@ -287,14 +316,14 @@ public class HtmlSpanner {
         return result;
     }
 
-    private void checkForCancellation( CancellationCallback cancellationCallback ) {
-        if ( cancellationCallback != null && cancellationCallback.isCancelled() ) {
+    private void checkForCancellation(CancellationCallback cancellationCallback) {
+        if (cancellationCallback != null && cancellationCallback.isCancelled()) {
             throw new ParsingCancelledException();
         }
     }
 
     private void handleContent(SpannableStringBuilder builder, Object node,
-                               SpanStack stack, CancellationCallback cancellationCallback ) {
+                               SpanStack stack, CancellationCallback cancellationCallback) {
 
         checkForCancellation(cancellationCallback);
 
@@ -303,12 +332,12 @@ public class HtmlSpanner {
         String text = TextUtil.replaceHtmlEntities(
                 contentNode.getContent().toString(), false);
 
-        if ( isStripExtraWhiteSpace() ) {
+        if (isStripExtraWhiteSpace()) {
             //Replace unicode non-breaking space with normal space.
-            text = text.replace( '\u00A0', ' ' );
+            text = text.replace('\u00A0', ' ');
         }
 
-        if ( text.trim().length() > 0 ) {
+        if (text.trim().length() > 0) {
             builder.append(text);
         }
     }
@@ -320,7 +349,7 @@ public class HtmlSpanner {
 
         TagNodeHandler handler = this.handlers.get(node.getName());
 
-        if ( handler == null ) {
+        if (handler == null) {
             handler = new StyledTextHandler();
             handler.setSpanner(this);
         }
@@ -329,14 +358,14 @@ public class HtmlSpanner {
 
         handler.beforeChildren(node, builder, stack);
 
-        if ( !handler.rendersContent() ) {
+        if (!handler.rendersContent()) {
 
             for (Object childNode : node.getAllChildren()) {
 
-                if ( childNode instanceof ContentNode ) {
-                    handleContent( builder, childNode, stack, cancellationCallback );
-                } else if ( childNode instanceof TagNode ) {
-                    applySpan( builder, (TagNode) childNode, stack, cancellationCallback );
+                if (childNode instanceof ContentNode) {
+                    handleContent(builder, childNode, stack, cancellationCallback);
+                } else if (childNode instanceof TagNode) {
+                    applySpan(builder, (TagNode) childNode, stack, cancellationCallback);
                 }
             }
         }
@@ -346,7 +375,7 @@ public class HtmlSpanner {
     }
 
 
-    private static StyledTextHandler wrap( StyledTextHandler handler ) {
+    private static StyledTextHandler wrap(StyledTextHandler handler) {
         return new StyleAttributeHandler(new AlignmentAttributeHandler(handler));
     }
 
@@ -378,7 +407,7 @@ public class HtmlSpanner {
         registerHandler("tt", monSpaceHandler);
         registerHandler("code", monSpaceHandler);
 
-        registerHandler("style", new StyleNodeHandler() );
+        registerHandler("style", new StyleNodeHandler());
 
         //We wrap an alignment-handler to support
         //align attributes
@@ -435,7 +464,7 @@ public class HtmlSpanner {
         registerHandler("a", new LinkHandler());
         registerHandler("img", new ImageHandler());
 
-        registerHandler("font", new FontHandler() );
+        registerHandler("font", new FontHandler());
 
         Style spanStyle = new Style().setDisplayStyle(Style.DisplayStyle.INLINE);
         TagNodeHandler spanHandler = new BorderAttributeHandler(wrap(new StyledTextHandler(spanStyle)));
