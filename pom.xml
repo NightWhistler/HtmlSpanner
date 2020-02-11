@@ -12,7 +12,7 @@
   <repositories>
 		<repository>
 			<id>PageTurner Repo</id>
-			<url>http://repo.pageturner-reader.org</url>
+			<url>https://repo.pageturner-reader.org</url>
 		</repository>
   </repositories>
 
