@@ -50,6 +50,12 @@ HtmlSpanner now also supports the most common subset of CSS: both style tags and
 * img
 * font
 * span
+* hr
+* script
+* td
+* tbody
+* body
+* html
 
 # Supported Style Attributes
 
