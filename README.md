@@ -72,7 +72,7 @@ HtmlSpanner now also supports the most common subset of CSS: both style tags and
 
 # Usage
 1. add following in root project
-  allprojects {
+  all projects {
     maven { url 'https://jitpack.io' }
     }
   }
