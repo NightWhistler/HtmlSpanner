@@ -1,20 +1,31 @@
 buildscript {
+
     repositories {
+        jcenter()
         mavenCentral()
+        google()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:4.1.1'
     }
+
+}
+
+allprojects {
+
+    repositories {
+        jcenter()
+        google()
+        mavenCentral()
+        maven {
+            url "http://repo.pageturner-reader.org"
+        }
+    }
+
 }
 
 apply plugin: 'android-library'
-
-repositories {
-    mavenCentral()
-    maven {
-        url "http://repo.pageturner-reader.org"
-    }
-}
 
 dependencies {
     compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.16'
@@ -38,17 +49,17 @@ android {
     }
 }
 
-apply plugin: 'sonar-runner'
+//apply plugin: 'sonar-runner'
 
-sonarRunner {
-    sonarProperties {
-        property "sonar.sourceEncoding", "UTF-8"
+//sonarRunner {
+//    sonarProperties {
+//        property "sonar.sourceEncoding", "UTF-8"
 //        property "sonar.profile", "Android Lint"
-        property "sonar.sources", "src"
-        property "sonar.binaries", file("${project.buildDir}/intermediates/classes/debug") 
-       // property "sonar.libraries", "android.sourceSets.main.runtimeClasspath"
-    }
-}
+//        property "sonar.sources", "src"
+//        property "sonar.binaries", file("${project.buildDir}/intermediates/classes/debug") 
+//        property "sonar.libraries", "android.sourceSets.main.runtimeClasspath"
+//    }
+//}
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
