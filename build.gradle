@@ -22,13 +22,14 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 17
-    buildToolsVersion "19.1.0"
+
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 7
-        targetSdkVersion 17
+        targetSdkVersion 29
     }
+
 }
 
 android {
