@@ -16,6 +16,7 @@
 
 package net.nightwhistler.htmlspanner.spans;
 
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.text.Layout;
@@ -49,12 +50,17 @@ public class ListItemSpan implements LeadingMarginSpan {
     public ListItemSpan(int number) {
         mNumber = number;
     }
-
+    
+    // Convert int to dp
+    private int toDip(int value){
+        return value * (int) (Resources.getSystem().getDisplayMetrics().density + 0.5f);
+    }
+    
     public int getLeadingMargin(boolean first) {
         if (mNumber != -1) {
-            return 2 * NUMBER_RADIUS + STANDARD_GAP_WIDTH;
+            return toDip(2 * NUMBER_RADIUS + STANDARD_GAP_WIDTH);
         } else {
-            return 2 * BULLET_RADIUS + STANDARD_GAP_WIDTH;
+            return toDip(2 * BULLET_RADIUS + STANDARD_GAP_WIDTH);
         }
     }
 
