@@ -41,6 +41,12 @@ public class AlignmentAttributeHandler extends WrappingStyleHandler {
 			int start, int end, Style style, SpanStack spanStack) {
 		
 		String align = node.getAttributeByName("align");
+		if (align == null) {
+		    final String style = node.getAttributeByName("style");
+		    if (style != null && style.contains("text-align:")) {
+		        align = style.split("text-align:")[1].split(";")[0].trim();
+		    }
+		}
 
 		if ( "right".equalsIgnoreCase(align) ) {
 		    style = style.setTextAlignment(Style.TextAlignment.RIGHT);
