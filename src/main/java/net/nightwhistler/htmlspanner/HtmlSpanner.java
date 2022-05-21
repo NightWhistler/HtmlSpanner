@@ -72,6 +72,18 @@ public class HtmlSpanner {
 
     private FontResolver fontResolver;
 
+    private ContrastPatcher contrastPatcher = new ContrastPatcher() {
+        @Override
+        public Integer patchBackgroundColor(Style style) {
+            return style.getBackgroundColor();
+        }
+
+        @Override
+        public Integer patchFontColor(Style style) {
+            return style.getColor();
+        }
+    };
+
     /**
      * Switch to determine if CSS is used
      */
@@ -134,6 +146,24 @@ public class HtmlSpanner {
      */
     public boolean isStripExtraWhiteSpace() {
         return stripExtraWhiteSpace;
+    }
+
+    /**
+     * Update the ContrastPatcher instance
+     *
+     * @param patcher
+     */
+    public void setContrastPatcher(ContrastPatcher patcher) {
+        this.contrastPatcher = patcher;
+    }
+
+    /**
+     * Returns the ContrastPatcher instance which might will modify the font/background color
+     *
+     * @return
+     */
+    public ContrastPatcher getContrastPatcher() {
+        return this.contrastPatcher;
     }
 
     /**
