@@ -28,7 +28,7 @@ allprojects {
 apply plugin: 'android-library'
 
 dependencies {
-    compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.16'
+    compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.26'
     compile 'com.osbcp.cssparser:cssparser:1.5'
 }
 
