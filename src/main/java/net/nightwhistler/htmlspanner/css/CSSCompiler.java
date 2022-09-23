@@ -289,7 +289,7 @@ public class CSSCompiler {
                     @Override
                     public Style updateStyle(Style style, HtmlSpanner spanner) {
                         Log.d("CSSCompiler", "Applying style " + key + ": " + value );
-                        return style.setFontSize(styleValue);
+                        return spanner.isUseFontSizeFromStyle() ? style.setFontSize(styleValue) : style;
                     }
                 };
 
@@ -302,7 +302,7 @@ public class CSSCompiler {
                         @Override
                         public Style updateStyle(Style style, HtmlSpanner spanner) {
                             Log.d("CSSCompiler", "Applying style " + key + ": " + value );
-                            return style.setFontSize(new StyleValue(number, StyleValue.Unit.EM));
+                            return spanner.isUseFontSizeFromStyle() ? style.setFontSize(new StyleValue(number, StyleValue.Unit.EM)) : style;
                         }
                     };
                 } catch ( NumberFormatException nfe ) {
