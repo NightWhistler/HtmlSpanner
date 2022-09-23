@@ -82,6 +82,11 @@ public class HtmlSpanner {
      */
     private boolean useColoursFromStyle = true;
 
+    /**
+     * If CSS can be used to change the font size
+     */
+    private boolean useFontSizeFromStyle = true;
+
 
     /**
      * Creates a new HtmlSpanner using a default HtmlCleaner instance.
@@ -170,6 +175,21 @@ public class HtmlSpanner {
 
     public boolean isUseColoursFromStyle() {
         return this.useColoursFromStyle;
+    }
+
+    /**
+     * Switch to specify if the font size can be changed from CSS.
+     * Headings, <big> and <small> will work independent of this setting.
+     *
+     * @param value
+     */
+    public void setUseFontSizeFromStyle(boolean value) {
+        this.useFontSizeFromStyle = value;
+    }
+
+
+    public boolean isUseFontSizeFromStyle() {
+        return this.useFontSizeFromStyle;
     }
 
     /**
