@@ -27,14 +27,14 @@ public class BorderSpan implements LineBackgroundSpan {
 
     private Style style;
 
-    private boolean usecolour;
+    private HtmlSpanner spanner;
 
-    public BorderSpan( Style style, int start, int end, boolean usecolour ) {
+    public BorderSpan( Style style, int start, int end, HtmlSpanner spanner ) {
         this.start = start;
         this.end = end;
 
         this.style = style;
-        this.usecolour = usecolour;
+        this.spanner = spanner;
     }
 
 
@@ -69,14 +69,15 @@ public class BorderSpan implements LineBackgroundSpan {
         int originalColor = p.getColor();
         float originalStrokeWidth = p.getStrokeWidth();
 
-        if ( usecolour && style.getBackgroundColor() != null ) {
-            p.setColor(style.getBackgroundColor());
+        Integer backgroundColor = spanner.getContrastPatcher().patchBackgroundColor(style);
+        if ( spanner.isUseColoursFromStyle() && backgroundColor != null ) {
+            p.setColor(backgroundColor);
             p.setStyle(Paint.Style.FILL);
 
             c.drawRect(left,top,right,bottom,p);
         }
 
-        if ( usecolour && style.getBorderColor() != null ) {
+        if ( spanner.isUseColoursFromStyle() && style.getBorderColor() != null ) {
             p.setColor( style.getBorderColor() );
         }
 
@@ -113,4 +114,3 @@ public class BorderSpan implements LineBackgroundSpan {
 
 
 }
-
