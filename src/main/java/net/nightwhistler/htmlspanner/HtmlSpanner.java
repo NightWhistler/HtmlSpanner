@@ -470,6 +470,12 @@ public class HtmlSpanner {
         TagNodeHandler spanHandler = new BorderAttributeHandler(wrap(new StyledTextHandler(spanStyle)));
         registerHandler("span", spanHandler);
 
+        registerHandler("hr", new HorizontalRuleHandler());
+
+        registerHandler("del", new StrikeThroughHandler());
+        registerHandler("s", new StrikeThroughHandler());
+        registerHandler("strike", new StrikeThroughHandler());
+
     }
 
     public static interface CancellationCallback {

@@ -23,6 +23,7 @@ import android.text.Layout;
 import android.text.Spanned;
 import android.text.style.LeadingMarginSpan;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
+import net.nightwhistler.htmlspanner.ViewUtil;
 
 /**
  * This class is similar to Android's BulletSpan with the following differences:
@@ -51,16 +52,11 @@ public class ListItemSpan implements LeadingMarginSpan {
         mNumber = number;
     }
     
-    // Convert int to dp
-    private int toDip(int value){
-        return value * (int) (Resources.getSystem().getDisplayMetrics().density + 0.5f);
-    }
-    
     public int getLeadingMargin(boolean first) {
         if (mNumber != -1) {
-            return toDip(2 * NUMBER_RADIUS + STANDARD_GAP_WIDTH);
+            return ViewUtil.dpToPixel(2 * NUMBER_RADIUS + STANDARD_GAP_WIDTH);
         } else {
-            return toDip(2 * BULLET_RADIUS + STANDARD_GAP_WIDTH);
+            return ViewUtil.dpToPixel(2 * BULLET_RADIUS + STANDARD_GAP_WIDTH);
         }
     }
 
