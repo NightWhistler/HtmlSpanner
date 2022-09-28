@@ -1,5 +1,9 @@
 # Android HTML rendering library
 
+# Differences from the original library
+* Added option ``useFontSizeFromStyle = true`` to ignore all params related to font size (thx fm-sys for the solution)
+* Added support for ``text-decoration: underline`` to span underline text
+
 ### Gradle dependency:
 
 ``implementation 'com.github.NightWhistler:HtmlSpanner:0.4'``
@@ -23,6 +27,7 @@ HtmlSpanner now also supports the most common subset of CSS: both style tags and
 * cite
 * dfn
 * b
+* u
 * strong
 * blockquote
 * ul
@@ -69,6 +74,7 @@ HtmlSpanner now also supports the most common subset of CSS: both style tags and
 * border-style
 * border-color
 * border-style
+* text-decoration (only underline)
 
 # Usage
 1. add following in root project
