@@ -12,12 +12,12 @@ import java.lang.reflect.Field;
  */
 public class Style {
 
-    public static enum TextAlignment { LEFT, CENTER, RIGHT };
-    public static enum FontWeight {  NORMAL, BOLD };
-    public static enum FontStyle { NORMAL, ITALIC };
-    public static enum DisplayStyle { BLOCK, INLINE };
-    public static enum BorderStyle { SOLID, DASHED, DOTTED, DOUBLE };
-    public static enum TextDecoration { NORMAL, UNDERLINE } ;
+    public static enum TextAlignment { LEFT, CENTER, RIGHT }
+    public static enum FontWeight {  NORMAL, BOLD }
+    public static enum FontStyle { NORMAL, ITALIC }
+    public static enum DisplayStyle { BLOCK, INLINE }
+    public static enum BorderStyle { SOLID, DASHED, DOTTED, DOUBLE }
+    public static enum TextDecoration { NORMAL, UNDERLINE }
 
     private final FontFamily fontFamily;
     private final TextAlignment textAlignment;
