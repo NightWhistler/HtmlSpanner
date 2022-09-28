@@ -30,7 +30,6 @@ apply plugin: 'com.android.library'
 dependencies {
     api 'net.sourceforge.htmlcleaner:htmlcleaner:2.26'
     api 'com.osbcp:cssparser:1.7'
-    testImplementation 'junit:junit:4.12'
 }
 
 android {
@@ -38,7 +37,7 @@ android {
     compileSdkVersion 33
 
     defaultConfig {
-        minSdkVersion 24
+        minSdkVersion 7
         targetSdkVersion 33
     }
 
