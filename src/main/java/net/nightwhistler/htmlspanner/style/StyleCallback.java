@@ -2,6 +2,7 @@ package net.nightwhistler.htmlspanner.style;
 
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.*;
 import android.util.Log;
 import net.nightwhistler.htmlspanner.FontFamily;
@@ -79,6 +80,10 @@ public class StyleCallback implements SpanCallback {
         if ( useStyle.getBorderStyle() != null ) {
             builder.setSpan(new BorderSpan(useStyle, start, end, spanner.isUseColoursFromStyle()), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        if (useStyle.getTextDecoration() != null && useStyle.getTextDecoration() == Style.TextDecoration.UNDERLINE) {
+            builder.setSpan(new UnderlineSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         if ( useStyle.getFontSize() != null ) {

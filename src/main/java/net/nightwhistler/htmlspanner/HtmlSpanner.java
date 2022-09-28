@@ -412,6 +412,7 @@ public class HtmlSpanner {
         TagNodeHandler boldHandler = new StyledTextHandler(
                 new Style().setFontWeight(Style.FontWeight.BOLD));
 
+        registerHandler("u", new UnderlineHandler());
         registerHandler("b", boldHandler);
         registerHandler("strong", boldHandler);
 

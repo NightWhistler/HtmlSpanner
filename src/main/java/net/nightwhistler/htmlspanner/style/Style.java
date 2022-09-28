@@ -13,14 +13,16 @@ import java.lang.reflect.Field;
 public class Style {
 
     public static enum TextAlignment { LEFT, CENTER, RIGHT };
-    public static enum FontWeight {  NORMAL, BOLD }
-    public static enum FontStyle { NORMAL, ITALIC }
+    public static enum FontWeight {  NORMAL, BOLD };
+    public static enum FontStyle { NORMAL, ITALIC };
     public static enum DisplayStyle { BLOCK, INLINE };
-    public static enum BorderStyle { SOLID, DASHED, DOTTED, DOUBLE }
+    public static enum BorderStyle { SOLID, DASHED, DOTTED, DOUBLE };
+    public static enum TextDecoration { NORMAL, UNDERLINE } ;
 
     private final FontFamily fontFamily;
     private final TextAlignment textAlignment;
     private final StyleValue fontSize;
+    private final TextDecoration textDecoration;
 
     private final FontWeight fontWeight;
     private final FontStyle fontStyle;
@@ -47,6 +49,7 @@ public class Style {
         fontSize = null;
         fontWeight = null;
         fontStyle = null;
+        textDecoration = null;
         color = null;
         backgroundColor = null;
         displayStyle = null;
@@ -62,7 +65,7 @@ public class Style {
     }
 
     public Style(FontFamily family, TextAlignment textAlignment, StyleValue fontSize,
-                 FontWeight fontWeight, FontStyle fontStyle, Integer color,
+                 FontWeight fontWeight, FontStyle fontStyle, TextDecoration textDecoration, Integer color,
                  Integer backgroundColor, DisplayStyle displayStyle, StyleValue marginTop,
                  StyleValue marginBottom, StyleValue marginLeft, StyleValue marginRight,
                  StyleValue textIndent, Integer borderColor, BorderStyle borderStyle,
@@ -73,6 +76,7 @@ public class Style {
 
         this.fontWeight = fontWeight;
         this.fontStyle = fontStyle;
+        this.textDecoration = textDecoration;
         this.color = color;
         this.backgroundColor = backgroundColor;
         this.displayStyle = displayStyle;
@@ -89,7 +93,7 @@ public class Style {
 
     public Style setFontFamily(FontFamily fontFamily) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, this.fontStyle, this.color, this.backgroundColor, this.displayStyle,
+                this.fontWeight, this.fontStyle, this.textDecoration, this.color, this.backgroundColor, this.displayStyle,
                 this.marginTop, this.marginBottom, this.marginLeft, this.marginRight, this.textIndent,
                 this.borderColor, this.borderStyle, this.borderWidth );
     }
@@ -97,105 +101,112 @@ public class Style {
 
     public Style setTextAlignment(TextAlignment alignment) {
         return new Style(this.fontFamily, alignment, this.fontSize, this.fontWeight,
-                this.fontStyle, this.color, this.backgroundColor, this.displayStyle,
+                this.fontStyle, this.textDecoration, this.color, this.backgroundColor, this.displayStyle,
                 this.marginTop, this.marginBottom, this.marginLeft, this.marginRight, this.textIndent,
                 this.borderColor, this.borderStyle, this.borderWidth );
     }
 
     public Style setFontSize(StyleValue fontSize) {
         return new Style(this.fontFamily, this.textAlignment, fontSize, this.fontWeight,
-                this.fontStyle, this.color, this.backgroundColor, this.displayStyle,
+                this.fontStyle, this.textDecoration, this.color, this.backgroundColor, this.displayStyle,
                 this.marginTop, this.marginBottom, this.marginLeft, this.marginRight, this.textIndent,
                 this.borderColor, this.borderStyle, this.borderWidth );
     }
 
     public Style setFontWeight(FontWeight fontWeight) {
         return new Style(fontFamily, this.textAlignment, this.fontSize, fontWeight,
-                this.fontStyle, this.color, this.backgroundColor, this.displayStyle,
+                this.fontStyle, this.textDecoration, this.color, this.backgroundColor, this.displayStyle,
                 this.marginTop, this.marginBottom, this.marginLeft, this.marginRight, this.textIndent,
                 this.borderColor, this.borderStyle, this.borderWidth );
     }
 
     public Style setFontStyle(FontStyle fontStyle) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.fontWeight, fontStyle, this.textDecoration, this.color, this.backgroundColor,
                 this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
                 this.textIndent, this.borderColor, this.borderStyle, this.borderWidth );
     }
 
     public Style setColor(Integer color) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, fontStyle, color, this.backgroundColor,
+                this.fontWeight, fontStyle, this.textDecoration, color, this.backgroundColor,
                 this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
                 this.textIndent, this.borderColor, this.borderStyle, this.borderWidth );
     }
 
     public Style setBackgroundColor( Integer bgColor ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, fontStyle, this.color, bgColor,
+                this.fontWeight, fontStyle, this.textDecoration, this.color, bgColor,
                 this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
                 this.textIndent, this.borderColor, this.borderStyle, this.borderWidth );
     }
 
     public Style setDisplayStyle( DisplayStyle displayStyle ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.fontWeight, fontStyle, this.textDecoration, this.color, this.backgroundColor,
                 displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
                 this.textIndent, this.borderColor, this.borderStyle, this.borderWidth );
     }
 
     public Style setMarginBottom( StyleValue marginBottom ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.fontWeight, fontStyle, this.textDecoration, this.color, this.backgroundColor,
                 this.displayStyle, this.marginTop, marginBottom, this.marginLeft,
                 this.marginRight,this.textIndent, this.borderColor, this.borderStyle, this.borderWidth );
     }
 
     public Style setMarginTop( StyleValue marginTop ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.fontWeight, fontStyle, this.textDecoration, this.color, this.backgroundColor,
                 this.displayStyle, marginTop, this.marginBottom, this.marginLeft,
                 this.marginRight,this.textIndent, this.borderColor, this.borderStyle, this.borderWidth );
     }
 
     public Style setMarginLeft( StyleValue marginLeft ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.fontWeight, fontStyle, this.textDecoration, this.color, this.backgroundColor,
                 this.displayStyle, this.marginTop, this.marginBottom, marginLeft,
                 this.marginRight,this.textIndent, this.borderColor, this.borderStyle, this.borderWidth );
     }
 
     public Style setMarginRight( StyleValue marginRight ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.fontWeight, fontStyle, this.textDecoration, this.color, this.backgroundColor,
                 this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft,
                 marginRight,this.textIndent, this.borderColor, this.borderStyle, this.borderWidth );
     }
 
     public Style setTextIndent( StyleValue textIndent ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.fontWeight, fontStyle, this.textDecoration, this.color, this.backgroundColor,
                 this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
                 textIndent, this.borderColor, this.borderStyle, this.borderWidth );
     }
 
     public Style setBorderStyle( BorderStyle borderStyle ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.fontWeight, fontStyle, this.textDecoration, this.color, this.backgroundColor,
                 this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
                 textIndent, this.borderColor, borderStyle, this.borderWidth );
     }
 
     public Style setBorderColor( Integer borderColor ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.fontWeight, fontStyle, this.textDecoration, this.color, this.backgroundColor,
                 this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
                 textIndent, borderColor, borderStyle, this.borderWidth );
     }
 
     public Style setBorderWidth( StyleValue borderWidth ) {
         return new Style(fontFamily, this.textAlignment, this.fontSize,
-                this.fontWeight, fontStyle, this.color, this.backgroundColor,
+                this.fontWeight, fontStyle, this.textDecoration, this.color, this.backgroundColor,
+                this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
+                textIndent, this.borderColor, this.borderStyle, borderWidth );
+    }
+
+    public Style setTextDecoration( TextDecoration decoration ) {
+        return new Style(fontFamily, this.textAlignment, this.fontSize,
+                this.fontWeight, fontStyle, decoration, this.color, this.backgroundColor,
                 this.displayStyle, this.marginTop, this.marginBottom, this.marginLeft, this.marginRight,
                 textIndent, this.borderColor, this.borderStyle, borderWidth );
     }
@@ -223,6 +234,8 @@ public class Style {
     public FontStyle getFontStyle() {
         return fontStyle;
     }
+
+    public TextDecoration getTextDecoration() { return textDecoration; }
 
     public Integer getColor() {
         return this.color;
@@ -286,6 +299,10 @@ public class Style {
 
         if ( fontStyle != null ) {
             result.append( "  font-style: " + fontStyle + "\n" );
+        }
+
+        if (textDecoration != null) {
+            result.append("  text-decoration: " + textDecoration + "\n");
         }
 
         if ( color != null ) {
