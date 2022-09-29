@@ -23,6 +23,7 @@ HtmlSpanner now also supports the most common subset of CSS: both style tags and
 * cite
 * dfn
 * b
+* u
 * strong
 * blockquote
 * ul
@@ -69,6 +70,7 @@ HtmlSpanner now also supports the most common subset of CSS: both style tags and
 * border-style
 * border-color
 * border-style
+* text-decoration (underline)
 
 # Usage
 1. add following in root project
